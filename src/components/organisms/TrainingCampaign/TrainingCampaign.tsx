@@ -16,7 +16,7 @@ const TrainingCampaign: FunctionComponent = () => {
         </div>
       </div>
       <div className={styles.trainingStory}>
-        <SectionMarker label="05 / ENTRENAMIENTO" />
+        <SectionMarker label="ENTRENAMIENTO" />
         <h2 id="training-titulo" className={styles.headline}>TU FUERZA.<br/>TUS REGLAS.</h2>
         <div className={styles.description13}>Hay días de avanzar y días de volver a empezar. Equipate para los dos. El resto lo ponés vos.</div>
         <div className={styles.trainingCategories}>

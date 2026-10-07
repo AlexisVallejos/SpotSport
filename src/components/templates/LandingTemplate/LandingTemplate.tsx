@@ -11,9 +11,11 @@ export type LandingTemplateProps = {
 const LandingTemplate: FunctionComponent<LandingTemplateProps> = ({ intro, cover, footer, children }) => {
   return (
     <div className={styles.spotTodoElDeporte}>
+      <a className="skip-to-content" href="#contenido">Saltar al contenido</a>
+      <div className="reading-progress" aria-hidden="true" />
       {intro}
       {cover}
-      <main className={styles.main}>{children}</main>
+      <main id="contenido" className={styles.main}>{children}</main>
       {footer}
     </div>
   );

@@ -7,6 +7,7 @@ export type ActionButtonVariant = 'hero' | 'campaign' | 'kit' | 'light';
 export type ActionButtonProps = {
   label: string;
   variant: ActionButtonVariant;
+  href?: string;
 };
 
 const variantClass: Record<ActionButtonVariant, string> = {
@@ -16,12 +17,12 @@ const variantClass: Record<ActionButtonVariant, string> = {
   light: styles.action5,
 };
 
-const ActionButton: FunctionComponent<ActionButtonProps> = ({ label, variant }) => {
+const ActionButton: FunctionComponent<ActionButtonProps> = ({ label, variant, href }) => {
   return (
-    <button type="button" className={`${styles.base} ${variantClass[variant]}`}>
+    <a href={href ?? (variant === 'hero' || variant === 'light' ? '#deportes' : '#calzado')} className={`${styles.base} ${variantClass[variant]}`}>
       <Label>{label}</Label>
       <Icon name="arrowRight" />
-    </button>
+    </a>
   );
 };
 

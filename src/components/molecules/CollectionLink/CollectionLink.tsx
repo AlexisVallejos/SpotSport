@@ -8,7 +8,7 @@ export type CollectionLinkProps = {
 
 const CollectionLink: FunctionComponent<CollectionLinkProps> = ({ label }) => {
   return (
-    <a href="#" className={styles.collectionLink}>
+    <a href={label.toLowerCase().includes('indumentaria') ? '#indumentaria' : label.toLowerCase().includes('calzado') ? '#calzado' : '#deportes'} className={styles.collectionLink}>
       <Label>{label}</Label>
       <Icon name="arrowRight" />
     </a>

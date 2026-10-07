@@ -154,3 +154,20 @@
     		transition: none;
   	}
 }
+
+.sculpturalHero{view-timeline-name:--hero;view-timeline-axis:block}
+.sceneLabel{color:#dddcd6}
+.cinemaScrim{background:linear-gradient(90deg,rgba(8,8,8,.25),transparent 65%),linear-gradient(0deg,rgba(8,8,8,.86),transparent 60%)}
+@supports(animation-timeline:view()){
+ @media(prefers-reduced-motion:no-preference){
+  .sportCinemaIcon{animation:photo-depth linear both;animation-timeline:--hero;animation-range:exit 0% exit 100%}
+  .foregroundIdentity{animation:identity-depth linear both;animation-timeline:--hero;animation-range:exit 0% exit 100%}
+  .orbitalTrajectory{animation:orbit-depth linear both;animation-timeline:--hero;animation-range:exit 0% exit 100%}
+ }
+}
+@keyframes photo-depth{from{transform:scale(1.035) translateY(0)}to{transform:scale(1.12) translateY(8%)}}
+@keyframes identity-depth{from{transform:translateY(0)}to{transform:translateY(-55px) scale(.96)}}
+@keyframes orbit-depth{from{transform:rotate(-10deg)}to{transform:rotate(8deg)}}
+@media(max-width:599px){.collectionNote{color:#d1d0c9}.sculpturalHero{min-height:680px;min-height:min(740px,100svh - 64px)}}
+
+@media(max-width:599px){.sportCinemaIcon{object-position:90% center}}

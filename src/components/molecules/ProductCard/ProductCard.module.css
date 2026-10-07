@@ -8,7 +8,7 @@
 }
 .productVisual {
   	align-self: stretch;
-  	aspect-ratio: 1 / 1;
+    aspect-ratio: 4 / 5;
   	background-color: #eaeae7;
   	overflow: hidden;
   	flex-shrink: 0;
@@ -100,3 +100,8 @@
     		transform: none;
   	}
 }
+
+.productActions { pointer-events: none; }
+.productDetails { padding-bottom: 20px; border-bottom: 1px solid #d7d7d0; }
+
+.productVisual:has(canvas) .productActions { visibility: hidden; }

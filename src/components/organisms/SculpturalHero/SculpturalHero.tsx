@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { Icon, Text, Wordmark } from '../../atoms';
+import { Text, Wordmark } from '../../atoms';
 import { ActionButton } from '../../molecules';
 import { images } from '../../../data/images';
 import styles from './SculpturalHero.module.css';
@@ -12,7 +12,7 @@ const SculpturalHero: FunctionComponent = () => {
       <div className={styles.orbitalTrajectory} />
       <div className={styles.campaignMetadata}>
         <Text>SPOT / EN MOVIMIENTO</Text>
-        <div className={styles.sceneLabel}>ÓRBITA 01 — EL IMPULSO</div>
+        <div className={styles.sceneLabel}>ÓRBITA 01 / EL IMPULSO</div>
       </div>
       <div className={styles.foregroundIdentity}>
         <Wordmark variant="hero" />
@@ -24,10 +24,7 @@ const SculpturalHero: FunctionComponent = () => {
           <div className={styles.collectionNote}>Calzado, indumentaria y actitud.</div>
         </div>
       </div>
-      <a href="#deportes" className={styles.scrollCue}>
-        <Text>SEGUÍ EL RECORRIDO</Text>
-        <Icon name="arrowDown" />
-      </a>
+
     </section>
   );
 };

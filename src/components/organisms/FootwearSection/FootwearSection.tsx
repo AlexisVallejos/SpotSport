@@ -20,7 +20,7 @@ const FootwearSection: FunctionComponent = () => {
 
   return (
     <ContentSection tone="white" id="calzado" labelledBy="calzado-titulo">
-      <SectionHeading id="calzado-titulo" marker="02 / NUEVAS SILUETAS" title="EL PRÓXIMO PASO ES TUYO." linkLabel="Explorá el calzado" />
+      <SectionHeading id="calzado-titulo" marker="NUEVAS SILUETAS" title="EL PRÓXIMO PASO ES TUYO." linkLabel="Explorá el calzado" />
       <CollectionFilters filters={filters} disclosure="Diseños propios SPOT · Selección conceptual" />
       <ProductGrid products={products} />
     </ContentSection>

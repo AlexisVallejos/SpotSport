@@ -111,3 +111,11 @@
     		right: clamp(24px, 4.45vw, 64px);
   	}
 }
+
+@supports(animation-timeline:view()){
+ @media(prefers-reduced-motion:no-preference){
+  .campaaRunningTuPropiaR{view-timeline-name:--running}
+  .runningPanoramaIcon{animation:running-depth linear both;animation-timeline:--running;animation-range:entry 0% exit 100%}
+ }
+}
+@keyframes running-depth{from{transform:scale(1.12) translateY(-3%)}to{transform:scale(1.12) translateY(3%)}}

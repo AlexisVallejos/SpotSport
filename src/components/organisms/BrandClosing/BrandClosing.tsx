@@ -11,7 +11,7 @@ const BrandClosing: FunctionComponent = () => {
       <div className={styles.atmosphereTint} />
       <div className={styles.brandStatement}>
         <div className={styles.manifestoCopy}>
-          <SectionMarker label="07 / EL MOVIMIENTO NOS ENCUENTRA" />
+          <SectionMarker label="EL MOVIMIENTO NOS ENCUENTRA" />
           <h2 id="cierre-titulo" className={styles.statement}>TU DEPORTE. TU LUGAR.</h2>
         </div>
         <div className={styles.closingInvitation}>

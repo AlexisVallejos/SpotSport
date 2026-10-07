@@ -15,7 +15,7 @@ const MainNavigation: FunctionComponent = () => {
       <div id="menu-principal" className={`${styles.menuPanel} ${menuOpen ? styles.menuPanelOpen : ''}`}>
         <div className={styles.departments}>
           {departments.map((department) => (
-            <a key={department} href="#" className={styles.navigationLink}>
+            <a key={department} href={department === 'Indumentaria' ? '#indumentaria' : department === 'Deportes' ? '#deportes' : '#calzado'} onClick={() => setMenuOpen(false)} className={styles.navigationLink}>
               {department}
             </a>
           ))}

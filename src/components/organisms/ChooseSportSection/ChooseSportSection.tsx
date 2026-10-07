@@ -8,7 +8,7 @@ import styles from './ChooseSportSection.module.css';
 const ChooseSportSection: FunctionComponent = () => {
   return (
     <ContentSection tone="muted" id="deportes" labelledBy="deportes-titulo">
-      <SectionHeading id="deportes-titulo" marker="01 / ENCONTRÁ TU ÓRBITA" title="¿QUÉ TE MUEVE?" linkLabel="Todos los deportes" />
+      <SectionHeading id="deportes-titulo" marker="ENCONTRÁ TU ÓRBITA" title="¿QUÉ TE MUEVE?" linkLabel="Todos los deportes" />
       <div className={styles.sportsCategories}>
         {sportCategories.map((sport) => (
           <SportCategoryCard key={sport.title} {...sport} />

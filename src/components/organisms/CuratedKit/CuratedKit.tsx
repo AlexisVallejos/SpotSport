@@ -1,5 +1,5 @@
 import { FunctionComponent } from 'react';
-import { Wordmark } from '../../atoms';
+import ProductViewer from '../../molecules/ProductViewer/ProductViewer';
 import { ActionButton, KitItem, SectionMarker } from '../../molecules';
 import { images } from '../../../data/images';
 import { kitItems } from '../../../data/kit';
@@ -9,18 +9,12 @@ const CuratedKit: FunctionComponent = () => {
   return (
     <section className={styles.seleccinSpotEquipoDeRut} aria-labelledby="seleccion-titulo">
       <div className={styles.curatedKitScene}>
-        <div className={styles.productOrbit} />
-        <div className={styles.integratedIdentity}>
-          <Wordmark variant="kit" />
-        </div>
-        <img className={styles.runningShoeFocus} src={images.kitShoe} alt="Zapatilla de running SPOT Órbita 01" loading="lazy" decoding="async" />
-        <img className={styles.runningAccessoryIcon} src={images.kitCap} alt="Gorra SPOT Trayecto" loading="lazy" decoding="async" />
-        <div className={styles.sceneCaption}>SPOT OBJECTS / RUTA 01</div>
+        <ProductViewer name="SPOT Órbita 01" image={images.kitShoe} featured />
       </div>
       <div className={styles.kitDetails}>
-        <SectionMarker variant="kit" label="06 / SELECCIÓN SPOT" />
+        <SectionMarker variant="kit" label="EL ESTUDIO SPOT" />
         <h2 id="seleccion-titulo" className={styles.selectionTitle}>MENOS VUELTAS.<br/>MÁS KILÓMETROS.</h2>
-        <div className={styles.selectionIntroduction}>Una selección para salir a correr: del primer cordón al último detalle.</div>
+        <div className={styles.selectionIntroduction}>El movimiento empieza en los detalles. Explorá Órbita 01 desde todos sus ángulos y armá tu próxima salida.</div>
         <div className={styles.kitContents}>
           {kitItems.map((item) => (
             <KitItem key={item.name} {...item} />

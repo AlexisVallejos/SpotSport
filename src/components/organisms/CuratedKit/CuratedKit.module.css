@@ -119,3 +119,7 @@
     		font-size: clamp(48px, 11vw, 76px);
   	}
 }
+
+.curatedKitScene{min-height:550px;border-top:1px solid #c9c9c1;border-bottom:1px solid #c9c9c1}
+.kitDetails{background:#eaeae4}
+@media(max-width:599px){.curatedKitScene{min-height:420px;aspect-ratio:1/1}.kitDetails{gap:20px}}

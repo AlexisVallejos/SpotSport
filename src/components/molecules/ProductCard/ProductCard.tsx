@@ -1,5 +1,6 @@
 import { FunctionComponent } from 'react';
 import { ColorSwatch, Icon, Label, SwatchColor, Text } from '../../atoms';
+import ProductViewer from '../ProductViewer/ProductViewer';
 import styles from './ProductCard.module.css';
 
 export type ProductCardProps = {
@@ -24,13 +25,7 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
   return (
     <article className={styles.productCard}>
       <div className={styles.productVisual}>
-        <img
-          className={styles.productPhotographIcon}
-          src={image}
-          alt={name}
-          loading="lazy"
-          decoding="async"
-        />
+        <ProductViewer name={name} image={image} />
         <div className={styles.productActions}>
           <Label>{badge}</Label>
           <Icon name="arrowUpRight" />
