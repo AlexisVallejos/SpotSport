@@ -1,0 +1,9 @@
+.footwearSelection {
+  	align-self: stretch;
+  	overflow: hidden;
+  	display: flex;
+  	align-items: flex-start;
+  	gap: 24px;
+  	font-size: 10px;
+  	color: #000;
+}

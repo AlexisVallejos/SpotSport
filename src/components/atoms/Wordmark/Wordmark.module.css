@@ -1,0 +1,36 @@
+.spotOrbitalWordmark {
+  	height: 39px;
+  	width: 130px;
+  	position: relative;
+}
+.spotOrbitalWordmark2 {
+  	height: 339px;
+  	width: 1130px;
+  	position: relative;
+  	filter: drop-shadow(12px 26px 24px rgba(0, 0, 0, 0.56));
+}
+.spotOrbitalWordmark3 {
+  	height: 197px;
+  	width: 435.5px;
+  	position: relative;
+  	filter: drop-shadow(12px 26px 24px rgba(0, 0, 0, 0.56));
+  	object-fit: contain;
+  	flex-shrink: 0;
+}
+.spotOrbitalWordmark4 {
+  	height: 165px;
+  	width: 550px;
+  	position: relative;
+  	filter: drop-shadow(12px 26px 24px rgba(0, 0, 0, 0.56));
+}
+.spotOrbitalWordmark5 {
+  	height: 270px;
+  	width: 900px;
+  	position: relative;
+  	filter: drop-shadow(12px 26px 24px rgba(0, 0, 0, 0.56));
+}
+.spotOrbitalWordmark6 {
+  	width: 180px;
+  	height: 54px;
+  	position: relative;
+}

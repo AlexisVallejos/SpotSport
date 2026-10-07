@@ -1,0 +1,8 @@
+.collectionLink {
+  	overflow: hidden;
+  	display: flex;
+  	align-items: center;
+  	gap: 12px;
+  	font-size: 13px;
+  	color: #000;
+}

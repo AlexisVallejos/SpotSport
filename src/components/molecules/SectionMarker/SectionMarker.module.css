@@ -1,0 +1,21 @@
+.sectionMarker {
+  	overflow: hidden;
+  	display: flex;
+  	align-items: center;
+  	gap: 10px;
+}
+.sectionMarker3 {
+  	overflow: hidden;
+  	display: flex;
+  	align-items: center;
+  	gap: 10px;
+  	color: #a7a9b2;
+}
+.sectionMarker6 {
+  	overflow: hidden;
+  	display: flex;
+  	align-items: center;
+  	gap: 10px;
+  	flex-shrink: 0;
+  	font-size: 11px;
+}

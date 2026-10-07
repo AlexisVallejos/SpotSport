@@ -1,0 +1,125 @@
+.sculpturalHero {
+  	align-self: stretch;
+  	height: 760px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	padding: 48px;
+  	box-sizing: border-box;
+  	position: relative;
+  	isolation: isolate;
+  	font-size: 11px;
+}
+.sportCinemaIcon {
+  	width: 1440px;
+  	height: 760px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 0px;
+  	left: 0px;
+  	object-fit: cover;
+  	z-index: 0;
+  	flex-shrink: 0;
+}
+.cinemaScrim {
+  	width: 1440px;
+  	height: 760px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 0px;
+  	left: 0px;
+  	background: linear-gradient(180deg, rgba(8, 8, 8, 0.53), rgba(8, 8, 8, 0.03) 50%, rgba(8, 8, 8, 0.87));
+  	z-index: 1;
+  	flex-shrink: 0;
+}
+.orbitalTrajectory {
+  	width: 1150px;
+  	height: 460px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 66px;
+  	left: 130px;
+  	border-radius: 50%;
+  	border: 1px solid rgba(255, 255, 255, 0.13);
+  	box-sizing: border-box;
+  	transform:  rotate(-10deg);
+  	transform-origin: 0 0;
+  	z-index: 2;
+  	flex-shrink: 0;
+}
+.campaignMetadata {
+  	align-self: stretch;
+  	overflow: hidden;
+  	display: flex;
+  	align-items: flex-start;
+  	justify-content: space-between;
+  	gap: 20px;
+  	z-index: 3;
+  	flex-shrink: 0;
+}
+.sceneLabel {
+  	position: relative;
+  	color: #a7a9b2;
+}
+.foregroundIdentity {
+  	width: 1160px;
+  	height: 370px;
+  	margin: 0 !important;
+  	position: absolute;
+  	top: 118px;
+  	left: 116px;
+  	display: flex;
+  	align-items: flex-start;
+  	z-index: 4;
+  	flex-shrink: 0;
+}
+.heroMessage {
+  	width: 750px;
+  	margin: 0 !important;
+  	position: absolute;
+  	top: 492px;
+  	left: 64px;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 18px;
+  	z-index: 5;
+  	flex-shrink: 0;
+  	font-size: 76px;
+  	font-family: 'Barlow Condensed';
+}
+.brandPromise {
+  	align-self: stretch;
+  	position: relative;
+  	line-height: 92%;
+}
+.heroActionRow {
+  	overflow: hidden;
+  	display: flex;
+  	align-items: center;
+  	gap: 28px;
+  	font-size: 13px;
+  	color: #080808;
+  	font-family: Inter;
+}
+.collectionNote {
+  	position: relative;
+  	font-size: 12px;
+  	color: #a7a9b2;
+}
+.scrollCue {
+  	margin: 0 !important;
+  	position: absolute;
+  	top: 677px;
+  	left: 1182px;
+  	overflow: hidden;
+  	display: flex;
+  	align-items: center;
+  	gap: 12px;
+  	z-index: 6;
+  	flex-shrink: 0;
+  	font-size: 10px;
+}

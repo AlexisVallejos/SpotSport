@@ -1,0 +1,22 @@
+.sectionHeading {
+  	align-self: stretch;
+  	overflow: hidden;
+  	display: flex;
+  	align-items: flex-end;
+  	justify-content: space-between;
+  	gap: 20px;
+}
+.titleGroup {
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 12px;
+}
+.title {
+  	position: relative;
+  	font-size: 64px;
+  	line-height: 95%;
+  	font-family: 'Barlow Condensed';
+  	color: #080808;
+}

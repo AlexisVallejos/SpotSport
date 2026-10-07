@@ -1,0 +1,87 @@
+.footerUniversoSpot {
+  	width: 1440px;
+  	background-color: #080808;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	padding: 56px 64px 28px;
+  	box-sizing: border-box;
+  	gap: 40px;
+  	font-size: 12px;
+  	color: #a7a9b2;
+}
+.footerDirectory {
+  	align-self: stretch;
+  	overflow: hidden;
+  	display: flex;
+  	align-items: flex-start;
+  	justify-content: space-between;
+  	gap: 20px;
+}
+.brandAndSocial {
+  	width: 260px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 24px;
+}
+.invitation {
+  	align-self: stretch;
+  	position: relative;
+  	line-height: 160%;
+}
+.socialLinks {
+  	overflow: hidden;
+  	display: flex;
+  	align-items: flex-start;
+  	gap: 20px;
+}
+.communityInvitation {
+  	width: 366px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 16px;
+}
+.communityTitle {
+  	position: relative;
+  	font-size: 34px;
+  	font-weight: 600;
+  	font-family: 'Barlow Condensed';
+  	color: #fff;
+}
+.privacyNote {
+  	align-self: stretch;
+  	position: relative;
+  	font-size: 10px;
+  	line-height: 150%;
+  	color: #747474;
+}
+.footerDivider {
+  	align-self: stretch;
+  	height: 1px;
+  	position: relative;
+  	background-color: rgba(255, 255, 255, 0.14);
+}
+.legalAndProjectNote {
+  	align-self: stretch;
+  	overflow: hidden;
+  	display: flex;
+  	align-items: center;
+  	justify-content: space-between;
+  	gap: 20px;
+  	font-size: 10px;
+  	color: #747474;
+}
+.legalLinks {
+  	overflow: hidden;
+  	display: flex;
+  	align-items: flex-start;
+  	gap: 20px;
+  	color: #a7a9b2;
+}

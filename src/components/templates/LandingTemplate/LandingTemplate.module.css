@@ -1,0 +1,13 @@
+.spotTodoElDeporte {
+  	width: 100%;
+  	position: relative;
+  	background-color: #f4f4f2;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	text-align: left;
+  	font-size: 11px;
+  	color: #747474;
+  	font-family: Inter;
+}

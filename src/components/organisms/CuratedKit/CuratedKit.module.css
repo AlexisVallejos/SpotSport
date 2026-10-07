@@ -1,0 +1,124 @@
+.seleccinSpotEquipoDeRut {
+  	width: 1440px;
+  	height: 640px;
+  	background-color: #f4f4f2;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	align-items: flex-start;
+  	font-size: 10px;
+}
+.curatedKitScene {
+  	align-self: stretch;
+  	width: 820px;
+  	background-color: #ddddd8;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	position: relative;
+  	isolation: isolate;
+}
+.productOrbit {
+  	width: 630px;
+  	height: 440px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 90px;
+  	left: 80px;
+  	border-radius: 50%;
+  	border: 1px solid #b8b8b2;
+  	box-sizing: border-box;
+  	transform:  rotate(-18deg);
+  	transform-origin: 0 0;
+  	z-index: 0;
+  	flex-shrink: 0;
+}
+.integratedIdentity {
+  	width: 560px;
+  	height: 200px;
+  	margin: 0 !important;
+  	position: absolute;
+  	top: 108px;
+  	left: 100px;
+  	display: flex;
+  	align-items: flex-start;
+  	z-index: 1;
+  	flex-shrink: 0;
+}
+.runningShoeFocus {
+  	width: 580.7px;
+  	height: 467.8px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 71.62px;
+  	left: 54px;
+  	object-fit: contain;
+  	z-index: 2;
+  	flex-shrink: 0;
+}
+.runningAccessoryIcon {
+  	width: 238.8px;
+  	height: 227.9px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 330px;
+  	left: 475.24px;
+  	object-fit: contain;
+  	z-index: 3;
+  	flex-shrink: 0;
+}
+.sceneCaption {
+  	width: 124px;
+  	height: 12px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 594px;
+  	left: 40px;
+  	display: inline-block;
+  	z-index: 4;
+  	flex-shrink: 0;
+}
+.kitDetails {
+  	align-self: stretch;
+  	flex: 1;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	justify-content: center;
+  	padding: 64px;
+  	gap: 24px;
+  	font-size: 13px;
+}
+.selectionTitle {
+  	align-self: stretch;
+  	position: relative;
+  	font-size: 76px;
+  	line-height: 95%;
+  	font-family: 'Barlow Condensed';
+  	color: #000;
+  	flex-shrink: 0;
+}
+.selectionIntroduction {
+  	align-self: stretch;
+  	position: relative;
+  	font-size: 14px;
+  	line-height: 160%;
+  	flex-shrink: 0;
+}
+.kitContents {
+  	align-self: stretch;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	flex-shrink: 0;
+  	color: #000;
+}
+.conceptDisclosure {
+  	position: relative;
+  	font-size: 10px;
+  	flex-shrink: 0;
+}

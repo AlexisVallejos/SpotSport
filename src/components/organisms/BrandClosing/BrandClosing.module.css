@@ -1,0 +1,106 @@
+.cierreDeMarcaSiempreEnM {
+  	width: 1440px;
+  	height: 590px;
+  	background-color: #080808;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	padding: 64px;
+  	box-sizing: border-box;
+  	position: relative;
+  	isolation: isolate;
+  	gap: 28px;
+  	color: #a7a9b2;
+}
+.brandAtmosphereIcon {
+  	width: 1440px;
+  	height: 590px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 0px;
+  	left: 0px;
+  	object-fit: cover;
+  	z-index: 0;
+  	flex-shrink: 0;
+}
+.atmosphereTint {
+  	width: 1440px;
+  	height: 590px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 0px;
+  	left: 0px;
+  	background-color: rgba(0, 0, 0, 0.5);
+  	z-index: 1;
+  	flex-shrink: 0;
+}
+.brandStatement {
+  	align-self: stretch;
+  	overflow: hidden;
+  	display: flex;
+  	align-items: flex-start;
+  	justify-content: space-between;
+  	gap: 20px;
+  	z-index: 2;
+  	flex-shrink: 0;
+}
+.manifestoCopy {
+  	width: 690px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 20px;
+}
+.statement {
+  	align-self: stretch;
+  	position: relative;
+  	font-size: 76px;
+  	line-height: 94%;
+  	font-family: 'Barlow Condensed';
+  	color: #fff;
+}
+.closingInvitation {
+  	width: 350px;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 22px;
+  	font-size: 14px;
+}
+.invitation {
+  	align-self: stretch;
+  	position: relative;
+  	line-height: 160%;
+}
+.brandFinale {
+  	width: 900px;
+  	height: 270px;
+  	margin: 0 !important;
+  	position: absolute;
+  	top: 222px;
+  	left: 258px;
+  	display: flex;
+  	align-items: flex-start;
+  	z-index: 3;
+  	flex-shrink: 0;
+}
+.brandSlogan {
+  	width: 550px;
+  	height: 16px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 526px;
+  	left: 445px;
+  	font-size: 13px;
+  	color: #fff;
+  	text-align: center;
+  	display: inline-block;
+  	z-index: 4;
+  	flex-shrink: 0;
+}

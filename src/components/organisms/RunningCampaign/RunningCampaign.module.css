@@ -1,0 +1,99 @@
+.campaaRunningTuPropiaR {
+  	width: 1440px;
+  	height: 700px;
+  	background-color: #080808;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	padding: 64px;
+  	box-sizing: border-box;
+  	position: relative;
+  	isolation: isolate;
+  	color: #fff;
+}
+.runningPanoramaIcon {
+  	width: 1440px;
+  	height: 700px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 0px;
+  	left: 0px;
+  	object-fit: cover;
+  	z-index: 0;
+  	flex-shrink: 0;
+}
+.editorialScrim {
+  	width: 1440px;
+  	height: 700px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 0px;
+  	left: 0px;
+  	background: linear-gradient(90deg, rgba(8, 8, 8, 0.85), rgba(8, 8, 8, 0.13) 65%, rgba(8, 8, 8, 0));
+  	z-index: 1;
+  	flex-shrink: 0;
+}
+.orbitArc {
+  	width: 1000px;
+  	height: 490px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 90px;
+  	left: 430px;
+  	border-radius: 50%;
+  	border: 2px solid rgba(255, 121, 0, 0.47);
+  	box-sizing: border-box;
+  	transform:  rotate(-18deg);
+  	transform-origin: 0 0;
+  	z-index: 2;
+  	flex-shrink: 0;
+}
+.runningCopy {
+  	width: 465px;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	gap: 26px;
+  	z-index: 3;
+  	flex-shrink: 0;
+}
+.campaignHeadline {
+  	align-self: stretch;
+  	position: relative;
+  	font-size: 110px;
+  	line-height: 88%;
+  	font-family: 'Barlow Condensed';
+}
+.campaignDescription {
+  	width: 350px;
+  	position: relative;
+  	font-size: 15px;
+  	line-height: 160%;
+  	display: inline-block;
+}
+.floatingCampaignIdentity {
+  	width: 445px;
+  	height: 160px;
+  	margin: 0 !important;
+  	position: absolute;
+  	top: 420px;
+  	left: 858px;
+  	display: flex;
+  	align-items: flex-start;
+  	z-index: 4;
+  	flex-shrink: 0;
+}
+.campaignSignature {
+  	width: 118px;
+  	height: 13px;
+  	position: absolute;
+  	margin: 0 !important;
+  	top: 642px;
+  	left: 1120px;
+  	display: inline-block;
+  	z-index: 5;
+  	flex-shrink: 0;
+}

@@ -1,0 +1,19 @@
+.collectionFilters {
+  	align-self: stretch;
+  	overflow: hidden;
+  	display: flex;
+  	align-items: center;
+  	justify-content: space-between;
+  	gap: 20px;
+  	font-size: 12px;
+}
+.sportFilters {
+  	overflow: hidden;
+  	display: flex;
+  	align-items: flex-start;
+  	gap: 24px;
+}
+.collectionDisclosure {
+  	position: relative;
+  	font-size: 11px;
+}

@@ -1,0 +1,12 @@
+.trainingCategory {
+  	align-self: stretch;
+  	height: 45px;
+  	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  	box-sizing: border-box;
+  	overflow: hidden;
+  	flex-shrink: 0;
+  	display: flex;
+  	align-items: center;
+  	justify-content: space-between;
+  	gap: 20px;
+}

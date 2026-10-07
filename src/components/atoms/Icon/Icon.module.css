@@ -1,0 +1,20 @@
+.plusIcon {
+  	height: 16px;
+  	width: 16px;
+  	position: relative;
+}
+.searchIcon {
+  	height: 18px;
+  	width: 18px;
+  	position: relative;
+}
+.userRoundIcon {
+  	height: 20px;
+  	width: 20px;
+  	position: relative;
+}
+.arrowDownRightIcon {
+  	height: 24px;
+  	width: 24px;
+  	position: relative;
+}

@@ -1,0 +1,10 @@
+.portadaElDeporteEnPrimer {
+  	width: 1440px;
+  	background-color: #080808;
+  	overflow: hidden;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-start;
+  	font-size: 13px;
+  	color: #fff;
+}
