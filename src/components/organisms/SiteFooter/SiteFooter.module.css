@@ -1,28 +1,24 @@
 .footerUniversoSpot {
-  	width: 1440px;
+  	width: 100%;
   	background-color: #080808;
-  	overflow: hidden;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
-  	padding: 56px 64px 28px;
-  	box-sizing: border-box;
+  	padding: 56px clamp(20px, 4.45vw, 64px) 28px;
   	gap: 40px;
   	font-size: 12px;
   	color: #a7a9b2;
 }
 .footerDirectory {
   	align-self: stretch;
-  	overflow: hidden;
-  	display: flex;
-  	align-items: flex-start;
+  	display: grid;
+  	grid-template-columns: minmax(200px, 260px) 190px 190px minmax(280px, 366px);
+  	align-items: start;
   	justify-content: space-between;
-  	gap: 20px;
+  	gap: 32px;
 }
 .brandAndSocial {
-  	width: 260px;
-  	overflow: hidden;
-  	flex-shrink: 0;
+  	min-width: 0;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
@@ -31,18 +27,23 @@
 .invitation {
   	align-self: stretch;
   	position: relative;
+  	margin: 0;
   	line-height: 160%;
 }
 .socialLinks {
-  	overflow: hidden;
   	display: flex;
   	align-items: flex-start;
   	gap: 20px;
 }
+.socialLink {
+  	display: flex;
+  	transition: color 0.2s ease;
+}
+.socialLink:hover {
+  	color: #ff7900;
+}
 .communityInvitation {
-  	width: 366px;
-  	overflow: hidden;
-  	flex-shrink: 0;
+  	min-width: 0;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
@@ -51,7 +52,7 @@
 .communityTitle {
   	position: relative;
   	font-size: 34px;
-  	font-weight: 600;
+  	font-weight: 700;
   	font-family: 'Barlow Condensed';
   	color: #fff;
 }
@@ -70,18 +71,39 @@
 }
 .legalAndProjectNote {
   	align-self: stretch;
-  	overflow: hidden;
   	display: flex;
   	align-items: center;
   	justify-content: space-between;
-  	gap: 20px;
+  	gap: 12px 20px;
   	font-size: 10px;
   	color: #747474;
 }
 .legalLinks {
-  	overflow: hidden;
   	display: flex;
   	align-items: flex-start;
   	gap: 20px;
   	color: #a7a9b2;
+}
+.legalLink:hover {
+  	color: #fff;
+}
+@media (max-width: 1099px) {
+  	.footerDirectory {
+    		grid-template-columns: repeat(2, minmax(0, 1fr));
+    		gap: 40px 24px;
+  	}
+  	.brandAndSocial,
+  	.communityInvitation {
+    		grid-column: 1 / -1;
+  	}
+  	.legalAndProjectNote {
+    		flex-direction: column;
+    		align-items: flex-start;
+  	}
+}
+@media (max-width: 599px) {
+  	.footerUniversoSpot {
+    		padding-top: 40px;
+    		gap: 32px;
+  	}
 }

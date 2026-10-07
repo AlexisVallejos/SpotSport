@@ -1,13 +1,12 @@
 .sectionHeading {
   	align-self: stretch;
-  	overflow: hidden;
   	display: flex;
   	align-items: flex-end;
   	justify-content: space-between;
   	gap: 20px;
 }
 .titleGroup {
-  	overflow: hidden;
+  	min-width: 0;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
@@ -15,8 +14,15 @@
 }
 .title {
   	position: relative;
-  	font-size: 64px;
+  	font-size: clamp(36px, 4.45vw, 64px);
   	line-height: 95%;
   	font-family: 'Barlow Condensed';
   	color: #080808;
+}
+@media (max-width: 599px) {
+  	.sectionHeading {
+    		flex-direction: column;
+    		align-items: flex-start;
+    		gap: 16px;
+  	}
 }

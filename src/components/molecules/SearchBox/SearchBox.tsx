@@ -1,5 +1,5 @@
-import { FunctionComponent } from 'react';
-import { Icon, Text } from '../../atoms';
+import { FormEvent, FunctionComponent } from 'react';
+import { Icon } from '../../atoms';
 import styles from './SearchBox.module.css';
 
 export type SearchBoxProps = {
@@ -7,11 +7,22 @@ export type SearchBoxProps = {
 };
 
 const SearchBox: FunctionComponent<SearchBoxProps> = ({ placeholder }) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => event.preventDefault();
+
   return (
-    <div className={styles.search}>
-      <Text>{placeholder}</Text>
-      <Icon size={18} />
-    </div>
+    <form className={styles.search} role="search" onSubmit={handleSubmit}>
+      <input
+        className={styles.input}
+        type="search"
+        name="q"
+        placeholder={placeholder}
+        aria-label={placeholder}
+        autoComplete="off"
+      />
+      <button type="submit" className={styles.submit} aria-label="Buscar">
+        <Icon name="search" size={18} />
+      </button>
+    </form>
   );
 };
 

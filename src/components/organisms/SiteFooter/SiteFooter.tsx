@@ -6,22 +6,26 @@ import styles from './SiteFooter.module.css';
 
 const SiteFooter: FunctionComponent = () => {
   return (
-    <div className={styles.footerUniversoSpot}>
+    <footer className={styles.footerUniversoSpot}>
       <div className={styles.footerDirectory}>
         <div className={styles.brandAndSocial}>
           <Wordmark variant="footer" />
-          <div className={styles.invitation}>El deporte nos mueve.<br/>SPOT nos encuentra.</div>
+          <p className={styles.invitation}>El deporte nos mueve.<br/>SPOT nos encuentra.</p>
           <div className={styles.socialLinks}>
-            <Icon />
-            <Icon />
+            <a href="#" className={styles.socialLink} aria-label="Instagram de SPOT">
+              <Icon name="instagram" />
+            </a>
+            <a href="#" className={styles.socialLink} aria-label="YouTube de SPOT">
+              <Icon name="youtube" />
+            </a>
           </div>
         </div>
         {footerLinkGroups.map((group) => (
           <FooterLinkGroup key={group.title} {...group} />
         ))}
         <div className={styles.communityInvitation}>
-          <div className={styles.communityTitle}>SEGUÍ EN MOVIMIENTO.</div>
-          <div className={styles.invitation}>Dejá tu mail para conocer el universo SPOT.</div>
+          <h3 className={styles.communityTitle}>SEGUÍ EN MOVIMIENTO.</h3>
+          <p className={styles.invitation}>Dejá tu mail para conocer el universo SPOT.</p>
           <EmailEntry placeholder="Tu correo electrónico" />
           <div className={styles.privacyNote}>Al suscribirte, aceptás la política de privacidad.</div>
         </div>
@@ -32,11 +36,13 @@ const SiteFooter: FunctionComponent = () => {
         <Text>Propuesta conceptual · Sin precios ni promociones</Text>
         <div className={styles.legalLinks}>
           {legalLinks.map((link) => (
-            <Text key={link}>{link}</Text>
+            <a key={link} href="#" className={styles.legalLink}>
+              {link}
+            </a>
           ))}
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 

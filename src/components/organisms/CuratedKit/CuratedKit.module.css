@@ -1,101 +1,84 @@
 .seleccinSpotEquipoDeRut {
-  	width: 1440px;
-  	height: 640px;
+  	width: 100%;
   	background-color: #f4f4f2;
   	overflow: hidden;
   	flex-shrink: 0;
   	display: flex;
-  	align-items: flex-start;
+  	align-items: stretch;
   	font-size: 10px;
 }
 .curatedKitScene {
-  	align-self: stretch;
-  	width: 820px;
+  	flex: 0 0 56.94%;
+  	min-width: 0;
+  	aspect-ratio: 820 / 640;
   	background-color: #ddddd8;
   	overflow: hidden;
-  	flex-shrink: 0;
-  	display: flex;
-  	flex-direction: column;
-  	align-items: flex-start;
   	position: relative;
   	isolation: isolate;
 }
 .productOrbit {
-  	width: 630px;
-  	height: 440px;
+  	width: 76.83%;
+  	height: 68.75%;
   	position: absolute;
-  	margin: 0 !important;
-  	top: 90px;
-  	left: 80px;
+  	top: 14.06%;
+  	left: 9.76%;
   	border-radius: 50%;
   	border: 1px solid #b8b8b2;
-  	box-sizing: border-box;
   	transform:  rotate(-18deg);
   	transform-origin: 0 0;
   	z-index: 0;
-  	flex-shrink: 0;
 }
 .integratedIdentity {
-  	width: 560px;
-  	height: 200px;
-  	margin: 0 !important;
+  	width: 68.29%;
+  	height: 31.25%;
   	position: absolute;
-  	top: 108px;
-  	left: 100px;
+  	top: 16.88%;
+  	left: 12.2%;
   	display: flex;
   	align-items: flex-start;
   	z-index: 1;
-  	flex-shrink: 0;
 }
 .runningShoeFocus {
-  	width: 580.7px;
-  	height: 467.8px;
+  	width: 70.82%;
+  	height: 73.09%;
   	position: absolute;
-  	margin: 0 !important;
-  	top: 71.62px;
-  	left: 54px;
+  	top: 11.19%;
+  	left: 6.59%;
   	object-fit: contain;
   	z-index: 2;
-  	flex-shrink: 0;
 }
 .runningAccessoryIcon {
-  	width: 238.8px;
-  	height: 227.9px;
+  	width: 29.12%;
+  	height: 35.61%;
   	position: absolute;
-  	margin: 0 !important;
-  	top: 330px;
-  	left: 475.24px;
+  	top: 51.56%;
+  	left: 57.95%;
   	object-fit: contain;
   	z-index: 3;
-  	flex-shrink: 0;
 }
 .sceneCaption {
-  	width: 124px;
-  	height: 12px;
   	position: absolute;
-  	margin: 0 !important;
-  	top: 594px;
-  	left: 40px;
-  	display: inline-block;
+  	bottom: 5.3%;
+  	left: 4.88%;
+  	white-space: nowrap;
+  	color: #747474;
   	z-index: 4;
-  	flex-shrink: 0;
 }
 .kitDetails {
-  	align-self: stretch;
   	flex: 1;
-  	overflow: hidden;
+  	min-width: 0;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
   	justify-content: center;
-  	padding: 64px;
+  	padding: clamp(28px, 4.45vw, 64px);
   	gap: 24px;
   	font-size: 13px;
 }
 .selectionTitle {
   	align-self: stretch;
   	position: relative;
-  	font-size: 76px;
+  	font-size: clamp(44px, 5.28vw, 76px);
   	line-height: 95%;
   	font-family: 'Barlow Condensed';
   	color: #000;
@@ -110,7 +93,6 @@
 }
 .kitContents {
   	align-self: stretch;
-  	overflow: hidden;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
@@ -121,4 +103,19 @@
   	position: relative;
   	font-size: 10px;
   	flex-shrink: 0;
+}
+@media (max-width: 1099px) {
+  	.seleccinSpotEquipoDeRut {
+    		flex-direction: column;
+  	}
+  	.curatedKitScene {
+    		flex: none;
+    		width: 100%;
+  	}
+  	.kitDetails {
+    		padding: 40px 24px 48px;
+  	}
+  	.selectionTitle {
+    		font-size: clamp(48px, 11vw, 76px);
+  	}
 }

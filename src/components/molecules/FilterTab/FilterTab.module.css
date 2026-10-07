@@ -5,6 +5,7 @@
   	align-items: flex-start;
   	gap: 10px;
   	color: #080808;
+  	flex-shrink: 0;
 }
 .activeIndicator {
   	align-self: stretch;
@@ -17,4 +18,10 @@
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
+  	flex-shrink: 0;
+  	padding-bottom: 12px;
+  	transition: color 0.2s ease;
+}
+.filter2:hover {
+  	color: #080808;
 }

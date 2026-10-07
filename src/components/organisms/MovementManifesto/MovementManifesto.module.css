@@ -1,25 +1,33 @@
 .movementManifesto {
   	align-self: stretch;
-  	height: 92px;
+  	min-height: 92px;
   	background-color: #ff7900;
-  	overflow: hidden;
   	flex-shrink: 0;
   	display: flex;
   	align-items: center;
   	justify-content: space-between;
-  	padding: 0px 64px;
-  	box-sizing: border-box;
-  	gap: 20px;
-  	font-size: 39px;
+  	padding: 16px clamp(20px, 4.45vw, 64px);
+  	gap: 12px 20px;
+  	font-size: clamp(24px, 2.7vw, 39px);
   	color: #080808;
   	font-family: 'Barlow Condensed';
 }
 .sportIndex {
-  	overflow: hidden;
   	display: flex;
   	align-items: center;
   	gap: 20px;
   	font-size: 11px;
   	color: #000;
   	font-family: Inter;
+}
+@media (max-width: 1099px) {
+  	.movementManifesto {
+    		flex-direction: column;
+    		align-items: flex-start;
+    		padding-top: 22px;
+    		padding-bottom: 22px;
+  	}
+  	.sportIndex {
+    		gap: 10px;
+  	}
 }

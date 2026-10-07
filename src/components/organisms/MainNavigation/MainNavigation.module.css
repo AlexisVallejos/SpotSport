@@ -1,17 +1,23 @@
 .mainNavigation {
   	align-self: stretch;
-  	height: 88px;
-  	overflow: hidden;
+  	min-height: 88px;
   	flex-shrink: 0;
   	display: flex;
   	align-items: center;
   	justify-content: space-between;
-  	padding: 0px 48px;
-  	box-sizing: border-box;
+  	padding: 0px clamp(20px, 3.33vw, 48px);
   	gap: 20px;
+  	position: relative;
+  	z-index: 10;
+}
+.brand {
+  	display: flex;
+  	flex-shrink: 0;
+}
+.menuPanel {
+  	display: contents;
 }
 .departments {
-  	overflow: hidden;
   	display: flex;
   	align-items: center;
   	gap: 30px;
@@ -19,18 +25,68 @@
 .navigationLink {
   	position: relative;
   	font-weight: 500;
+  	transition: color 0.2s ease;
+}
+.navigationLink:hover {
+  	color: #ff7900;
 }
 .accountAndBag {
-  	overflow: hidden;
   	display: flex;
-  	align-items: flex-start;
+  	align-items: center;
   	gap: 22px;
   	font-size: 11px;
   	color: #ff7900;
+  	flex-shrink: 0;
+}
+.iconButton {
+  	display: flex;
+  	align-items: center;
 }
 .bag {
-  	overflow: hidden;
-  	display: flex;
-  	align-items: flex-start;
   	gap: 7px;
+}
+.menuToggle {
+  	display: none;
+  	color: #fff;
+}
+@media (max-width: 1099px) {
+  	.mainNavigation {
+    		flex-wrap: wrap;
+    		min-height: 72px;
+    		row-gap: 0;
+  	}
+  	.brand {
+    		order: 1;
+  	}
+  	.accountAndBag {
+    		order: 2;
+    		margin-left: auto;
+    		gap: 18px;
+  	}
+  	.menuToggle {
+    		display: flex;
+  	}
+  	.menuPanel {
+    		display: none;
+    		order: 3;
+    		width: 100%;
+    		flex-direction: column;
+    		align-items: stretch;
+    		gap: 20px;
+    		padding: 8px 0px 24px;
+  	}
+  	.menuPanelOpen {
+    		display: flex;
+  	}
+  	.departments {
+    		flex-direction: column;
+    		align-items: flex-start;
+    		gap: 0px;
+  	}
+  	.navigationLink {
+    		width: 100%;
+    		padding: 14px 0px;
+    		font-size: 18px;
+    		border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  	}
 }

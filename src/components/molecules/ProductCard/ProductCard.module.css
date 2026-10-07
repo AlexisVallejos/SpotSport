@@ -1,5 +1,5 @@
 .productCard {
-  	flex: 1;
+  	min-width: 0;
   	overflow: hidden;
   	display: flex;
   	flex-direction: column;
@@ -8,7 +8,7 @@
 }
 .productVisual {
   	align-self: stretch;
-  	height: 310px;
+  	aspect-ratio: 1 / 1;
   	background-color: #eaeae7;
   	overflow: hidden;
   	flex-shrink: 0;
@@ -16,37 +16,21 @@
   	flex-direction: column;
   	align-items: flex-start;
   	padding: 16px;
-  	box-sizing: border-box;
   	position: relative;
   	isolation: isolate;
 }
 .productPhotographIcon {
   	width: calc(100% - 32px);
-  	height: 250px;
+  	height: calc(100% - 60px);
   	position: absolute;
-  	margin: 0 !important;
   	top: 32px;
-  	right: 16px;
   	left: 16px;
-  	max-width: 100%;
-  	overflow: hidden;
-  	flex-shrink: 0;
   	object-fit: cover;
   	z-index: 0;
+  	transition: transform 0.4s ease;
 }
-.productPhotographIcon3 {
-  	width: calc(100% - 31.7px);
-  	height: 250px;
-  	position: absolute;
-  	margin: 0 !important;
-  	top: 32px;
-  	right: 15.7px;
-  	left: 16px;
-  	max-width: 100%;
-  	overflow: hidden;
-  	flex-shrink: 0;
-  	object-fit: cover;
-  	z-index: 0;
+.productCard:hover .productPhotographIcon {
+  	transform: scale(1.04);
 }
 .productActions {
   	align-self: stretch;
@@ -59,7 +43,6 @@
 }
 .productDetails {
   	align-self: stretch;
-  	overflow: hidden;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
@@ -83,9 +66,37 @@
   	font-size: 12px;
 }
 .colors {
-  	overflow: hidden;
   	display: flex;
-  	align-items: flex-start;
+  	flex-wrap: wrap;
+  	align-items: center;
   	padding: 4px 0px 0px;
   	gap: 6px;
+}
+@media (max-width: 599px) {
+  	.productCard {
+    		gap: 12px;
+  	}
+  	.productVisual {
+    		padding: 10px;
+  	}
+  	.productPhotographIcon {
+    		top: 26px;
+    		left: 10px;
+    		width: calc(100% - 20px);
+    		height: calc(100% - 44px);
+  	}
+  	.productActions {
+    		font-size: 9px;
+  	}
+  	.productName {
+    		font-size: 14px;
+  	}
+}
+@media (prefers-reduced-motion: reduce) {
+  	.productPhotographIcon {
+    		transition: none;
+  	}
+  	.productCard:hover .productPhotographIcon {
+    		transform: none;
+  	}
 }

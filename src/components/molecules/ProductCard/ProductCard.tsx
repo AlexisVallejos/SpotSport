@@ -2,8 +2,6 @@ import { FunctionComponent } from 'react';
 import { ColorSwatch, Icon, Label, SwatchColor, Text } from '../../atoms';
 import styles from './ProductCard.module.css';
 
-export type ProductImageFit = 'default' | 'narrow';
-
 export type ProductCardProps = {
   badge: string;
   category: string;
@@ -11,13 +9,7 @@ export type ProductCardProps = {
   description: string;
   colors: SwatchColor[];
   collectionNote: string;
-  imageFit?: ProductImageFit;
   image?: string;
-};
-
-const imageClass: Record<ProductImageFit, string> = {
-  default: styles.productPhotographIcon,
-  narrow: styles.productPhotographIcon3,
 };
 
 const ProductCard: FunctionComponent<ProductCardProps> = ({
@@ -27,21 +19,26 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
   description,
   colors,
   collectionNote,
-  imageFit = 'default',
   image,
 }) => {
   return (
-    <div className={styles.productCard}>
+    <article className={styles.productCard}>
       <div className={styles.productVisual}>
-        <img className={imageClass[imageFit]} src={image} alt="" />
+        <img
+          className={styles.productPhotographIcon}
+          src={image}
+          alt={name}
+          loading="lazy"
+          decoding="async"
+        />
         <div className={styles.productActions}>
           <Label>{badge}</Label>
-          <Icon />
+          <Icon name="arrowUpRight" />
         </div>
       </div>
       <div className={styles.productDetails}>
         <div className={styles.category}>{category}</div>
-        <div className={styles.productName}>{name}</div>
+        <h3 className={styles.productName}>{name}</h3>
         <div className={styles.description5}>{description}</div>
         <div className={styles.colors}>
           {colors.map((color, index) => (
@@ -50,7 +47,7 @@ const ProductCard: FunctionComponent<ProductCardProps> = ({
           <Text>{collectionNote}</Text>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

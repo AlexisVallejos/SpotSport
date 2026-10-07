@@ -1,5 +1,4 @@
 import { FunctionComponent } from 'react';
-import { Text } from '../../atoms';
 import styles from './FooterLinkGroup.module.css';
 
 export type FooterLinkGroupProps = {
@@ -9,12 +8,14 @@ export type FooterLinkGroupProps = {
 
 const FooterLinkGroup: FunctionComponent<FooterLinkGroupProps> = ({ title, links }) => {
   return (
-    <div className={styles.footerLinkGroup}>
-      <div className={styles.groupTitle}>{title}</div>
+    <nav className={styles.footerLinkGroup} aria-label={title}>
+      <h3 className={styles.groupTitle}>{title}</h3>
       {links.map((link) => (
-        <Text key={link}>{link}</Text>
+        <a key={link} href="#" className={styles.link}>
+          {link}
+        </a>
       ))}
-    </div>
+    </nav>
   );
 };
 

@@ -18,10 +18,10 @@ const variantClass: Record<ActionButtonVariant, string> = {
 
 const ActionButton: FunctionComponent<ActionButtonProps> = ({ label, variant }) => {
   return (
-    <div className={variantClass[variant]}>
+    <button type="button" className={`${styles.base} ${variantClass[variant]}`}>
       <Label>{label}</Label>
-      <Icon />
-    </div>
+      <Icon name="arrowRight" />
+    </button>
   );
 };
 

@@ -1,0 +1,42 @@
+.introSplash {
+  	position: fixed;
+  	inset: 0;
+  	z-index: 100;
+  	background-color: #080808;
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	opacity: 1;
+  	transition: opacity 0.6s ease;
+}
+.leaving {
+  	opacity: 0;
+  	pointer-events: none;
+}
+.video {
+  	width: 100%;
+  	height: 100%;
+  	object-fit: cover;
+}
+.skip {
+  	position: absolute;
+  	right: clamp(20px, 3.33vw, 48px);
+  	bottom: clamp(20px, 3.33vw, 48px);
+  	padding: 12px 18px;
+  	border: 1px solid rgba(255, 255, 255, 0.4);
+  	font-family: Inter;
+  	font-size: 12px;
+  	font-weight: 600;
+  	color: #fff;
+  	background-color: rgba(8, 8, 8, 0.4);
+  	transition: border-color 0.2s ease, color 0.2s ease;
+}
+.skip:hover {
+  	border-color: #ff7900;
+  	color: #ff7900;
+}
+@media (prefers-reduced-motion: reduce) {
+  	.introSplash {
+    		transition: none;
+  	}
+}

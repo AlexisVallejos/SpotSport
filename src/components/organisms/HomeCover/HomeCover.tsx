@@ -6,11 +6,11 @@ import styles from './HomeCover.module.css';
 
 const HomeCover: FunctionComponent = () => {
   return (
-    <div className={styles.portadaElDeporteEnPrimer}>
+    <header className={styles.portadaElDeporteEnPrimer}>
       <MainNavigation />
       <SculpturalHero />
       <MovementManifesto />
-    </div>
+    </header>
   );
 };
 

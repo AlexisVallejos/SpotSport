@@ -8,10 +8,10 @@ export type CollectionLinkProps = {
 
 const CollectionLink: FunctionComponent<CollectionLinkProps> = ({ label }) => {
   return (
-    <div className={styles.collectionLink}>
+    <a href="#" className={styles.collectionLink}>
       <Label>{label}</Label>
-      <Icon />
-    </div>
+      <Icon name="arrowRight" />
+    </a>
   );
 };
 

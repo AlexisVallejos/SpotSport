@@ -5,22 +5,20 @@ import styles from './FilterTab.module.css';
 export type FilterTabProps = {
   label: string;
   active?: boolean;
+  onSelect?: () => void;
 };
 
-const FilterTab: FunctionComponent<FilterTabProps> = ({ label, active = false }) => {
-  if (active) {
-    return (
-      <div className={styles.filter}>
-        <Label>{label}</Label>
-        <div className={styles.activeIndicator} />
-      </div>
-    );
-  }
-
+const FilterTab: FunctionComponent<FilterTabProps> = ({ label, active = false, onSelect }) => {
   return (
-    <div className={styles.filter2}>
-      <Text>{label}</Text>
-    </div>
+    <button
+      type="button"
+      className={active ? styles.filter : styles.filter2}
+      aria-pressed={active}
+      onClick={onSelect}
+    >
+      {active ? <Label>{label}</Label> : <Text>{label}</Text>}
+      {active && <div className={styles.activeIndicator} />}
+    </button>
   );
 };
 

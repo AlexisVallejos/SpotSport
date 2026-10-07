@@ -9,13 +9,13 @@ export type KitItemProps = {
 
 const KitItem: FunctionComponent<KitItemProps> = ({ name, category }) => {
   return (
-    <div className={styles.kitItem}>
+    <a href="#" className={styles.kitItem}>
       <div className={styles.itemDetails}>
         <Label>{name}</Label>
         <div className={styles.category12}>{category}</div>
       </div>
-      <Icon size={16} />
-    </div>
+      <Icon name="plus" size={16} />
+    </a>
   );
 };
 

@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { images } from '../../../data/images';
 import styles from './Wordmark.module.css';
 
 export type WordmarkVariant = 'nav' | 'hero' | 'running' | 'kit' | 'closing' | 'footer';
@@ -17,8 +18,8 @@ const variantClass: Record<WordmarkVariant, string> = {
   footer: styles.spotOrbitalWordmark6,
 };
 
-const Wordmark: FunctionComponent<WordmarkProps> = ({ variant, src }) => {
-  return <img className={variantClass[variant]} src={src} alt="" />;
+const Wordmark: FunctionComponent<WordmarkProps> = ({ variant, src = images.logoDarkBg }) => {
+  return <img className={variantClass[variant]} src={src} alt="SPOT" />;
 };
 
 export default Wordmark;

@@ -1,17 +1,18 @@
 import { FunctionComponent } from 'react';
 import { Wordmark } from '../../atoms';
 import { ActionButton, SectionMarker } from '../../molecules';
+import { images } from '../../../data/images';
 import styles from './RunningCampaign.module.css';
 
 const RunningCampaign: FunctionComponent = () => {
   return (
-    <div className={styles.campaaRunningTuPropiaR}>
-      <img className={styles.runningPanoramaIcon} alt="" />
+    <section className={styles.campaaRunningTuPropiaR} aria-labelledby="running-titulo">
+      <img className={styles.runningPanoramaIcon} src={images.runningPanorama} alt="" loading="lazy" decoding="async" />
       <div className={styles.editorialScrim} />
       <div className={styles.orbitArc} />
       <div className={styles.runningCopy}>
         <SectionMarker variant="light" label="03 / RUNNING — A TU RITMO" />
-        <b className={styles.campaignHeadline}>SALÍ DE<br/>LA VUELTA.<br/>ENTRÁ EN<br/>TU ÓRBITA.</b>
+        <h2 id="running-titulo" className={styles.campaignHeadline}>SALÍ DE<br/>LA VUELTA.<br/>ENTRÁ EN<br/>TU ÓRBITA.</h2>
         <div className={styles.campaignDescription}>No importa el tiempo ni la distancia. Importa ese primer paso que es tuyo.</div>
         <ActionButton variant="campaign" label="Encontrá tu equipo de running" />
       </div>
@@ -19,7 +20,7 @@ const RunningCampaign: FunctionComponent = () => {
         <Wordmark variant="running" />
       </div>
       <div className={styles.campaignSignature}>SPOT / RUNNING EDIT</div>
-    </div>
+    </section>
   );
 };
 

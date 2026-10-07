@@ -1,58 +1,50 @@
 .campaaRunningTuPropiaR {
-  	width: 1440px;
-  	height: 700px;
+  	width: 100%;
+  	min-height: 700px;
   	background-color: #080808;
   	overflow: hidden;
   	flex-shrink: 0;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
-  	padding: 64px;
-  	box-sizing: border-box;
+  	padding: clamp(24px, 4.45vw, 64px);
   	position: relative;
   	isolation: isolate;
   	color: #fff;
 }
 .runningPanoramaIcon {
-  	width: 1440px;
-  	height: 700px;
+  	width: 100%;
+  	height: 100%;
   	position: absolute;
-  	margin: 0 !important;
   	top: 0px;
   	left: 0px;
   	object-fit: cover;
   	z-index: 0;
-  	flex-shrink: 0;
 }
 .editorialScrim {
-  	width: 1440px;
-  	height: 700px;
+  	width: 100%;
+  	height: 100%;
   	position: absolute;
-  	margin: 0 !important;
   	top: 0px;
   	left: 0px;
   	background: linear-gradient(90deg, rgba(8, 8, 8, 0.85), rgba(8, 8, 8, 0.13) 65%, rgba(8, 8, 8, 0));
   	z-index: 1;
-  	flex-shrink: 0;
 }
 .orbitArc {
-  	width: 1000px;
-  	height: 490px;
+  	width: 69.44%;
+  	aspect-ratio: 1000 / 490;
   	position: absolute;
-  	margin: 0 !important;
   	top: 90px;
-  	left: 430px;
+  	left: 29.86%;
   	border-radius: 50%;
   	border: 2px solid rgba(255, 121, 0, 0.47);
-  	box-sizing: border-box;
   	transform:  rotate(-18deg);
   	transform-origin: 0 0;
   	z-index: 2;
-  	flex-shrink: 0;
 }
 .runningCopy {
   	width: 465px;
-  	overflow: hidden;
+  	max-width: 100%;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
@@ -63,37 +55,59 @@
 .campaignHeadline {
   	align-self: stretch;
   	position: relative;
-  	font-size: 110px;
+  	font-size: clamp(64px, 7.64vw, 110px);
   	line-height: 88%;
   	font-family: 'Barlow Condensed';
 }
 .campaignDescription {
   	width: 350px;
+  	max-width: 100%;
   	position: relative;
   	font-size: 15px;
   	line-height: 160%;
-  	display: inline-block;
 }
 .floatingCampaignIdentity {
-  	width: 445px;
-  	height: 160px;
-  	margin: 0 !important;
+  	width: 30.9%;
+  	aspect-ratio: 445 / 160;
   	position: absolute;
   	top: 420px;
-  	left: 858px;
+  	left: 59.6%;
   	display: flex;
   	align-items: flex-start;
   	z-index: 4;
-  	flex-shrink: 0;
 }
 .campaignSignature {
-  	width: 118px;
-  	height: 13px;
   	position: absolute;
-  	margin: 0 !important;
-  	top: 642px;
-  	left: 1120px;
-  	display: inline-block;
+  	bottom: 45px;
+  	right: 14%;
+  	white-space: nowrap;
+  	font-size: 11px;
+  	color: #a7a9b2;
   	z-index: 5;
-  	flex-shrink: 0;
+}
+@media (max-width: 1099px) {
+  	.campaaRunningTuPropiaR {
+    		min-height: 640px;
+    		justify-content: flex-end;
+  	}
+  	.editorialScrim {
+    		background: linear-gradient(180deg, rgba(8, 8, 8, 0.2), rgba(8, 8, 8, 0.55) 45%, rgba(8, 8, 8, 0.92));
+  	}
+  	.orbitArc,
+  	.campaignSignature {
+    		display: none;
+  	}
+  	.runningCopy {
+    		width: 100%;
+    		gap: 22px;
+  	}
+  	.campaignHeadline {
+    		font-size: clamp(56px, 13vw, 96px);
+  	}
+  	.floatingCampaignIdentity {
+    		width: min(220px, 46%);
+    		top: clamp(24px, 4.45vw, 64px);
+    		left: auto;
+    		right: clamp(24px, 4.45vw, 64px);
+  	}
 }

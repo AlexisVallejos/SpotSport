@@ -1,22 +1,18 @@
-.elegTuDeporte {
-  	width: 1440px;
-  	background-color: #f4f4f2;
+.elegTuDeporte,
+.novedadesDeCalzado {
+  	width: 100%;
   	overflow: hidden;
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
-  	padding: 72px 64px;
-  	box-sizing: border-box;
-  	gap: 32px;
+  	padding: clamp(48px, 5vw, 72px) clamp(20px, 4.45vw, 64px);
+  	scroll-margin-top: 0;
+}
+.elegTuDeporte {
+  	background-color: #f4f4f2;
+  	gap: clamp(24px, 2.2vw, 32px);
 }
 .novedadesDeCalzado {
-  	width: 1440px;
   	background-color: #fff;
-  	overflow: hidden;
-  	display: flex;
-  	flex-direction: column;
-  	align-items: flex-start;
-  	padding: 72px 64px;
-  	box-sizing: border-box;
-  	gap: 28px;
+  	gap: clamp(22px, 1.95vw, 28px);
 }

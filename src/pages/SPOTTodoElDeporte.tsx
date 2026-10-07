@@ -7,6 +7,7 @@ import {
   CuratedKit,
   FootwearSection,
   HomeCover,
+  IntroSplash,
   RunningCampaign,
   SiteFooter,
   TrainingCampaign,
@@ -14,8 +15,7 @@ import {
 
 const SPOTTodoElDeporte: FunctionComponent = () => {
   return (
-    <LandingTemplate>
-      <HomeCover />
+    <LandingTemplate intro={<IntroSplash />} cover={<HomeCover />} footer={<SiteFooter />}>
       <ChooseSportSection />
       <FootwearSection />
       <RunningCampaign />
@@ -23,7 +23,6 @@ const SPOTTodoElDeporte: FunctionComponent = () => {
       <TrainingCampaign />
       <CuratedKit />
       <BrandClosing />
-      <SiteFooter />
     </LandingTemplate>
   );
 };

@@ -5,4 +5,16 @@
   	gap: 12px;
   	font-size: 13px;
   	color: #000;
+  	flex-shrink: 0;
+}
+.collectionLink svg {
+  	transition: transform 0.2s ease;
+}
+.collectionLink:hover svg {
+  	transform: translateX(4px);
+}
+@media (prefers-reduced-motion: reduce) {
+  	.collectionLink svg {
+    		transition: none;
+  	}
 }

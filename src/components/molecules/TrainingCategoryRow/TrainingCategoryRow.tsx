@@ -8,10 +8,10 @@ export type TrainingCategoryRowProps = {
 
 const TrainingCategoryRow: FunctionComponent<TrainingCategoryRowProps> = ({ label }) => {
   return (
-    <div className={styles.trainingCategory}>
+    <a href="#" className={styles.trainingCategory}>
       <Text>{label}</Text>
-      <Icon size={16} />
-    </div>
+      <Icon name="plus" size={16} />
+    </a>
   );
 };
 

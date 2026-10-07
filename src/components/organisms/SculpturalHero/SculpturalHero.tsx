@@ -1,12 +1,13 @@
 import { FunctionComponent } from 'react';
 import { Icon, Text, Wordmark } from '../../atoms';
 import { ActionButton } from '../../molecules';
+import { images } from '../../../data/images';
 import styles from './SculpturalHero.module.css';
 
 const SculpturalHero: FunctionComponent = () => {
   return (
-    <div className={styles.sculpturalHero}>
-      <img className={styles.sportCinemaIcon} alt="" />
+    <section className={styles.sculpturalHero} aria-label="Portada">
+      <img className={styles.sportCinemaIcon} src={images.heroRunner} alt="" fetchPriority="high" decoding="async" />
       <div className={styles.cinemaScrim} />
       <div className={styles.orbitalTrajectory} />
       <div className={styles.campaignMetadata}>
@@ -17,17 +18,17 @@ const SculpturalHero: FunctionComponent = () => {
         <Wordmark variant="hero" />
       </div>
       <div className={styles.heroMessage}>
-        <b className={styles.brandPromise}>TODO EL DEPORTE<br/>EN UN SOLO LUGAR</b>
+        <h1 className={styles.brandPromise}>TODO EL DEPORTE<br/>EN UN SOLO LUGAR</h1>
         <div className={styles.heroActionRow}>
           <ActionButton variant="hero" label="Encontrá tu próximo movimiento" />
           <div className={styles.collectionNote}>Calzado, indumentaria y actitud.</div>
         </div>
       </div>
-      <div className={styles.scrollCue}>
+      <a href="#deportes" className={styles.scrollCue}>
         <Text>SEGUÍ EL RECORRIDO</Text>
-        <Icon />
-      </div>
-    </div>
+        <Icon name="arrowDown" />
+      </a>
+    </section>
   );
 };
 

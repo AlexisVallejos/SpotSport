@@ -1,5 +1,5 @@
-import { FunctionComponent } from 'react';
-import { Icon, Text } from '../../atoms';
+import { FormEvent, FunctionComponent } from 'react';
+import { Icon } from '../../atoms';
 import styles from './EmailEntry.module.css';
 
 export type EmailEntryProps = {
@@ -7,11 +7,23 @@ export type EmailEntryProps = {
 };
 
 const EmailEntry: FunctionComponent<EmailEntryProps> = ({ placeholder }) => {
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => event.preventDefault();
+
   return (
-    <div className={styles.emailEntry}>
-      <Text>{placeholder}</Text>
-      <Icon />
-    </div>
+    <form className={styles.emailEntry} onSubmit={handleSubmit}>
+      <input
+        className={styles.input}
+        type="email"
+        name="email"
+        placeholder={placeholder}
+        aria-label={placeholder}
+        autoComplete="email"
+        required
+      />
+      <button type="submit" className={styles.submit} aria-label="Suscribirme">
+        <Icon name="arrowRight" />
+      </button>
+    </form>
   );
 };
 

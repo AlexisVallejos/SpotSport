@@ -8,7 +8,7 @@ const MovementManifesto: FunctionComponent = () => {
       <Text as="b">NO ES SOLO DEPORTE. ES TU FORMA DE MOVERTE.</Text>
       <div className={styles.sportIndex}>
         <Label>RUNNING / TRAINING / FÚTBOL / MÁS</Label>
-        <Icon size={24} />
+        <Icon name="arrowDownRight" size={24} />
       </div>
     </div>
   );

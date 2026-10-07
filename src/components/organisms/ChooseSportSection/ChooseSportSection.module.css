@@ -1,10 +1,16 @@
 .sportsCategories {
   	align-self: stretch;
-  	overflow: hidden;
-  	display: flex;
-  	align-items: flex-start;
+  	display: grid;
+  	grid-template-columns: repeat(4, minmax(0, 1fr));
   	gap: 16px;
-  	font-size: 34px;
-  	color: #fff;
-  	font-family: 'Barlow Condensed';
+}
+@media (max-width: 1099px) {
+  	.sportsCategories {
+    		grid-template-columns: repeat(2, minmax(0, 1fr));
+  	}
+}
+@media (max-width: 599px) {
+  	.sportsCategories {
+    		gap: 10px;
+  	}
 }

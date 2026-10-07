@@ -10,7 +10,7 @@ export type CollectionFiltersProps = {
 const CollectionFilters: FunctionComponent<CollectionFiltersProps> = ({ filters, disclosure }) => {
   return (
     <div className={styles.collectionFilters}>
-      <div className={styles.sportFilters}>
+      <div className={styles.sportFilters} role="group" aria-label="Filtrar por deporte">
         {filters.map((filter) => (
           <FilterTab key={filter.label} {...filter} />
         ))}

@@ -5,6 +5,8 @@ export type ContentSectionTone = 'muted' | 'white';
 
 export type ContentSectionProps = {
   tone: ContentSectionTone;
+  id?: string;
+  labelledBy?: string;
   children: ReactNode;
 };
 
@@ -13,8 +15,12 @@ const toneClass: Record<ContentSectionTone, string> = {
   white: styles.novedadesDeCalzado,
 };
 
-const ContentSection: FunctionComponent<ContentSectionProps> = ({ tone, children }) => {
-  return <div className={toneClass[tone]}>{children}</div>;
+const ContentSection: FunctionComponent<ContentSectionProps> = ({ tone, id, labelledBy, children }) => {
+  return (
+    <section id={id} className={toneClass[tone]} aria-labelledby={labelledBy}>
+      {children}
+    </section>
+  );
 };
 
 export default ContentSection;

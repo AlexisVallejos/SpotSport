@@ -10,17 +10,17 @@ export type SportCategoryCardProps = {
 
 const SportCategoryCard: FunctionComponent<SportCategoryCardProps> = ({ title, description, image }) => {
   return (
-    <div className={styles.sportCategory}>
-      <img className={styles.sportPhotographIcon} src={image} alt="" />
+    <a href="#" className={styles.sportCategory} aria-label={`${title}. ${description}`}>
+      <img className={styles.sportPhotographIcon} src={image} alt="" loading="lazy" decoding="async" />
       <div className={styles.categoryScrim} />
       <div className={styles.categoryTitle}>
         <Text as="b">{title}</Text>
         <div className={styles.description}>{description}</div>
       </div>
       <div className={styles.exploreSport}>
-        <Icon />
+        <Icon name="arrowUpRight" />
       </div>
-    </div>
+    </a>
   );
 };
 

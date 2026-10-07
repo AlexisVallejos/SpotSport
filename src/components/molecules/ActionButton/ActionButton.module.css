@@ -1,3 +1,17 @@
+.base {
+  	max-width: 100%;
+  	transition: filter 0.2s ease;
+}
+.base:hover {
+  	filter: brightness(1.08);
+}
+.base svg {
+  	flex-shrink: 0;
+  	transition: transform 0.2s ease;
+}
+.base:hover svg {
+  	transform: translateX(4px);
+}
 .action {
   	height: 52px;
   	background-color: #ff7900;
@@ -5,7 +19,6 @@
   	display: flex;
   	align-items: center;
   	padding: 0px 24px;
-  	box-sizing: border-box;
   	gap: 24px;
 }
 .action2 {
@@ -16,7 +29,6 @@
   	display: flex;
   	align-items: center;
   	padding: 0px 24px;
-  	box-sizing: border-box;
   	gap: 24px;
   	font-size: 13px;
   	color: #080808;
@@ -29,7 +41,6 @@
   	display: flex;
   	align-items: center;
   	padding: 0px 24px;
-  	box-sizing: border-box;
   	gap: 24px;
   	color: #080808;
 }
@@ -41,8 +52,29 @@
   	display: flex;
   	align-items: center;
   	padding: 0px 24px;
-  	box-sizing: border-box;
   	gap: 24px;
   	font-size: 13px;
   	color: #080808;
+}
+.action,
+.action2,
+.action4,
+.action5 {
+  	color: #080808;
+}
+@media (max-width: 599px) {
+  	.action,
+  	.action2,
+  	.action4,
+  	.action5 {
+    		height: 48px;
+    		padding: 0px 18px;
+    		gap: 16px;
+  	}
+}
+@media (prefers-reduced-motion: reduce) {
+  	.base,
+  	.base svg {
+    		transition: none;
+  	}
 }
