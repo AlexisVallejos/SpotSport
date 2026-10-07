@@ -10,6 +10,8 @@ import {
   Search,
   ShoppingBag,
   UserRound,
+  Volume2,
+  VolumeX,
   X,
 } from 'lucide-react';
 import styles from './Icon.module.css';
@@ -24,6 +26,8 @@ export type IconName =
   | 'search'
   | 'shoppingBag'
   | 'userRound'
+  | 'volume'
+  | 'volumeOff'
   | 'x'
   | 'instagram'
   | 'youtube';
@@ -52,6 +56,8 @@ const lucideIcons: Record<Exclude<IconName, 'instagram' | 'youtube'>, LucideIcon
   search: Search,
   shoppingBag: ShoppingBag,
   userRound: UserRound,
+  volume: Volume2,
+  volumeOff: VolumeX,
   x: X,
 };
 

@@ -18,6 +18,7 @@
   	height: 100%;
   	object-fit: cover;
 }
+.sound,
 .skip {
   	position: absolute;
   	right: clamp(20px, 3.33vw, 48px);
@@ -31,6 +32,14 @@
   	background-color: rgba(8, 8, 8, 0.4);
   	transition: border-color 0.2s ease, color 0.2s ease;
 }
+.sound {
+  	right: auto;
+  	left: clamp(20px, 3.33vw, 48px);
+  	display: flex;
+  	align-items: center;
+  	gap: 10px;
+}
+.sound:hover,
 .skip:hover {
   	border-color: #ff7900;
   	color: #ff7900;
