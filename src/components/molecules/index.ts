@@ -14,3 +14,5 @@ export type { SportCategoryCardProps } from './SportCategoryCard/SportCategoryCa
 export type { KitItemProps } from './KitItem/KitItem';
 export type { FooterLinkGroupProps } from './FooterLinkGroup/FooterLinkGroup';
 export type { FilterTabProps } from './FilterTab/FilterTab';
+export { default as ExerciseCard } from './ExerciseCard/ExerciseCard';
+export type { ExerciseCardProps } from './ExerciseCard/ExerciseCard';
