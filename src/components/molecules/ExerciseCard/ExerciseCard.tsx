@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import { Icon } from '../../atoms';
-import { CATEGORY, type Exercise } from '../../../lib/wger';
+import { subtitle, type Exercise } from '../../../lib/wger';
 import styles from './ExerciseCard.module.css';
 
 export type ExerciseCardProps = {
@@ -11,7 +11,7 @@ export type ExerciseCardProps = {
 };
 
 const ExerciseCard: FunctionComponent<ExerciseCardProps> = ({ exercise, hasPose, selected, onSelect }) => {
-  const meta = [CATEGORY[exercise.category], ...exercise.muscles.slice(0, 2)].filter(Boolean).join(' · ');
+  const meta = subtitle(exercise, [], 3);
   return (
     <button type="button" className={`${styles.card} ${selected ? styles.selected : ''}`} onClick={onSelect} aria-pressed={selected}>
       <span className={styles.media}>

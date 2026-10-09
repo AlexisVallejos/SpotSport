@@ -3,7 +3,7 @@ import { Icon } from '../../atoms';
 import { ExerciseCard } from '../../molecules';
 import { LOCAL_EXERCISES } from '../../../lib/exercises/local';
 import { ruleFor } from '../../../lib/exercises/match';
-import { CATEGORY, loadCatalog, searchExercises, type Exercise } from '../../../lib/wger';
+import { loadCatalog, searchExercises, subtitle, type Exercise } from '../../../lib/wger';
 import styles from './ExerciseCatalog.module.css';
 
 export type ExerciseCatalogProps = {
@@ -111,7 +111,7 @@ const ExerciseCatalog: FunctionComponent<ExerciseCatalogProps> = ({ onStart }) =
             </button>
             {selected.image ? <img className={styles.detailImage} src={selected.image} alt="" /> : null}
             <h2 className={styles.detailTitle}>{selected.name}</h2>
-            <p className={styles.meta}>{[CATEGORY[selected.category], ...selected.muscles, ...selected.equipment].filter(Boolean).join(' · ')}</p>
+            <p className={styles.meta}>{subtitle(selected, selected.equipment)}</p>
             {selected.lines.length > 0 ? (
               <ol className={styles.steps}>
                 {selected.lines.map((line, index) => (

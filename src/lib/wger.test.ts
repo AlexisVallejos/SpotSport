@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { searchExercises, slim, type Exercise } from './wger';
+import { searchExercises, slim, subtitle, type Exercise } from './wger';
+
+describe('subtitle', () => {
+  it('skips repeats and cuts at the limit', () => {
+    const exercise: Exercise = { id: 1, name: 'Plancha', category: 10, muscles: ['Abdomen', 'Oblicuos', 'Hombros'], equipment: [], image: null, lines: [], source: 'wger' };
+    expect(subtitle(exercise)).toBe('Abdomen · Oblicuos · Hombros');
+    expect(subtitle(exercise, ['Colchoneta'], 2)).toBe('Abdomen · Oblicuos');
+  });
+});
 
 describe('slim', () => {
   it('keeps the Spanish translation as plain text', () => {
@@ -47,5 +55,9 @@ describe('searchExercises', () => {
   });
   it('returns everything for an empty query, images first', () => {
     expect(searchExercises(list, '', null).map((item) => item.id)).toEqual([3, 1, 2, 4]);
+  });
+  it('puts the Ritmo-Vida routines before wger', () => {
+    const own: Exercise = { ...make(-1, 'Sentadilla profunda', 9), source: 'ritmo' };
+    expect(searchExercises([...list, own], 'sentadilla', null).map((item) => item.id)).toEqual([-1, 3, 2]);
   });
 });

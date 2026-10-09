@@ -130,7 +130,12 @@ export async function loadCatalog(): Promise<Exercise[]> {
 
 export const fold = (text: string) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
 
-/** Exercises matching every typed word (name, muscles or category), optionally inside one category. */
+/** Category and muscles for a subtitle, without repeats ("Abdomen · Abdomen"). */
+export function subtitle(exercise: Exercise, extra: string[] = [], limit = Infinity): string {
+  return [...new Set([CATEGORY[exercise.category], ...exercise.muscles, ...extra].filter(Boolean))].slice(0, limit).join(' · ');
+}
+
+/** Exercises matching every typed word (name, muscles or category), optionally inside one category. Ritmo-Vida first. */
 export function searchExercises(list: Exercise[], query: string, category: number | null): Exercise[] {
   const words = fold(query).split(/\s+/).filter((word) => word.length >= 3);
   return list
@@ -140,6 +145,6 @@ export function searchExercises(list: Exercise[], query: string, category: numbe
       return { exercise, score: words.filter((word) => haystack.includes(word)).length };
     })
     .filter((item) => words.length === 0 || item.score === words.length)
-    .sort((a, b) => b.score - a.score || Number(!!b.exercise.image) - Number(!!a.exercise.image))
+    .sort((a, b) => b.score - a.score || Number(b.exercise.source === 'ritmo') - Number(a.exercise.source === 'ritmo') || Number(!!b.exercise.image) - Number(!!a.exercise.image))
     .map((item) => item.exercise);
 }
