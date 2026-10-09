@@ -2,8 +2,10 @@ import { FunctionComponent, ReactElement } from 'react';
 import {
   ArrowDown,
   ArrowDownRight,
+  ArrowLeft,
   ArrowRight,
   ArrowUpRight,
+  Camera,
   LucideIcon,
   Menu,
   Plus,
@@ -19,8 +21,10 @@ import styles from './Icon.module.css';
 export type IconName =
   | 'arrowDown'
   | 'arrowDownRight'
+  | 'arrowLeft'
   | 'arrowRight'
   | 'arrowUpRight'
+  | 'camera'
   | 'menu'
   | 'plus'
   | 'search'
@@ -49,8 +53,10 @@ const sizeClass: Record<IconSize, string> = {
 const lucideIcons: Record<Exclude<IconName, 'instagram' | 'youtube'>, LucideIcon> = {
   arrowDown: ArrowDown,
   arrowDownRight: ArrowDownRight,
+  arrowLeft: ArrowLeft,
   arrowRight: ArrowRight,
   arrowUpRight: ArrowUpRight,
+  camera: Camera,
   menu: Menu,
   plus: Plus,
   search: Search,

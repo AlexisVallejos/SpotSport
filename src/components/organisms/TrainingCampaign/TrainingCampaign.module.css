@@ -109,3 +109,8 @@
     		padding: 40px 24px 48px;
   	}
 }
+.actions {
+  	display: flex;
+  	flex-wrap: wrap;
+  	gap: 12px;
+}
