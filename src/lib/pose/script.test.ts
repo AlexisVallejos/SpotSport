@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { FRAMING, type TrackerState } from './engine';
 import { RULES } from './rules';
-import { CHEERS, clipKey, CORRECTIONS, createNarrator, forSpeech, introText, numberWords, setDoneText, splitSentences, summaryText } from './script';
+import { CHEERS, clipKey, CORRECTIONS, createNarrator, forSpeech, introText, nextSetText, numberWords, SEEN, setDoneText, splitSentences, summaryText } from './script';
 
-const base: TrackerState = { status: 'active', reps: 0, badReps: 0, holdMs: 0, progress: 0, message: '', tone: 'info', failing: [], errors: {} };
+const base: TrackerState = { status: 'active', ready: true, reps: 0, badReps: 0, holdMs: 0, progress: 0, message: '', tone: 'info', failing: [], errors: {} };
 const at = (patch: Partial<TrackerState>): TrackerState => ({ ...base, ...patch });
 
 const SHALLOW = 'Bajá más: muslos paralelos al piso.';
@@ -24,7 +24,7 @@ describe('numberWords', () => {
   });
 });
 
-describe('createNarrator (reps)', () => {
+describe('createNarrator (reps): few words, spaced out', () => {
   it('asks to step back once in a while, not on every frame', () => {
     const narrator = createNarrator(RULES.squat);
     const framing = at({ status: 'framing', tone: 'warn', message: FRAMING });
@@ -32,7 +32,7 @@ describe('createNarrator (reps)', () => {
     expect(first?.urgent).toBe(false);
     expect(CORRECTIONS[FRAMING]).toContain(first?.text);
     expect(narrator.update(framing, 1000)).toBeNull();
-    expect(narrator.update(framing, 11_000)?.urgent).toBe(false);
+    expect(narrator.update(framing, 20_000)?.urgent).toBe(false);
   });
 
   it('stays quiet before the person shows up', () => {
@@ -40,113 +40,125 @@ describe('createNarrator (reps)', () => {
     expect(narrator.update(at({ status: 'framing', tone: 'info', message: 'Empezá cuando quieras.' }), 0)).toBeNull();
   });
 
-  it('says it sees you once, then counts', () => {
+  it('says it sees you once, briefly', () => {
     const narrator = createNarrator(RULES.squat);
-    expect(narrator.update(at({}), 0)?.text).toBe('Dale, ya te veo. Cuando quieras, arrancá.');
+    expect(narrator.update(at({}), 0)).toEqual({ text: SEEN, urgent: false });
     expect(narrator.update(at({}), 33)).toBeNull();
-    expect(narrator.update(at({ reps: 1, tone: 'ok', message: '¡Bien! Van 1.' }), 2000)).toEqual({ text: 'uno', urgent: false });
-    expect(narrator.update(at({ reps: 2, tone: 'ok' }), 4000)?.text).toBe('dos');
   });
 
-  it('cheers on multiples of five, with different words each time', () => {
+  it('does not read out every repetition: the count is on screen', () => {
     const narrator = createNarrator(RULES.squat);
-    narrator.update(at({ reps: 4 }), 0);
-    const five = narrator.update(at({ reps: 5 }), 1000)?.text ?? '';
-    expect(five.startsWith('cinco. ')).toBe(true);
-    expect(CHEERS).toContain(five.slice('cinco. '.length));
-    const ten = narrator.update(at({ reps: 10 }), 2000)?.text ?? '';
-    expect(ten.startsWith('diez. ')).toBe(true);
-    expect(ten).not.toBe(`diez. ${five.slice('cinco. '.length)}`);
+    narrator.update(at({}), 0);
+    let spoken = 0;
+    for (const reps of [1, 2, 3, 4]) if (narrator.update(at({ reps, tone: 'ok' }), reps * 6000)) spoken += 1;
+    expect(spoken).toBe(0);
   });
 
-  it('warns before the last rep', () => {
+  it('gives a short check-in every five and warns before the last one', () => {
     const narrator = createNarrator(RULES.squat);
-    narrator.update(at({ reps: 8 }), 0);
-    expect(narrator.update(at({ reps: 9 }), 1000)?.text).toMatch(/^nueve\. ¡Una más/);
+    narrator.update(at({}), 0);
+    expect(narrator.update(at({ reps: 5 }), 10_000)?.text).toBe('cinco');
+    narrator.update(at({ reps: 8 }), 20_000);
+    expect(narrator.update(at({ reps: 9 }), 30_000)?.text).toMatch(/Una más/);
   });
 
-  it('corrects a bad rep in Argentine Spanish, urgently, and not twice in a row', () => {
+  it('cheers a little on the tens', () => {
+    const narrator = createNarrator(RULES.squat);
+    narrator.update(at({}), 0);
+    const line = narrator.update(at({ reps: 10 }), 10_000)?.text ?? '';
+    expect(line.startsWith('diez. ')).toBe(true);
+    expect(CHEERS).toContain(line.slice('diez. '.length));
+  });
+
+  it('corrects a bad rep in short Argentine Spanish, and not twice in a row', () => {
     const narrator = createNarrator(RULES.squat);
     narrator.update(at({}), 0);
     const bad = at({ badReps: 1, tone: 'warn', message: SHALLOW });
-    const first = narrator.update(bad, 3000);
-    expect(first?.urgent).toBe(true);
+    const first = narrator.update(bad, 10_000);
+    expect(first?.urgent).toBe(false);
     expect(CORRECTIONS[SHALLOW]).toContain(first?.text);
-    expect(narrator.update({ ...bad, badReps: 2 }, 5000)).toBeNull();
-    const again = narrator.update({ ...bad, badReps: 3 }, 10_000);
-    expect(again?.urgent).toBe(true);
+    expect(first?.text.split(' ').length).toBeLessThanOrEqual(5);
+    expect(narrator.update({ ...bad, badReps: 2 }, 12_000)).toBeNull();
+    const again = narrator.update({ ...bad, badReps: 3 }, 30_000);
     expect(again?.text).not.toBe(first?.text);
+  });
+
+  it('never talks over itself: lines come at least a few seconds apart', () => {
+    const narrator = createNarrator(RULES.squat);
+    narrator.update(at({}), 0);
+    expect(narrator.update(at({ badReps: 1, tone: 'warn', message: SHALLOW }), 10_000)).not.toBeNull();
+    expect(narrator.update(at({ reps: 5 }), 11_000)).toBeNull();
+  });
+
+  it('does not nag while you are mid-rep: corrections come after it', () => {
+    const narrator = createNarrator(RULES.squat);
+    narrator.update(at({}), 0);
+    expect(narrator.update(at({ tone: 'warn', message: CHEST }), 10_000)).toBeNull();
   });
 
   it('speaks a message with no special wording as it is', () => {
     const narrator = createNarrator(RULES.squat);
     narrator.update(at({}), 0);
-    expect(narrator.update(at({ tone: 'warn', message: 'Algo nuevo.' }), 1000)).toEqual({ text: 'Algo nuevo.', urgent: true });
-  });
-
-  it('warns live while the form is wrong', () => {
-    const narrator = createNarrator(RULES.squat);
-    narrator.update(at({}), 0);
-    const live = at({ tone: 'warn', message: CHEST });
-    const line = narrator.update(live, 1000);
-    expect(line?.urgent).toBe(true);
-    expect(CORRECTIONS[CHEST]).toContain(line?.text);
-    expect(narrator.update(live, 2000)).toBeNull();
+    expect(narrator.update(at({ badReps: 1, tone: 'warn', message: 'Algo nuevo.' }), 10_000)?.text).toBe('Algo nuevo.');
   });
 
   it('keeps counting after a new set resets the tracker', () => {
     const narrator = createNarrator(RULES.squat);
-    narrator.update(at({ reps: 10 }), 0);
-    narrator.update(at({ reps: 0 }), 1000);
-    expect(narrator.update(at({ reps: 1 }), 2000)?.text).toBe('uno');
+    narrator.update(at({}), 0);
+    narrator.update(at({ reps: 10 }), 10_000);
+    narrator.update(at({ reps: 0 }), 20_000);
+    expect(narrator.update(at({ reps: 5 }), 30_000)?.text).toBe('cinco');
   });
 });
 
 describe('createNarrator (hold)', () => {
-  it('marks every ten seconds and the last five', () => {
+  it('marks only the tens, with no extra chatter', () => {
     const narrator = createNarrator(RULES.plank);
-    expect(narrator.update(at({ holdMs: 1000 }), 0)?.text).toBe('Dale, ya te veo. Ponete en posición y aguantá.');
-    expect(narrator.update(at({ holdMs: 9000 }), 8000)).toBeNull();
-    expect(narrator.update(at({ holdMs: 10_000, tone: 'ok' }), 9000)?.text).toMatch(/^diez segundos\./);
-    expect(narrator.update(at({ holdMs: 20_000, tone: 'ok' }), 19_000)?.text).toMatch(/^veinte segundos\./);
-    expect(narrator.update(at({ holdMs: 25_000, tone: 'ok' }), 24_000)?.text).toBe('¡Cinco segundos más, aguantá!');
-    expect(narrator.update(at({ holdMs: 26_000, tone: 'ok' }), 25_000)).toBeNull();
+    expect(narrator.update(at({ holdMs: 1000 }), 0)?.text).toBe(SEEN);
+    expect(narrator.update(at({ holdMs: 9000, tone: 'ok' }), 8000)).toBeNull();
+    expect(narrator.update(at({ holdMs: 10_000, tone: 'ok' }), 10_000)?.text).toBe('diez segundos.');
+    expect(narrator.update(at({ holdMs: 17_000, tone: 'ok' }), 17_000)).toBeNull();
+    expect(narrator.update(at({ holdMs: 20_000, tone: 'ok' }), 20_000)?.text).toBe('veinte segundos.');
+    expect(narrator.update(at({ holdMs: 25_000, tone: 'ok' }), 25_000)).toBeNull();
+  });
+
+  it('warns when the form slips, not more than every few seconds', () => {
+    const narrator = createNarrator(RULES.plank);
+    narrator.update(at({}), 0);
+    const slipping = at({ tone: 'warn', message: 'Subí la cadera.' });
+    const first = narrator.update(slipping, 10_000);
+    expect(CORRECTIONS['Subí la cadera.']).toContain(first?.text);
+    expect(narrator.update(slipping, 12_000)).toBeNull();
+    expect(narrator.update(slipping, 14_000)).toBeNull();
   });
 });
 
 describe('texts', () => {
-  const steps = ['Pies al ancho de caderas.', 'Bajá con el pecho arriba.', 'Subí empujando con talones.', 'Cuarto paso que no se lee.'];
-
-  it('introduces the exercise like a teacher: camera, sets and the first steps', () => {
-    const text = introText(RULES.squat, steps, 3);
-    expect(text).toContain('Dale, vamos con sentadilla.');
-    expect(text).toContain('de costado');
-    expect(text).toContain('a 2 o 3 metros');
-    expect(text).toContain('Hacemos tres series de diez repeticiones.');
-    expect(text).toContain('Pies al ancho de caderas.');
-    expect(text).not.toContain('Cuarto paso');
-    expect(text).toContain('activá la cámara y arrancamos');
+  it('introduces the exercise in three short sentences', () => {
+    const text = introText(RULES.squat);
+    expect(splitSentences(text)).toEqual(['Dale, vamos con sentadilla.', 'Ponete de costado a la cámara, a dos o tres metros.', 'Cuando estés listo, activá la cámara.']);
   });
 
   it('introduces an exercise without rules, without naming it', () => {
-    const text = introText(null, [], 3);
+    const text = introText(null);
     expect(text).toContain('todavía no tiene corrección');
     expect(text.startsWith('Dale, vamos.')).toBe(true);
   });
 
-  it('closes sets', () => {
-    expect(setDoneText(1, 3)).toBe('Muy bien, serie uno lista. Respirá un poquito y vamos con la segunda.');
+  it('closes sets briefly and names the next one after the rest', () => {
+    expect(setDoneText(1, 3)).toBe('Muy bien, serie uno lista. Descansá.');
     expect(setDoneText(3, 3)).toBe('Muy bien, serie tres lista.');
+    expect(nextSetText(2)).toBe('Dale, arrancamos. Serie dos.');
   });
 
-  it('summarizes reps with numbers in words', () => {
-    expect(summaryText(RULES.squat, { reps: 24, badReps: 3, holdMs: 0, errors: { [CHEST]: 2 } })).toBe(`Listo, terminaste. Veinticuatro repeticiones bien hechas. Tres para corregir. Lo que más te costó fue esto. ${CORRECTIONS[CHEST][0]}`);
-    expect(summaryText(RULES.squat, { reps: 1, badReps: 0, holdMs: 0, errors: {} })).toBe('Listo, terminaste. Una repetición bien hecha. Ninguna para corregir.');
+  it('summarizes reps with numbers in words, only mentioning what matters', () => {
+    expect(summaryText(RULES.squat, { reps: 24, badReps: 3, holdMs: 0, errors: { [CHEST]: 2 } })).toBe(`Listo, terminaste. Veinticuatro repeticiones bien hechas. Tres para corregir. ${CORRECTIONS[CHEST][0]}`);
+    expect(summaryText(RULES.squat, { reps: 1, badReps: 0, holdMs: 0, errors: {} })).toBe('Listo, terminaste. Una repetición bien hecha.');
     expect(summaryText(RULES.squat, { reps: 0, badReps: 21, holdMs: 0, errors: {} })).toBe('Listo, terminaste. Ninguna repetición bien hecha. Veintiuna para corregir.');
   });
 
   it('summarizes a hold in rounded seconds', () => {
-    expect(summaryText(RULES.plank, { reps: 0, badReps: 0, holdMs: 62_000, errors: {} })).toBe('Listo, terminaste. Aguantaste unos sesenta segundos en buena postura.');
+    expect(summaryText(RULES.plank, { reps: 0, badReps: 0, holdMs: 62_000, errors: {} })).toBe('Listo, terminaste. Aguantaste unos sesenta segundos.');
     expect(summaryText(RULES.plank, { reps: 0, badReps: 0, holdMs: 1000, errors: {} })).toBe('Listo, terminaste. Casi no aguantaste, probemos de nuevo.');
   });
 
@@ -161,5 +173,9 @@ describe('texts', () => {
     expect(clipKey('cinco.')).toBe('cinco');
     expect(clipKey('¡Muy bien!')).toBe('¡Muy bien!');
     expect(clipKey('uno')).toBe('uno');
+  });
+
+  it('keeps every spoken correction short', () => {
+    for (const variants of Object.values(CORRECTIONS)) for (const text of variants) expect(text.split(/\s+/).length, text).toBeLessThanOrEqual(6);
   });
 });

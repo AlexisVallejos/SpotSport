@@ -2,12 +2,13 @@ import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'rea
 import type { PoseLandmarker } from '@mediapipe/tasks-vision';
 import { Icon } from '../../atoms';
 import ExerciseDemo from '../ExerciseDemo/ExerciseDemo';
+import { measure, type Reading } from '../../../lib/pose/debug';
 import { createTracker, isSetDone, type Tracker, type TrackerState } from '../../../lib/pose/engine';
 import type { Landmarks } from '../../../lib/pose/geometry';
 import { loadLandmarker, POSE_CONNECTIONS } from '../../../lib/pose/landmarker';
 import type { PoseRule } from '../../../lib/pose/rules';
 import { phrasesFor } from '../../../lib/pose/phrases';
-import { createNarrator, introText, SETS, setDoneText, summaryText, type Narrator } from '../../../lib/pose/script';
+import { createNarrator, introText, nextSetText, REST_MS, SETS, setDoneText, summaryText, type Narrator } from '../../../lib/pose/script';
 import { readVoicePref, speak, stopSpeaking, voiceSupported, warmVoice, writeVoicePref } from '../../../lib/voice';
 import type { Exercise } from '../../../lib/wger';
 import styles from './PoseCoach.module.css';
@@ -96,16 +97,23 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
   const [set, setSet] = useState(1);
   const [totals, setTotals] = useState<Totals>(EMPTY);
   const [flash, setFlash] = useState('');
+  const [restLeft, setRestLeft] = useState(0);
+  const restUntilRef = useRef(0);
   const [personSeen, setPersonSeen] = useState(false);
   const [voiceOn, setVoiceOn] = useState(voiceOnRef.current);
+  // Live numbers for calibrating: the Datos button, or ?debug in the address.
+  const debugRef = useRef(typeof location !== 'undefined' && /[?&]debug/.test(location.href));
+  const [debugOn, setDebugOn] = useState(debugRef.current);
+  const [reading, setReading] = useState<Reading | null>(null);
+  const [fps, setFps] = useState(0);
   const canSpeak = voiceSupported();
 
   const say = useCallback((text: string, urgent = false) => {
     if (voiceOnRef.current) speak(text, urgent);
   }, []);
 
-  // Only our own routines read their steps aloud: texts from outside are not in the recorded voice pack.
-  const intro = useCallback(() => introText(rule, exercise.source === 'ritmo' ? exercise.lines : [], SETS), [rule, exercise]);
+  // Short on purpose: what we are doing and where to stand. The steps are in the demo.
+  const intro = useCallback(() => introText(rule), [rule]);
 
   useEffect(() => {
     warmVoice(phrasesFor(rule));
@@ -158,11 +166,13 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
       totalsRef.current = add(totalsRef.current, state);
       setTotals(totalsRef.current);
       say(setDoneText(setRef.current, SETS), true);
-      setFlash(`¡Serie ${setRef.current} completa! Respirá y seguí con la ${setRef.current + 1}.`);
+      // A real rest: nothing counts and nothing is said until it ends or you skip it.
+      restUntilRef.current = performance.now() + REST_MS;
+      setRestLeft(Math.ceil(REST_MS / 1000));
       setRef.current += 1;
       setSet(setRef.current);
-      trackerRef.current?.reset();
       liveRef.current = null;
+      setLive(null);
     },
     [finish, say],
   );
@@ -174,20 +184,44 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
       if (!video || !canvas) return;
       let lastVideoTime = -1;
       let lastPaint = 0;
+      let frames = 0;
+      let windowStart = performance.now();
       const tick = () => {
         frameRef.current = requestAnimationFrame(tick);
         if (video.readyState < 2 || video.currentTime === lastVideoTime) return;
         lastVideoTime = video.currentTime;
         const now = performance.now();
         const lm = landmarker.detectForVideo(video, now).landmarks[0] ?? null;
+        if (restUntilRef.current > 0) {
+          if (now < restUntilRef.current) {
+            draw(canvas, video, lm, [], false);
+            if (now - lastPaint > 250) {
+              lastPaint = now;
+              setRestLeft(Math.ceil((restUntilRef.current - now) / 1000));
+            }
+            return;
+          }
+          restUntilRef.current = 0;
+          setRestLeft(0);
+          trackerRef.current?.reset();
+          say(nextSetText(setRef.current), true);
+          return;
+        }
         const tracker = trackerRef.current;
         const state = tracker ? tracker.update(lm, now) : null;
         liveRef.current = state;
         const line = state ? narratorRef.current?.update(state, now) : null;
         if (line) say(line.text, line.urgent);
         draw(canvas, video, lm, state?.failing ?? [], !!tracker);
+        frames += 1;
+        if (now - windowStart > 1000) {
+          if (debugRef.current) setFps(Math.round((frames * 1000) / (now - windowStart)));
+          frames = 0;
+          windowStart = now;
+        }
         if (now - lastPaint > 100) {
           lastPaint = now;
+          if (debugRef.current) setReading(rule && lm ? measure(rule, lm) : null);
           setLive(state);
           if (lm) setPersonSeen(true);
         }
@@ -388,6 +422,21 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
         <video ref={videoRef} className={styles.video} muted playsInline />
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
         {framing ? <p className={styles.framing}>{live?.message ?? 'Buscándote… ubicate frente a la cámara.'}</p> : null}
+        {restLeft > 0 ? (
+          <div className={styles.rest} role="status">
+            <p className={styles.restTitle}>Descansá</p>
+            <p className={styles.restTime}>{restLeft}</p>
+            <p className={styles.restNext}>Después: serie {set} de {SETS}</p>
+            <button
+              type="button"
+              className={styles.secondary}
+              onClick={() => {
+                restUntilRef.current = performance.now();
+              }}>
+              Seguir ya
+            </button>
+          </div>
+        ) : null}
         {flash ? <p className={styles.flash}>{flash}</p> : null}
       </div>
 
@@ -424,7 +473,40 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
             Salir
           </button>
           {voiceButton}
+          <button
+            type="button"
+            className={styles.voice}
+            aria-pressed={debugOn}
+            onClick={() => {
+              debugRef.current = !debugRef.current;
+              setDebugOn(debugRef.current);
+            }}>
+            Datos
+          </button>
         </div>
+        {debugOn ? (
+          <div className={styles.debug} aria-live="off">
+            {reading && rule ? (
+              <>
+                <p>
+                  lado: <b>{reading.side === 'left' ? 'izquierdo' : 'derecho'}</b> · articulaciones: <b>{reading.visible}/{reading.total}</b> · visibilidad mín: <b>{reading.minVisibility.toFixed(2)}</b> · {fps} fps
+                </p>
+                {reading.metric !== null ? (
+                  <p>
+                    ángulo: <b>{Math.round(reading.metric)}°</b> · reposo {reading.rest}° → profundidad {reading.peak}° · progreso <b>{Math.round((reading.progress ?? 0) * 100)}%</b>
+                  </p>
+                ) : null}
+                {reading.checks.map((check) => (
+                  <p key={check.message} className={check.ok ? styles.checkOk : styles.checkBad}>
+                    {check.ok ? '✓' : '✗'} {check.message}
+                  </p>
+                ))}
+              </>
+            ) : (
+              <p>Sin cuerpo detectado</p>
+            )}
+          </div>
+        ) : null}
       </aside>
     </section>
   );

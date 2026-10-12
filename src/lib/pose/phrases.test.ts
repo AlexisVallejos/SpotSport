@@ -1,21 +1,19 @@
 import { describe, expect, it } from 'vitest';
-import { LOCAL_EXERCISES } from '../exercises/local';
-import { ruleFor } from '../exercises/match';
 import { FRAMING, type TrackerState } from './engine';
 import { allSentences, phrasesFor } from './phrases';
 import { RULES } from './rules';
-import { clipKey, CORRECTIONS, createNarrator, introText, SETS, setDoneText, splitSentences, summaryText } from './script';
+import { clipKey, CORRECTIONS, createNarrator, introText, nextSetText, SETS, setDoneText, splitSentences, summaryText } from './script';
 
 const known = new Set(allSentences());
 const missing = (text: string) => splitSentences(text).map(clipKey).filter((key) => !known.has(key));
 
-const base: TrackerState = { status: 'active', reps: 0, badReps: 0, holdMs: 0, progress: 0, message: '', tone: 'info', failing: [], errors: {} };
+const base: TrackerState = { status: 'active', ready: true, reps: 0, badReps: 0, holdMs: 0, progress: 0, message: '', tone: 'info', failing: [], errors: {} };
 
 describe('voice pack coverage', () => {
   it('has no duplicates and the basics', () => {
     const list = allSentences();
     expect(new Set(list).size).toBe(list.length);
-    expect(list).toEqual(expect.arrayContaining(['uno', 'veinte', '¡Muy bien!', 'diez segundos', 'Dale, ya te veo']));
+    expect(list).toEqual(expect.arrayContaining(['uno', 'veinte', '¡Muy bien!', 'diez segundos', 'Dale, ya te veo', 'Dale, arrancamos']));
   });
 
   it('wrote a spoken version of every correction a rule can give', () => {
@@ -49,7 +47,7 @@ describe('voice pack coverage', () => {
       }
       for (let seconds = 1; seconds <= 95; seconds += 1) say({ ...base, holdMs: seconds * 1000, tone: 'ok' }, tick());
 
-      expect(lines.length).toBeGreaterThan(10);
+      expect(lines.length).toBeGreaterThan(5);
       for (const line of lines) expect(missing(line), `${rule.id}: "${line}"`).toEqual([]);
     }
   });
@@ -59,10 +57,12 @@ describe('voice pack coverage', () => {
   });
 
   it('covers the setup screens, set endings and summaries', () => {
-    for (const rule of Object.values(RULES)) expect(missing(introText(rule, [], SETS))).toEqual([]);
-    for (const exercise of LOCAL_EXERCISES) expect(missing(introText(ruleFor(exercise.name), exercise.lines, SETS)), exercise.name).toEqual([]);
-    expect(missing(introText(null, [], SETS))).toEqual([]);
-    for (let set = 1; set <= SETS; set += 1) expect(missing(setDoneText(set, SETS))).toEqual([]);
+    for (const rule of Object.values(RULES)) expect(missing(introText(rule)), rule.id).toEqual([]);
+    expect(missing(introText(null))).toEqual([]);
+    for (let set = 1; set <= SETS; set += 1) {
+      expect(missing(setDoneText(set, SETS))).toEqual([]);
+      expect(missing(nextSetText(set))).toEqual([]);
+    }
 
     const worst = Object.keys(CORRECTIONS)[1];
     for (const reps of [0, 1, 2, 17, 21, 36, 40, 80]) {

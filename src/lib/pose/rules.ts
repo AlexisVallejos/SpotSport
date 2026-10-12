@@ -51,7 +51,19 @@ const chain = (...names: (keyof Joints)[]) => (lm: Landmarks) => {
   return names.map((name) => j[name]);
 };
 
+/** The torso must show its side to the camera: seen head-on, a body looks short and every angle lies. */
+const PROFILE = 'Ponete de costado a la cámara.';
+const profile = (min: number, a: keyof Joints, b: keyof Joints): Check => ({
+  message: PROFILE,
+  joints: () => [],
+  ok: (lm) => {
+    const j = side(lm);
+    return Math.abs(lm[j[a]].x - lm[j[b]].x) >= min;
+  },
+});
+
 const board = (sag: string, pike: string): Check[] => [
+  profile(0.2, 'shoulder', 'ankle'),
   { message: 'Ponete en posición: cuerpo horizontal.', joints: () => [], ok: lying },
   { message: sag, joints: chain('hip'), ok: (lm) => bodyLine(lm) >= 160 || hipAbove(lm) },
   { message: pike, joints: chain('hip'), ok: (lm) => bodyLine(lm) >= 160 || !hipAbove(lm) },
@@ -101,7 +113,7 @@ export const RULES: Record<RuleId, PoseRule> = {
     rest: 155,
     peak: 95,
     shallow: 'Bajá el pecho más cerca del piso.',
-    checks: [{ message: 'Cuerpo recto: alineá la cadera.', joints: chain('hip'), ok: (lm) => bodyLine(lm) > 150 }],
+    checks: [profile(0.2, 'shoulder', 'ankle'), { message: 'Cuerpo recto: alineá la cadera.', joints: chain('hip'), ok: (lm) => bodyLine(lm) > 150 }],
   },
   plank: {
     id: 'plank',
@@ -135,7 +147,7 @@ export const RULES: Record<RuleId, PoseRule> = {
     rest: 135,
     peak: 165,
     shallow: 'Subí más la cadera, hasta alinearla con hombros y rodillas.',
-    checks: [],
+    checks: [profile(0.1, 'shoulder', 'hip')],
   },
   legRaise: {
     id: 'legRaise',
@@ -152,7 +164,7 @@ export const RULES: Record<RuleId, PoseRule> = {
     rest: 160,
     peak: 110,
     shallow: 'Subí las piernas hasta casi 90°.',
-    checks: [{ message: 'Piernas más estiradas.', joints: chain('knee'), ok: (lm) => knee(lm, side(lm)) > 140 }],
+    checks: [profile(0.1, 'shoulder', 'hip'), { message: 'Piernas más estiradas.', joints: chain('knee'), ok: (lm) => knee(lm, side(lm)) > 140 }],
   },
   kick: {
     id: 'kick',
@@ -166,6 +178,6 @@ export const RULES: Record<RuleId, PoseRule> = {
     rest: 110,
     peak: 150,
     shallow: 'Elevá más la pierna, hasta la altura de la cadera.',
-    checks: [],
+    checks: [profile(0.1, 'shoulder', 'hip')],
   },
 };

@@ -5,6 +5,7 @@ import { clipKey, forSpeech, splitSentences } from './pose/script';
 
 const PREF_KEY = 'spot:voice';
 const PACK_URL = `${import.meta.env.BASE_URL}voice/es_AR/`;
+const SENTENCE_GAP_MS = 320;
 /** Rioplatense first, then the rest of Latin America, then Spain. */
 const LATAM = ['es-ar', 'es-mx', 'es-us', 'es-419'];
 
@@ -166,7 +167,7 @@ function packJob(keys: string[], pack: Pack): Job {
         // Ya había terminado.
       }
     });
-    for (const pending of loading) {
+    for (const [index, pending] of loading.entries()) {
       const buffer = await pending;
       if (stopped || !isCurrent()) return;
       await new Promise<void>((resolve) => {
@@ -177,6 +178,8 @@ function packJob(keys: string[], pack: Pack): Job {
         source.onended = () => resolve();
         source.start();
       });
+      // A breath between sentences, so a line is not one rushed run of words.
+      if (index < loading.length - 1 && !stopped) await new Promise<void>((resolve) => setTimeout(resolve, SENTENCE_GAP_MS));
     }
   };
 }
