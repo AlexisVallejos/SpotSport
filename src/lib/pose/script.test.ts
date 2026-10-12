@@ -134,15 +134,17 @@ describe('createNarrator (hold)', () => {
 });
 
 describe('texts', () => {
-  it('introduces the exercise in three short sentences', () => {
-    const text = introText(RULES.squat);
-    expect(splitSentences(text)).toEqual(['Dale, vamos con sentadilla.', 'Ponete de costado a la cámara, a dos o tres metros.', 'Cuando estés listo, activá la cámara.']);
+  it('introduces the exercise in two short sentences', () => {
+    expect(splitSentences(introText(RULES.squat))).toEqual(['Vamos con sentadilla.', 'Ponete de costado a la cámara.']);
+    expect(splitSentences(introText(RULES.sidePlank))).toEqual(['Vamos con plancha lateral.', 'Ponete de frente a la cámara.']);
+  });
+
+  it('keeps the explanation under fifteen words', () => {
+    for (const rule of Object.values(RULES)) expect(introText(rule).split(/s+/).length, rule.id).toBeLessThanOrEqual(15);
   });
 
   it('introduces an exercise without rules, without naming it', () => {
-    const text = introText(null);
-    expect(text).toContain('todavía no tiene corrección');
-    expect(text.startsWith('Dale, vamos.')).toBe(true);
+    expect(splitSentences(introText(null))).toEqual(['Vamos.', 'Ubicate para que se te vea entero.']);
   });
 
   it('closes sets briefly and names the next one after the rest', () => {

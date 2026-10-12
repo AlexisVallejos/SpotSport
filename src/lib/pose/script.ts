@@ -34,10 +34,9 @@ export const CHEERS = ['¡Muy bien!', '¡Eso es!', '¡Así, bárbaro!', '¡Buen�
 export const LAST_REP = ['¡Una más!', 'Una más, dale.'];
 export const SEEN = 'Dale, ya te veo.';
 export const REST_END = 'Dale, arrancamos.';
-export const PLACE_SIDE = 'Ponete de costado a la cámara, a dos o tres metros.';
-export const PLACE_FRONT = 'Ponete de frente a la cámara, a dos o tres metros.';
-export const PLACE_ANY = 'Ubicá la cámara a dos o tres metros.';
-export const READY_PROMPT = 'Cuando estés listo, activá la cámara.';
+export const PLACE_SIDE = 'Ponete de costado a la cámara.';
+export const PLACE_FRONT = 'Ponete de frente a la cámara.';
+export const PLACE_ANY = 'Ubicate para que se te vea entero.';
 
 /** Spoken versions (voseo, argentinismos) of the on-screen corrections: short, one idea. Anything missing is read as written. */
 export const CORRECTIONS: Record<string, string[]> = {
@@ -180,14 +179,14 @@ export function createNarrator(rule: PoseRule | null): Narrator {
 }
 
 /**
- * Read when the setup screen opens: what we are doing and where to put the camera. The steps are on screen
- * and in the 3D demo, so they are not read. It never includes names or texts that come from outside,
+ * Read when the setup screen opens: two short sentences, what we are doing and where to stand. Distance, steps
+ * and the number of sets are on screen and in the 3D demo, so they are not read. It never includes names or texts that come from outside,
  * so every sentence can be recorded ahead of time.
  */
 export function introText(rule: PoseRule | null): string {
-  if (!rule) return forSpeech(`Dale, vamos. ${PLACE_ANY} Este ejercicio todavía no tiene corrección. ${READY_PROMPT}`);
+  if (!rule) return forSpeech(`Vamos. ${PLACE_ANY}`);
   const name = `${rule.name.charAt(0).toLowerCase()}${rule.name.slice(1)}`;
-  return forSpeech(`Dale, vamos con ${name}. ${rule.view === 'side' ? PLACE_SIDE : PLACE_FRONT} ${READY_PROMPT}`);
+  return forSpeech(`Vamos con ${name}. ${rule.view === 'side' ? PLACE_SIDE : PLACE_FRONT}`);
 }
 
 export function setDoneText(set: number, sets: number): string {

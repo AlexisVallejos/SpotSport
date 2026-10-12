@@ -5,7 +5,7 @@ import { clipKey, forSpeech, splitSentences } from './pose/script';
 
 const PREF_KEY = 'spot:voice';
 const PACK_URL = `${import.meta.env.BASE_URL}voice/es_AR/`;
-const SENTENCE_GAP_MS = 320;
+const SENTENCE_GAP_MS = 600;
 /** Rioplatense first, then the rest of Latin America, then Spain. */
 const LATAM = ['es-ar', 'es-mx', 'es-us', 'es-419'];
 

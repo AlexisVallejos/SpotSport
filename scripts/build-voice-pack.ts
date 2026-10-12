@@ -12,8 +12,8 @@ import { finish, loadPiper, root, type Style, VOICE, wav } from './piper-node';
 const out = join(root, 'public', 'voice', 'es_AR');
 const force = process.argv.includes('--force');
 
-/** Slower and with a little more variation than the model default: a calm coach, not a reader. */
-const STYLE: Required<Style> = { noiseScale: 0.75, noiseW: 0.9, lengthScale: 1.15 };
+/** Clearly slower than the model default and steadier in delivery: a calm coach, not a reader in a hurry. */
+const STYLE: Required<Style> = { noiseScale: 0.7, noiseW: 0.85, lengthScale: 1.25 };
 const styleId = `${STYLE.noiseScale}/${STYLE.noiseW}/${STYLE.lengthScale}`;
 
 type Manifest = { voice: string; style: string; rate: number; clips: Record<string, string> };
