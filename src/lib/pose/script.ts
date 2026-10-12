@@ -5,17 +5,33 @@ import type { PoseRule } from './rules';
 export type Line = { text: string; urgent: boolean };
 export type Narrator = { update: (state: TrackerState, now: number) => Line | null; reset: () => void };
 
-const WORDS = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte'];
-const ORDINALS = ['', 'primera', 'segunda', 'tercera', 'cuarta', 'quinta'];
-const word = (n: number) => WORDS[n] ?? String(n);
+const UNITS = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve', 'diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve', 'veinte', 'veintiuno', 'veintidós', 'veintitrés', 'veinticuatro', 'veinticinco', 'veintiséis', 'veintisiete', 'veintiocho', 'veintinueve'];
+const TENS = ['', '', '', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+const ORDINALS = ['', 'primera', 'segunda', 'tercera', 'cuarta', 'quinta', 'sexta'];
+
+/** Spanish number words for 0–99 ("veinticuatro", "treinta y uno"); `feminine` turns "uno" into "una". */
+export function numberWords(n: number, feminine = false): string {
+  if (!Number.isInteger(n) || n < 0 || n > 99) return String(n);
+  const text = n < 30 ? UNITS[n] : TENS[Math.floor(n / 10)] + (n % 10 ? ` y ${UNITS[n % 10]}` : '');
+  return feminine ? text.replace(/uno$/, 'una') : text;
+}
+
+const word = (n: number) => numberWords(n);
+const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
+/** Sets per session. */
+export const SETS = 3;
 
 const SAME_WORDS_MS = 6000;
 const FRAMING_MS = 10_000;
 
 // A teacher does not repeat the same sentence every time: these rotate, in order.
 export const CHEERS = ['¡Muy bien!', '¡Eso es!', '¡Así, bárbaro!', '¡Buenísimo!'];
-const LAST_REP = ['¡Una más y listo!', '¡Una más, dale!'];
-const HOLD_CHEERS = ['Aguantá, vas bien.', 'Muy bien, no aflojes.', 'Así, seguí así.'];
+export const LAST_REP = ['¡Una más y listo!', '¡Una más, dale!'];
+export const HOLD_CHEERS = ['Aguantá, vas bien.', 'Muy bien, no aflojes.', 'Así, seguí así.'];
+export const SEEN_REPS = 'Dale, ya te veo. Cuando quieras, arrancá.';
+export const SEEN_HOLD = 'Dale, ya te veo. Ponete en posición y aguantá.';
+export const LAST_FIVE = '¡Cinco segundos más, aguantá!';
 
 /** Spoken versions (voseo, argentinismos) of the on-screen corrections. Anything missing is read as written. */
 export const CORRECTIONS: Record<string, string[]> = {
@@ -45,6 +61,19 @@ export function forSpeech(text: string): string {
     .replace(/°/g, ' grados')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+/** Splits a line into sentences: each one is a clip of the voice pack, and a long line starts playing sooner. */
+export function splitSentences(text: string): string[] {
+  return forSpeech(text)
+    .split(/(?<=[.!?])\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+/** The key a sentence has in the voice pack: its spoken text without the final full stop. */
+export function clipKey(sentence: string): string {
+  return sentence.trim().replace(/\.$/, '');
 }
 
 /**
@@ -98,7 +127,7 @@ export function createNarrator(rule: PoseRule | null): Narrator {
 
     if (!seen) {
       seen = true;
-      return { text: rule?.mode === 'hold' ? 'Dale, ya te veo. Ponete en posición y aguantá.' : 'Dale, ya te veo. Cuando quieras, arrancá.', urgent: false };
+      return { text: rule?.mode === 'hold' ? SEEN_HOLD : SEEN_REPS, urgent: false };
     }
 
     // A new set resets the tracker: counters go back to zero without announcing anything.
@@ -131,7 +160,7 @@ export function createNarrator(rule: PoseRule | null): Narrator {
       }
       if (!lastCall && seconds >= rule.target - 5 && seconds < rule.target) {
         lastCall = true;
-        return { text: '¡Cinco segundos más, aguantá!', urgent: false };
+        return { text: LAST_FIVE, urgent: false };
       }
     }
 
@@ -141,19 +170,20 @@ export function createNarrator(rule: PoseRule | null): Narrator {
   return { update, reset };
 }
 
-type Describable = { name: string; lines: string[] };
-
-/** Read when the setup screen opens: what it is, where to put the camera, how many sets, the first steps. */
-export function introText(exercise: Describable, rule: PoseRule | null, sets: number): string {
-  const parts = [`Dale, vamos con ${exercise.name}.`];
+/**
+ * Read when the setup screen opens: what we are doing, where to put the camera, how many sets, and the steps.
+ * It never includes names or texts that come from outside, so every sentence can be recorded ahead of time.
+ */
+export function introText(rule: PoseRule | null, steps: string[], sets: number): string {
+  const parts: string[] = [];
   if (rule) {
-    parts.push(rule.setup);
+    parts.push(`Dale, vamos con ${rule.name.charAt(0).toLowerCase()}${rule.name.slice(1)}.`, rule.setup);
     parts.push(`Hacemos ${word(sets)} series de ${word(rule.target)} ${rule.mode === 'reps' ? 'repeticiones' : 'segundos'}.`);
   } else {
-    parts.push('Ubicá la cámara a dos o tres metros, que se te vea el cuerpo entero.', 'Este ejercicio todavía no tiene corrección: vas a ver tu esqueleto.');
+    parts.push('Dale, vamos.', 'Ubicá la cámara a dos o tres metros, que se te vea el cuerpo entero.', 'Este ejercicio todavía no tiene corrección: vas a ver tu esqueleto.');
   }
-  const steps = exercise.lines.filter((line) => line.length < 140).slice(0, 3);
-  if (steps.length > 0) parts.push('Fijate cómo va:', ...steps);
+  const usable = steps.filter((line) => line.length < 140).slice(0, 3);
+  if (usable.length > 0) parts.push('Fijate cómo va:', ...usable);
   parts.push('Cuando estés listo, activá la cámara y arrancamos.');
   return forSpeech(parts.join(' '));
 }
@@ -165,10 +195,23 @@ export function setDoneText(set: number, sets: number): string {
 
 type Totals = { reps: number; badReps: number; holdMs: number; errors: Record<string, number> };
 
+const SUMMARY_MAX = 40;
+
 export function summaryText(rule: PoseRule | null, totals: Totals): string {
   if (!rule) return 'Listo, terminaste. Buen trabajo.';
   const worst = Object.entries(totals.errors).sort((a, b) => b[1] - a[1])[0];
-  const learned = worst ? ` Lo que más te costó: ${worst[0]}` : '';
-  if (rule.mode === 'hold') return `Listo, terminaste. Aguantaste ${Math.round(totals.holdMs / 1000)} segundos en buena postura.${learned}`;
-  return `Listo, terminaste. ${totals.reps} repeticiones bien hechas y ${totals.badReps} para corregir.${learned}`;
+  const learned = worst ? ` Lo que más te costó fue esto. ${CORRECTIONS[worst[0]]?.[0] ?? worst[0]}` : '';
+  if (rule.mode === 'hold') {
+    const seconds = totals.holdMs / 1000;
+    if (seconds < 3) return `Listo, terminaste. Casi no aguantaste, probemos de nuevo.${learned}`;
+    const rounded = Math.min(95, Math.max(5, Math.round(seconds / 5) * 5));
+    return `Listo, terminaste. Aguantaste unos ${word(rounded)} segundos en buena postura.${learned}`;
+  }
+  const reps = Math.min(SUMMARY_MAX, totals.reps);
+  const bad = Math.min(SUMMARY_MAX, totals.badReps);
+  const good = reps === 0 ? 'Ninguna repetición bien hecha.' : reps === 1 ? 'Una repetición bien hecha.' : `${capital(numberWords(reps, true))} repeticiones bien hechas.`;
+  const fix = bad === 0 ? 'Ninguna para corregir.' : `${capital(numberWords(bad, true))} para corregir.`;
+  return `Listo, terminaste. ${good} ${fix}${learned}`;
 }
+
+export { SUMMARY_MAX };

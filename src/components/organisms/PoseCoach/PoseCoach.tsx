@@ -5,8 +5,9 @@ import { createTracker, isSetDone, type Tracker, type TrackerState } from '../..
 import type { Landmarks } from '../../../lib/pose/geometry';
 import { loadLandmarker, POSE_CONNECTIONS } from '../../../lib/pose/landmarker';
 import type { PoseRule } from '../../../lib/pose/rules';
-import { createNarrator, introText, setDoneText, summaryText, type Narrator } from '../../../lib/pose/script';
-import { readVoicePref, speak, stopSpeaking, voiceSupported, writeVoicePref } from '../../../lib/voice';
+import { phrasesFor } from '../../../lib/pose/phrases';
+import { createNarrator, introText, SETS, setDoneText, summaryText, type Narrator } from '../../../lib/pose/script';
+import { readVoicePref, speak, stopSpeaking, voiceSupported, warmVoice, writeVoicePref } from '../../../lib/voice';
 import type { Exercise } from '../../../lib/wger';
 import styles from './PoseCoach.module.css';
 
@@ -20,7 +21,6 @@ type Phase = 'setup' | 'starting' | 'live' | 'done' | 'error';
 type Problem = 'denied' | 'nocamera' | 'insecure' | 'model' | 'other';
 type Totals = { reps: number; badReps: number; holdMs: number; errors: Record<string, number> };
 
-const SETS = 3;
 const EMPTY: Totals = { reps: 0, badReps: 0, holdMs: 0, errors: {} };
 const OK = '#3ddc84';
 const BAD = '#ff3b30';
@@ -103,13 +103,20 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
     if (voiceOnRef.current) speak(text, urgent);
   }, []);
 
+  // Only our own routines read their steps aloud: texts from outside are not in the recorded voice pack.
+  const intro = useCallback(() => introText(rule, exercise.source === 'ritmo' ? exercise.lines : [], SETS), [rule, exercise]);
+
+  useEffect(() => {
+    warmVoice(phrasesFor(rule));
+  }, [rule]);
+
   function toggleVoice() {
     const next = !voiceOnRef.current;
     voiceOnRef.current = next;
     writeVoicePref(next);
     setVoiceOn(next);
     if (!next) stopSpeaking();
-    else if (phase === 'setup') speak(introText(exercise, rule, SETS));
+    else if (phase === 'setup') speak(intro());
   }
 
   const stop = useCallback(() => {
@@ -123,8 +130,8 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
 
   // Like a teacher at the start of the class: what we are doing and how, while you get in position.
   useEffect(() => {
-    if (phase === 'setup') say(introText(exercise, rule, SETS));
-  }, [phase, exercise, rule, say]);
+    if (phase === 'setup') say(intro());
+  }, [phase, intro, say]);
 
   useEffect(() => {
     if (!flash) return;
