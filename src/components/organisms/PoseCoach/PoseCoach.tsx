@@ -1,0 +1,515 @@
+import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
+import type { PoseLandmarker } from '@mediapipe/tasks-vision';
+import { Icon } from '../../atoms';
+import ExerciseDemo from '../ExerciseDemo/ExerciseDemo';
+import { measure, type Reading } from '../../../lib/pose/debug';
+import { createTracker, isSetDone, type Tracker, type TrackerState } from '../../../lib/pose/engine';
+import type { Landmarks } from '../../../lib/pose/geometry';
+import { loadLandmarker, POSE_CONNECTIONS } from '../../../lib/pose/landmarker';
+import type { PoseRule } from '../../../lib/pose/rules';
+import { phrasesFor } from '../../../lib/pose/phrases';
+import { createNarrator, introText, nextSetText, REST_MS, SETS, setDoneText, summaryText, type Narrator } from '../../../lib/pose/script';
+import { readVoicePref, speak, stopSpeaking, voiceSupported, warmVoice, writeVoicePref } from '../../../lib/voice';
+import type { Exercise } from '../../../lib/wger';
+import styles from './PoseCoach.module.css';
+
+export type PoseCoachProps = {
+  exercise: Exercise;
+  rule: PoseRule | null;
+  onExit: () => void;
+};
+
+type Phase = 'setup' | 'starting' | 'live' | 'done' | 'error';
+type Problem = 'denied' | 'nocamera' | 'insecure' | 'model' | 'other';
+type Totals = { reps: number; badReps: number; holdMs: number; errors: Record<string, number> };
+
+const EMPTY: Totals = { reps: 0, badReps: 0, holdMs: 0, errors: {} };
+const OK = '#3ddc84';
+const BAD = '#ff3b30';
+const NEUTRAL = '#ff7900';
+
+const PROBLEMS: Record<Problem, { title: string; text: string }> = {
+  denied: { title: 'Sin permiso para la cámara', text: 'Tocá el ícono de la cámara o del candado en la barra de direcciones, elegí «Permitir» y volvé a intentar.' },
+  nocamera: { title: 'No encontramos una cámara', text: 'Conectá una webcam o cerrá otras apps que la estén usando (Zoom, Meet, OBS…).' },
+  insecure: { title: 'La cámara necesita HTTPS', text: 'Abrí la página con https:// o desde localhost: el navegador bloquea la cámara en sitios sin cifrar.' },
+  model: { title: 'No se pudo cargar el analizador', text: 'Revisá tu conexión a internet e intentá de nuevo.' },
+  other: { title: 'No pudimos abrir la cámara', text: 'Intentá de nuevo. Si sigue fallando, recargá la página.' },
+};
+
+function problemOf(error: unknown): Problem {
+  const name = error instanceof DOMException ? error.name : '';
+  if (name === 'NotAllowedError' || name === 'SecurityError') return 'denied';
+  if (name === 'NotFoundError' || name === 'OverconstrainedError' || name === 'NotReadableError') return 'nocamera';
+  return 'other';
+}
+
+function add(totals: Totals, state: TrackerState): Totals {
+  const errors = { ...totals.errors };
+  for (const [key, count] of Object.entries(state.errors)) errors[key] = (errors[key] ?? 0) + count;
+  return { reps: totals.reps + state.reps, badReps: totals.badReps + state.badReps, holdMs: totals.holdMs + state.holdMs, errors };
+}
+
+/** Skeleton over the video: face points skipped, joints red when a check fails. */
+function draw(canvas: HTMLCanvasElement, video: HTMLVideoElement, lm: Landmarks | null, failing: number[], judged: boolean) {
+  const width = video.videoWidth;
+  const height = video.videoHeight;
+  if (canvas.width !== width) canvas.width = width;
+  if (canvas.height !== height) canvas.height = height;
+  const context = canvas.getContext('2d');
+  if (!context) return;
+  context.clearRect(0, 0, width, height);
+  if (!lm) return;
+  const seen = (index: number) => index >= 11 && (lm[index]?.visibility ?? 1) >= 0.5;
+  const bad = new Set(failing);
+  context.lineWidth = Math.max(3, width / 280);
+  context.lineCap = 'round';
+  context.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+  for (const { start, end } of POSE_CONNECTIONS) {
+    if (!seen(start) || !seen(end)) continue;
+    context.beginPath();
+    context.moveTo(lm[start].x * width, lm[start].y * height);
+    context.lineTo(lm[end].x * width, lm[end].y * height);
+    context.stroke();
+  }
+  lm.forEach((point, index) => {
+    if (!seen(index)) return;
+    context.beginPath();
+    context.fillStyle = bad.has(index) ? BAD : judged ? OK : NEUTRAL;
+    context.arc(point.x * width, point.y * height, bad.has(index) ? width / 80 : width / 150, 0, Math.PI * 2);
+    context.fill();
+  });
+}
+
+const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const frameRef = useRef(0);
+  const trackerRef = useRef<Tracker | null>(null);
+  const liveRef = useRef<TrackerState | null>(null);
+  const narratorRef = useRef<Narrator | null>(null);
+  const voiceOnRef = useRef(readVoicePref());
+  const setRef = useRef(1);
+  const totalsRef = useRef<Totals>(EMPTY);
+  const [phase, setPhase] = useState<Phase>('setup');
+  const [problem, setProblem] = useState<Problem>('other');
+  const [live, setLive] = useState<TrackerState | null>(null);
+  const [set, setSet] = useState(1);
+  const [totals, setTotals] = useState<Totals>(EMPTY);
+  const [flash, setFlash] = useState('');
+  const [restLeft, setRestLeft] = useState(0);
+  const restUntilRef = useRef(0);
+  const [personSeen, setPersonSeen] = useState(false);
+  const [voiceOn, setVoiceOn] = useState(voiceOnRef.current);
+  // Live numbers for calibrating: the Datos button, or ?debug in the address.
+  const debugRef = useRef(typeof location !== 'undefined' && /[?&]debug/.test(location.href));
+  const [debugOn, setDebugOn] = useState(debugRef.current);
+  const [reading, setReading] = useState<Reading | null>(null);
+  const [fps, setFps] = useState(0);
+  const canSpeak = voiceSupported();
+
+  const say = useCallback((text: string, urgent = false) => {
+    if (voiceOnRef.current) speak(text, urgent);
+  }, []);
+
+  // Short on purpose: what we are doing and where to stand. The steps are in the demo.
+  const intro = useCallback(() => introText(rule), [rule]);
+
+  useEffect(() => {
+    warmVoice(phrasesFor(rule));
+  }, [rule]);
+
+  function toggleVoice() {
+    const next = !voiceOnRef.current;
+    voiceOnRef.current = next;
+    writeVoicePref(next);
+    setVoiceOn(next);
+    if (!next) stopSpeaking();
+    else if (phase === 'setup') speak(intro());
+  }
+
+  const stop = useCallback(() => {
+    cancelAnimationFrame(frameRef.current);
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    streamRef.current = null;
+  }, []);
+
+  useEffect(() => stop, [stop]);
+  useEffect(() => stopSpeaking, []);
+
+  // Like a teacher at the start of the class: what we are doing and how, while you get in position.
+  useEffect(() => {
+    if (phase === 'setup') say(intro());
+  }, [phase, intro, say]);
+
+  useEffect(() => {
+    if (!flash) return;
+    const timer = window.setTimeout(() => setFlash(''), 3000);
+    return () => window.clearTimeout(timer);
+  }, [flash]);
+
+  const finish = useCallback(() => {
+    if (liveRef.current) totalsRef.current = add(totalsRef.current, liveRef.current);
+    liveRef.current = null;
+    setTotals(totalsRef.current);
+    stop();
+    setPhase('done');
+    say(summaryText(rule, totalsRef.current), true);
+  }, [stop, rule, say]);
+
+  const completeSet = useCallback(
+    (state: TrackerState) => {
+      if (setRef.current >= SETS) {
+        finish();
+        return;
+      }
+      totalsRef.current = add(totalsRef.current, state);
+      setTotals(totalsRef.current);
+      say(setDoneText(setRef.current, SETS), true);
+      // A real rest: nothing counts and nothing is said until it ends or you skip it.
+      restUntilRef.current = performance.now() + REST_MS;
+      setRestLeft(Math.ceil(REST_MS / 1000));
+      setRef.current += 1;
+      setSet(setRef.current);
+      liveRef.current = null;
+      setLive(null);
+    },
+    [finish, say],
+  );
+
+  const loop = useCallback(
+    (landmarker: PoseLandmarker) => {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      if (!video || !canvas) return;
+      let lastVideoTime = -1;
+      let lastPaint = 0;
+      let frames = 0;
+      let windowStart = performance.now();
+      const tick = () => {
+        frameRef.current = requestAnimationFrame(tick);
+        if (video.readyState < 2 || video.currentTime === lastVideoTime) return;
+        lastVideoTime = video.currentTime;
+        const now = performance.now();
+        const lm = landmarker.detectForVideo(video, now).landmarks[0] ?? null;
+        if (restUntilRef.current > 0) {
+          if (now < restUntilRef.current) {
+            draw(canvas, video, lm, [], false);
+            if (now - lastPaint > 250) {
+              lastPaint = now;
+              setRestLeft(Math.ceil((restUntilRef.current - now) / 1000));
+            }
+            return;
+          }
+          restUntilRef.current = 0;
+          setRestLeft(0);
+          trackerRef.current?.reset();
+          say(nextSetText(setRef.current), true);
+          return;
+        }
+        const tracker = trackerRef.current;
+        const state = tracker ? tracker.update(lm, now) : null;
+        liveRef.current = state;
+        const line = state ? narratorRef.current?.update(state, now) : null;
+        if (line) say(line.text, line.urgent);
+        draw(canvas, video, lm, state?.failing ?? [], !!tracker);
+        frames += 1;
+        if (now - windowStart > 1000) {
+          if (debugRef.current) setFps(Math.round((frames * 1000) / (now - windowStart)));
+          frames = 0;
+          windowStart = now;
+        }
+        if (now - lastPaint > 100) {
+          lastPaint = now;
+          if (debugRef.current) setReading(rule && lm ? measure(rule, lm) : null);
+          setLive(state);
+          if (lm) setPersonSeen(true);
+        }
+        if (state && rule && isSetDone(rule, state)) completeSet(state);
+      };
+      tick();
+    },
+    [rule, completeSet, say],
+  );
+
+  async function start() {
+    stopSpeaking();
+    if (!window.isSecureContext) {
+      setProblem('insecure');
+      setPhase('error');
+      return;
+    }
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setProblem('nocamera');
+      setPhase('error');
+      return;
+    }
+    setPhase('starting');
+    let stream: MediaStream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+    } catch (error) {
+      setProblem(problemOf(error));
+      setPhase('error');
+      return;
+    }
+    streamRef.current = stream;
+    try {
+      await loadLandmarker();
+    } catch {
+      stop();
+      setProblem('model');
+      setPhase('error');
+      return;
+    }
+    if (streamRef.current !== stream) return;
+    trackerRef.current = rule ? createTracker(rule) : null;
+    narratorRef.current = rule ? createNarrator(rule) : null;
+    liveRef.current = null;
+    setRef.current = 1;
+    totalsRef.current = EMPTY;
+    setSet(1);
+    setTotals(EMPTY);
+    setLive(null);
+    setPersonSeen(false);
+    setPhase('live');
+  }
+
+  useEffect(() => {
+    if (phase !== 'live') return;
+    const video = videoRef.current;
+    const stream = streamRef.current;
+    if (!video || !stream) return;
+    video.srcObject = stream;
+    let cancelled = false;
+    video
+      .play()
+      .then(() => loadLandmarker())
+      .then((landmarker) => {
+        if (!cancelled) loop(landmarker);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        stop();
+        setProblem('other');
+        setPhase('error');
+      });
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frameRef.current);
+    };
+  }, [phase, loop, stop]);
+
+  function exit() {
+    stop();
+    stopSpeaking();
+    onExit();
+  }
+
+  const voiceButton = canSpeak ? (
+    <button type="button" className={styles.voice} onClick={toggleVoice} aria-pressed={voiceOn}>
+      <Icon name={voiceOn ? 'volume' : 'volumeOff'} size={18} /> Voz: {voiceOn ? 'sí' : 'no'}
+    </button>
+  ) : null;
+
+  if (phase === 'error') {
+    const { title, text } = PROBLEMS[problem];
+    return (
+      <section className={styles.card} role="alert">
+        <p className={styles.kicker}>{exercise.name}</p>
+        <h1 className={styles.title}>{title}</h1>
+        <p className={styles.text}>{text}</p>
+        <div className={styles.actions}>
+          <button type="button" className={styles.primary} onClick={start}>
+            Reintentar
+          </button>
+          <button type="button" className={styles.secondary} onClick={exit}>
+            Elegir otro ejercicio
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  if (phase === 'setup' || phase === 'starting') {
+    return (
+      <section className={`${styles.card} ${rule ? styles.withDemo : ''}`} aria-labelledby="coach-titulo">
+        {rule ? (
+          <div className={styles.demoSlot}>
+            <ExerciseDemo rule={rule} />
+          </div>
+        ) : null}
+        <div className={styles.setupText}>
+        <p className={styles.kicker}>PREPARATE</p>
+        <h1 id="coach-titulo" className={styles.title}>
+          {exercise.name}
+        </h1>
+        <ul className={styles.list}>
+          <li>{rule ? rule.setup : 'Ubicá la cámara a 2–3 metros, que se te vea el cuerpo entero.'}</li>
+          <li>Buena luz de frente, nada brillante detrás tuyo.</li>
+          <li>El video se analiza en esta compu: no se graba ni se sube.</li>
+          {rule ? <li>{SETS} series de {rule.mode === 'reps' ? `${rule.target} repeticiones` : `${rule.target} segundos`}. Las repeticiones mal hechas no cuentan.</li> : <li>Este ejercicio no tiene corrección todavía: vas a ver tu esqueleto en vivo.</li>}
+        </ul>
+        <div className={styles.actions}>
+          <button type="button" className={styles.primary} onClick={start} disabled={phase === 'starting'}>
+            <Icon name="camera" /> {phase === 'starting' ? 'Abriendo cámara…' : 'Activar cámara'}
+          </button>
+          <button type="button" className={styles.secondary} onClick={exit}>
+            Volver
+          </button>
+          {voiceButton}
+        </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (phase === 'done') {
+    const worst = Object.entries(totals.errors).sort((a, b) => b[1] - a[1])[0];
+    return (
+      <section className={styles.card} aria-labelledby="resumen-titulo">
+        <p className={styles.kicker}>RESUMEN</p>
+        <h1 id="resumen-titulo" className={styles.title}>
+          {exercise.name}
+        </h1>
+        {rule ? (
+          <div className={styles.summary}>
+            {rule.mode === 'reps' ? (
+              <div className={styles.stat}>
+                <span className={styles.statValue}>{totals.reps}</span>
+                <span className={styles.statLabel}>repeticiones bien hechas</span>
+              </div>
+            ) : (
+              <div className={styles.stat}>
+                <span className={styles.statValue}>{Math.round(totals.holdMs / 1000)} s</span>
+                <span className={styles.statLabel}>en buena postura</span>
+              </div>
+            )}
+            {rule.mode === 'reps' ? (
+              <div className={styles.stat}>
+                <span className={styles.statValue}>{totals.badReps}</span>
+                <span className={styles.statLabel}>para corregir</span>
+              </div>
+            ) : null}
+            <div className={styles.stat}>
+              <span className={styles.statValue}>{worst ? worst[1] : 0}</span>
+              <span className={styles.statLabel}>{worst ? `veces: «${worst[0]}»` : 'correcciones'}</span>
+            </div>
+          </div>
+        ) : (
+          <p className={styles.text}>Sesión terminada.</p>
+        )}
+        <div className={styles.actions}>
+          <button type="button" className={styles.primary} onClick={start}>
+            Otra vez
+          </button>
+          <button type="button" className={styles.secondary} onClick={exit}>
+            Elegir otro ejercicio
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  const target = rule?.target ?? 0;
+  const count = rule && live ? (rule.mode === 'reps' ? live.reps : Math.floor(live.holdMs / 1000)) : 0;
+  const fill = rule && live ? (rule.mode === 'reps' ? live.progress : Math.min(1, live.holdMs / (rule.target * 1000))) : 0;
+  const framing = !rule ? !personSeen : !live || live.status === 'framing';
+
+  return (
+    <section className={styles.stage} aria-label={`Entrenando: ${exercise.name}`}>
+      <div className={styles.videoWrap}>
+        <video ref={videoRef} className={styles.video} muted playsInline />
+        <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
+        {framing ? <p className={styles.framing}>{live?.message ?? 'Buscándote… ubicate frente a la cámara.'}</p> : null}
+        {restLeft > 0 ? (
+          <div className={styles.rest} role="status">
+            <p className={styles.restTitle}>Descansá</p>
+            <p className={styles.restTime}>{restLeft}</p>
+            <p className={styles.restNext}>Después: serie {set} de {SETS}</p>
+            <button
+              type="button"
+              className={styles.secondary}
+              onClick={() => {
+                restUntilRef.current = performance.now();
+              }}>
+              Seguir ya
+            </button>
+          </div>
+        ) : null}
+        {flash ? <p className={styles.flash}>{flash}</p> : null}
+      </div>
+
+      <aside className={styles.panel}>
+        <p className={styles.kicker}>{exercise.name}</p>
+        {rule ? (
+          <>
+            <p className={styles.setLabel}>
+              SERIE {set}/{SETS}
+            </p>
+            <p className={styles.count} aria-live="polite">
+              {count}
+              <span className={styles.target}>
+                /{target}
+                {rule.mode === 'hold' ? ' s' : ''}
+              </span>
+            </p>
+            <div className={styles.bar} aria-hidden="true">
+              <div className={styles.barFill} style={{ width: `${Math.round(fill * 100)}%` }} />
+            </div>
+            <p className={`${styles.message} ${styles[live?.tone ?? 'info']}`} aria-live="polite">
+              {live?.message ?? 'Ubicate frente a la cámara.'}
+            </p>
+            {rule.mode === 'reps' ? <p className={styles.stats}>Para corregir en esta serie: {live?.badReps ?? 0}</p> : null}
+          </>
+        ) : (
+          <p className={`${styles.message} ${styles.info}`}>Análisis de postura todavía no disponible para este ejercicio. Mirá tu esqueleto para controlar el movimiento.</p>
+        )}
+        <div className={styles.actions}>
+          <button type="button" className={styles.primary} onClick={finish}>
+            Terminar
+          </button>
+          <button type="button" className={styles.secondary} onClick={exit}>
+            Salir
+          </button>
+          {voiceButton}
+          <button
+            type="button"
+            className={styles.voice}
+            aria-pressed={debugOn}
+            onClick={() => {
+              debugRef.current = !debugRef.current;
+              setDebugOn(debugRef.current);
+            }}>
+            Datos
+          </button>
+        </div>
+        {debugOn ? (
+          <div className={styles.debug} aria-live="off">
+            {reading && rule ? (
+              <>
+                <p>
+                  lado: <b>{reading.side === 'left' ? 'izquierdo' : 'derecho'}</b> · articulaciones: <b>{reading.visible}/{reading.total}</b> · visibilidad mín: <b>{reading.minVisibility.toFixed(2)}</b> · {fps} fps
+                </p>
+                {reading.metric !== null ? (
+                  <p>
+                    ángulo: <b>{Math.round(reading.metric)}°</b> · reposo {reading.rest}° → profundidad {reading.peak}° · progreso <b>{Math.round((reading.progress ?? 0) * 100)}%</b>
+                  </p>
+                ) : null}
+                {reading.checks.map((check) => (
+                  <p key={check.message} className={check.ok ? styles.checkOk : styles.checkBad}>
+                    {check.ok ? '✓' : '✗'} {check.message}
+                  </p>
+                ))}
+              </>
+            ) : (
+              <p>Sin cuerpo detectado</p>
+            )}
+          </div>
+        ) : null}
+      </aside>
+    </section>
+  );
+};
+
+export default PoseCoach;

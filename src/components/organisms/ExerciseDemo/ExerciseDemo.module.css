@@ -1,0 +1,96 @@
+.demo {
+  	position: relative;
+  	width: 100%;
+  	aspect-ratio: 4 / 3;
+  	min-height: 240px;
+  	max-height: 460px;
+  	overflow: hidden;
+  	background: radial-gradient(120% 90% at 50% 30%, #1d1d1d 0%, #0c0c0c 100%);
+  	border: 1px solid #2a2a2a;
+  	font-family: Inter;
+  	color: #fff;
+}
+.stage {
+  	position: absolute;
+  	inset: 0;
+  	cursor: grab;
+  	touch-action: pan-y;
+}
+.stage:active {
+  	cursor: grabbing;
+}
+.cue {
+  	position: absolute;
+  	top: 12px;
+  	left: 12px;
+  	right: 12px;
+  	margin: 0;
+  	padding: 8px 12px;
+  	border-left: 3px solid #ff7900;
+  	background-color: rgba(8, 8, 8, 0.78);
+  	font-size: 14px;
+  	font-weight: 600;
+  	line-height: 1.35;
+  	pointer-events: none;
+}
+.controls {
+  	position: absolute;
+  	left: 12px;
+  	bottom: 12px;
+  	display: flex;
+  	flex-wrap: wrap;
+  	gap: 6px;
+}
+.chip {
+  	height: 32px;
+  	padding: 0 12px;
+  	background-color: rgba(8, 8, 8, 0.78);
+  	border: 1px solid #3a3a3a;
+  	color: #d9dae0;
+  	font-size: 12px;
+  	font-weight: 600;
+}
+.chip:hover {
+  	border-color: #ff7900;
+}
+.on {
+  	background-color: #ff7900;
+  	border-color: #ff7900;
+  	color: #080808;
+}
+.hint {
+  	position: absolute;
+  	right: 12px;
+  	bottom: 14px;
+  	font-size: 11px;
+  	letter-spacing: 0.08em;
+  	text-transform: uppercase;
+  	color: #8a8c94;
+  	pointer-events: none;
+}
+.fallback {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 8px;
+  	padding: 16px;
+  	border-left: 3px solid #ff7900;
+  	background-color: #121212;
+  	font-family: Inter;
+  	font-size: 14px;
+  	line-height: 1.5;
+  	color: #d9dae0;
+}
+.fallback p {
+  	margin: 0;
+}
+.kicker {
+  	font-size: 11px;
+  	letter-spacing: 0.18em;
+  	color: #ff7900;
+  	font-weight: 600;
+}
+@media (max-width: 599px) {
+  	.hint {
+    		display: none;
+  	}
+}

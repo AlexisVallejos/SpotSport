@@ -24,7 +24,10 @@ const TrainingCampaign: FunctionComponent = () => {
             <TrainingCategoryRow key={category} label={category} />
           ))}
         </div>
-        <ActionButton variant="campaign" label="Armá tu equipo de training" />
+        <div className={styles.actions}>
+          <ActionButton variant="campaign" label="Armá tu equipo de training" />
+          <ActionButton variant="light" label="Entrená con cámara" href="#entrenar" />
+        </div>
       </div>
     </section>
   );

@@ -1,0 +1,43 @@
+.page {
+  	min-height: 100vh;
+  	background-color: #080808;
+  	color: #fff;
+  	font-family: Inter;
+}
+.bar {
+  	position: sticky;
+  	top: 0;
+  	z-index: 10;
+  	display: flex;
+  	align-items: center;
+  	justify-content: space-between;
+  	gap: 16px;
+  	height: 64px;
+  	padding: 0 clamp(16px, 4vw, 48px);
+  	background-color: rgba(8, 8, 8, 0.92);
+  	border-bottom: 1px solid #1f1f1f;
+  	backdrop-filter: blur(8px);
+}
+.back {
+  	display: inline-flex;
+  	align-items: center;
+  	gap: 8px;
+  	font-family: 'Barlow Condensed';
+  	font-weight: 800;
+  	font-size: 24px;
+  	letter-spacing: 0.04em;
+}
+.back:hover {
+  	color: #ff7900;
+}
+.section {
+  	font-size: 12px;
+  	letter-spacing: 0.16em;
+  	text-transform: uppercase;
+  	color: #a7a9b2;
+}
+.main {
+  	max-width: 1440px;
+  	margin: 0 auto;
+  	padding: clamp(24px, 4vw, 56px) clamp(16px, 4vw, 48px) 80px;
+}
