@@ -2424,4 +2424,5 @@ Cambios respecto de los bloques de código de arriba (el código del repo es la 
 - `lib/wger.ts`: `subtitle(exercise, extra, limit)` evita repeticiones ("Abdomen · Abdomen"); `searchExercises` pone primero las rutinas de Ritmo-Vida.
 - `pages/Entrenar.tsx`: importa `ExerciseCatalog` y `PoseCoach` directo, no desde el barrel, para que MediaPipe quede en el chunk lazy (landing: 409 KB → 264 KB).
 - `ExerciseCatalog.module.css`: grilla `minmax(150px, 1fr)` para 2 columnas en celular.
-- Pendiente: copia local del modelo en `public/models/pose_landmarker_lite.task` (hoy cae al de Google).
+- Modelo local: `public/models/pose_landmarker_lite.task` (5,5 MB, de `storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/`). `landmarker.ts` lo usa si existe y cae al de Google si no.
+- Voz: `lib/voice.ts` (speechSynthesis; prioriza voz neuronal > nube > local y acento es-AR; reintenta con la siguiente si una voz online falla) y `lib/pose/script.ts` (guion en voseo con frases que rotan).

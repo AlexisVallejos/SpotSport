@@ -15,9 +15,28 @@ describe('pickVoice', () => {
     expect(pickVoice([voice('en_US'), voice('es_CL')])?.lang).toBe('es_CL');
   });
 
-  it('prefers an offline voice inside the same language', () => {
-    const list = [voice('es-ES', 'Google español', false), voice('es-ES', 'Microsoft Helena', true)];
-    expect(pickVoice(list)?.name).toBe('Microsoft Helena');
+  it('prefers a neural voice over any other, even from another country', () => {
+    const list = [voice('es-AR', 'Local argentina'), voice('es-ES', 'Microsoft Alvaro Online (Natural) - Spanish (Spain)', false)];
+    expect(pickVoice(list)?.name).toContain('Natural');
+  });
+
+  it('picks the Argentine neural voice when it exists', () => {
+    const list = [
+      voice('es-ES', 'Microsoft Elvira Online (Natural) - Spanish (Spain)', false),
+      voice('es-AR', 'Microsoft Elena Online (Natural) - Spanish (Argentina)', false),
+      voice('es-MX', 'Microsoft Dalia Online (Natural) - Spanish (Mexico)', false),
+    ];
+    expect(pickVoice(list)?.name).toContain('Elena');
+  });
+
+  it('prefers a cloud voice (Google) over the basic local one', () => {
+    const list = [voice('es-ES', 'Microsoft Helena - Spanish (Spain)', true), voice('es-US', 'Google español de Estados Unidos', false)];
+    expect(pickVoice(list)?.name).toContain('Google');
+  });
+
+  it('skips voices that already failed', () => {
+    const list = [voice('es-AR', 'Microsoft Elena Online (Natural) - Spanish (Argentina)', false), voice('es-ES', 'Microsoft Helena - Spanish (Spain)', true)];
+    expect(pickVoice(list, new Set(['Microsoft Elena Online (Natural) - Spanish (Argentina)']))?.name).toContain('Helena');
   });
 
   it('returns null when there is no Spanish voice', () => {
