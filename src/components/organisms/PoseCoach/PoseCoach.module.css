@@ -218,3 +218,22 @@
     		transition: none;
   	}
 }
+.voice {
+  	display: inline-flex;
+  	align-items: center;
+  	justify-content: center;
+  	gap: 8px;
+  	height: 52px;
+  	padding: 0 18px;
+  	border: 1px solid #3a3a3a;
+  	color: #d0d1d6;
+  	font-size: 14px;
+  	font-weight: 600;
+}
+.voice:hover {
+  	border-color: #ff7900;
+}
+.voice[aria-pressed="true"] {
+  	color: #ff7900;
+  	border-color: #ff7900;
+}

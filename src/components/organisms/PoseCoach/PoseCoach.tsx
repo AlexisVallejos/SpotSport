@@ -5,6 +5,8 @@ import { createTracker, isSetDone, type Tracker, type TrackerState } from '../..
 import type { Landmarks } from '../../../lib/pose/geometry';
 import { loadLandmarker, POSE_CONNECTIONS } from '../../../lib/pose/landmarker';
 import type { PoseRule } from '../../../lib/pose/rules';
+import { createNarrator, introText, setDoneText, summaryText, type Narrator } from '../../../lib/pose/script';
+import { readVoicePref, speak, stopSpeaking, voiceSupported, writeVoicePref } from '../../../lib/voice';
 import type { Exercise } from '../../../lib/wger';
 import styles from './PoseCoach.module.css';
 
@@ -83,6 +85,8 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
   const frameRef = useRef(0);
   const trackerRef = useRef<Tracker | null>(null);
   const liveRef = useRef<TrackerState | null>(null);
+  const narratorRef = useRef<Narrator | null>(null);
+  const voiceOnRef = useRef(readVoicePref());
   const setRef = useRef(1);
   const totalsRef = useRef<Totals>(EMPTY);
   const [phase, setPhase] = useState<Phase>('setup');
@@ -92,6 +96,21 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
   const [totals, setTotals] = useState<Totals>(EMPTY);
   const [flash, setFlash] = useState('');
   const [personSeen, setPersonSeen] = useState(false);
+  const [voiceOn, setVoiceOn] = useState(voiceOnRef.current);
+  const canSpeak = voiceSupported();
+
+  const say = useCallback((text: string, urgent = false) => {
+    if (voiceOnRef.current) speak(text, urgent);
+  }, []);
+
+  function toggleVoice() {
+    const next = !voiceOnRef.current;
+    voiceOnRef.current = next;
+    writeVoicePref(next);
+    setVoiceOn(next);
+    if (!next) stopSpeaking();
+    else if (phase === 'setup') speak(introText(exercise, rule, SETS));
+  }
 
   const stop = useCallback(() => {
     cancelAnimationFrame(frameRef.current);
@@ -100,6 +119,12 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
   }, []);
 
   useEffect(() => stop, [stop]);
+  useEffect(() => stopSpeaking, []);
+
+  // Like a teacher at the start of the class: what we are doing and how, while you get in position.
+  useEffect(() => {
+    if (phase === 'setup') say(introText(exercise, rule, SETS));
+  }, [phase, exercise, rule, say]);
 
   useEffect(() => {
     if (!flash) return;
@@ -113,7 +138,8 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
     setTotals(totalsRef.current);
     stop();
     setPhase('done');
-  }, [stop]);
+    say(summaryText(rule, totalsRef.current), true);
+  }, [stop, rule, say]);
 
   const completeSet = useCallback(
     (state: TrackerState) => {
@@ -123,13 +149,14 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
       }
       totalsRef.current = add(totalsRef.current, state);
       setTotals(totalsRef.current);
+      say(setDoneText(setRef.current, SETS), true);
       setFlash(`¡Serie ${setRef.current} completa! Respirá y seguí con la ${setRef.current + 1}.`);
       setRef.current += 1;
       setSet(setRef.current);
       trackerRef.current?.reset();
       liveRef.current = null;
     },
-    [finish],
+    [finish, say],
   );
 
   const loop = useCallback(
@@ -148,6 +175,8 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
         const tracker = trackerRef.current;
         const state = tracker ? tracker.update(lm, now) : null;
         liveRef.current = state;
+        const line = state ? narratorRef.current?.update(state, now) : null;
+        if (line) say(line.text, line.urgent);
         draw(canvas, video, lm, state?.failing ?? [], !!tracker);
         if (now - lastPaint > 100) {
           lastPaint = now;
@@ -158,10 +187,11 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
       };
       tick();
     },
-    [rule, completeSet],
+    [rule, completeSet, say],
   );
 
   async function start() {
+    stopSpeaking();
     if (!window.isSecureContext) {
       setProblem('insecure');
       setPhase('error');
@@ -192,6 +222,7 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
     }
     if (streamRef.current !== stream) return;
     trackerRef.current = rule ? createTracker(rule) : null;
+    narratorRef.current = rule ? createNarrator(rule) : null;
     liveRef.current = null;
     setRef.current = 1;
     totalsRef.current = EMPTY;
@@ -229,8 +260,15 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
 
   function exit() {
     stop();
+    stopSpeaking();
     onExit();
   }
+
+  const voiceButton = canSpeak ? (
+    <button type="button" className={styles.voice} onClick={toggleVoice} aria-pressed={voiceOn}>
+      <Icon name={voiceOn ? 'volume' : 'volumeOff'} size={18} /> Voz: {voiceOn ? 'sí' : 'no'}
+    </button>
+  ) : null;
 
   if (phase === 'error') {
     const { title, text } = PROBLEMS[problem];
@@ -271,6 +309,7 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
           <button type="button" className={styles.secondary} onClick={exit}>
             Volver
           </button>
+          {voiceButton}
         </div>
       </section>
     );
@@ -369,6 +408,7 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
           <button type="button" className={styles.secondary} onClick={exit}>
             Salir
           </button>
+          {voiceButton}
         </div>
       </aside>
     </section>
