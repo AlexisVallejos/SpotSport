@@ -237,3 +237,24 @@
   	color: #ff7900;
   	border-color: #ff7900;
 }
+.withDemo {
+  	max-width: 1080px;
+  	display: grid;
+  	grid-template-columns: minmax(0, 1fr);
+  	gap: 28px;
+}
+.demoSlot {
+  	min-width: 0;
+}
+.setupText {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 20px;
+  	min-width: 0;
+}
+@media (min-width: 900px) {
+  	.withDemo {
+    		grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    		align-items: start;
+  	}
+}

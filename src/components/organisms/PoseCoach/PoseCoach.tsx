@@ -1,6 +1,7 @@
 import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
 import type { PoseLandmarker } from '@mediapipe/tasks-vision';
 import { Icon } from '../../atoms';
+import ExerciseDemo from '../ExerciseDemo/ExerciseDemo';
 import { createTracker, isSetDone, type Tracker, type TrackerState } from '../../../lib/pose/engine';
 import type { Landmarks } from '../../../lib/pose/geometry';
 import { loadLandmarker, POSE_CONNECTIONS } from '../../../lib/pose/landmarker';
@@ -298,7 +299,13 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
 
   if (phase === 'setup' || phase === 'starting') {
     return (
-      <section className={styles.card} aria-labelledby="coach-titulo">
+      <section className={`${styles.card} ${rule ? styles.withDemo : ''}`} aria-labelledby="coach-titulo">
+        {rule ? (
+          <div className={styles.demoSlot}>
+            <ExerciseDemo rule={rule} />
+          </div>
+        ) : null}
+        <div className={styles.setupText}>
         <p className={styles.kicker}>PREPARATE</p>
         <h1 id="coach-titulo" className={styles.title}>
           {exercise.name}
@@ -317,6 +324,7 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
             Volver
           </button>
           {voiceButton}
+        </div>
         </div>
       </section>
     );
