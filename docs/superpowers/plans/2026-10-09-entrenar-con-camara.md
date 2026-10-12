@@ -2413,3 +2413,15 @@ export default Entrenar;
 - [ ] **Step 6:** Desde la landing, el botón "Entrená con cámara" lleva a `#entrenar`; "← SPOT" vuelve.
 - [ ] **Step 7 (manual, usuario):** frente a la webcam, hacer sentadillas: cuenta reps, avisa "Bajá más" y "Mantené el pecho arriba".
 ```
+
+---
+
+## Ajustes durante la ejecución
+
+Cambios respecto de los bloques de código de arriba (el código del repo es la fuente de verdad):
+
+- `lib/exercises/match.ts`: patrones afinados contra los 645 nombres reales de wger. `plancha de lado` → `sidePlank`; `patadas traseras/de burro` → `kick`; `\bflexion` y la lista `NOT_PUSHUP` suma `lateral|pino|burpee|estiramiento|escapular` para descartar dorsiflexión, flexión lateral, flexión a pino, etc.
+- `lib/wger.ts`: `subtitle(exercise, extra, limit)` evita repeticiones ("Abdomen · Abdomen"); `searchExercises` pone primero las rutinas de Ritmo-Vida.
+- `pages/Entrenar.tsx`: importa `ExerciseCatalog` y `PoseCoach` directo, no desde el barrel, para que MediaPipe quede en el chunk lazy (landing: 409 KB → 264 KB).
+- `ExerciseCatalog.module.css`: grilla `minmax(150px, 1fr)` para 2 columnas en celular.
+- Pendiente: copia local del modelo en `public/models/pose_landmarker_lite.task` (hoy cae al de Google).
