@@ -15,3 +15,6 @@ export { default as CuratedKit } from './CuratedKit/CuratedKit';
 export { default as BrandClosing } from './BrandClosing/BrandClosing';
 export { default as SiteFooter } from './SiteFooter/SiteFooter';
 export { default as IntroSplash } from './IntroSplash/IntroSplash';
+export { default as LavaHero } from './LavaHero/LavaHero';
+export { default as SpotMarquee } from './SpotMarquee/SpotMarquee';
+export { default as DisciplineDeck } from './DisciplineDeck/DisciplineDeck';

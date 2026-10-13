@@ -4,8 +4,8 @@ export const images = {
   heroRunner: '/images/hero-runner.jpg',
   runningPanorama: '/images/running-panorama.jpg',
   trainingLift: '/images/training-lift.jpg',
-  kitShoe: '/images/kit-shoe.png',
-  kitCap: '/images/kit-cap.png',
+  kitShoe: '/images/kit-shoe.webp',
+  kitCap: '/images/kit-cap.webp',
   brandAtmosphere: '/images/brand-atmosphere.jpg',
 };
 

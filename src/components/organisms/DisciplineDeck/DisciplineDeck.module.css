@@ -1,0 +1,190 @@
+/* Las cuatro disciplinas en una fila, tipo acordeón: el panel activo se expande. */
+.section {
+  width: 100%;
+  padding: clamp(56px, 7vw, 96px) clamp(20px, 4.45vw, 64px) clamp(48px, 6vw, 80px);
+  background: #080808;
+  color: #fff;
+  font-family: Inter, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #ffffffb3;
+}
+
+.eyebrow::before { content: ''; width: 6px; height: 6px; background: #ff7900; }
+
+.heading {
+  margin-top: 14px;
+  font: 800 clamp(44px, 5.4vw, 80px)/.88 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+}
+
+.heading span { color: #ff7900; }
+
+.intro { max-width: 300px; margin: 0; font-size: 14px; line-height: 1.6; color: #c9c7bf; }
+
+.panels {
+  display: flex;
+  gap: 10px;
+  height: clamp(340px, 50svh, 480px);
+}
+
+.panel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: 16px;
+  background: #161616;
+  transition: flex-grow .6s var(--spot-ease);
+}
+
+.active { flex-grow: 2.6; }
+
+.photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(.7) brightness(.62);
+  transform: scale(1.06);
+  transition: filter .6s, transform .8s var(--spot-ease);
+}
+
+.panel:nth-child(2) .photo { object-position: 50% 25%; }
+.panel:nth-child(3) .photo { object-position: 50% 60%; }
+.active .photo { filter: none; transform: scale(1); }
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, #080808f0 0%, #08080880 40%, #08080000 72%);
+}
+
+.active::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px #ff790099;
+  pointer-events: none;
+}
+
+.number {
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  font: 800 36px/.8 'Barlow Condensed', sans-serif;
+  color: transparent;
+  -webkit-text-stroke: 1.2px #ff7900;
+}
+
+.content {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: #ff9a3d;
+  white-space: nowrap;
+}
+
+.title {
+  display: flex;
+  overflow: hidden;
+  margin-top: 6px;
+  font: 800 clamp(22px, 2.2vw, 34px)/.9 'Barlow Condensed', sans-serif;
+  letter-spacing: -.02em;
+  white-space: nowrap;
+}
+
+.title span { display: inline-block; }
+
+.active .title { font-size: clamp(34px, 3.4vw, 56px); }
+
+/* En los paneles angostos el título va en vertical, para que nunca se corte. */
+.panel:not(.active) .title {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: clamp(26px, 2.4vw, 38px);
+}
+
+/* Al activarse, las letras suben una por una. */
+.active .title span {
+  animation: letter-in .55s var(--spot-ease) both;
+  animation-delay: calc(var(--i) * 22ms);
+}
+
+@keyframes letter-in {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+
+.description { margin: 8px 0 0; font-size: 13px; color: #e6e4dd; }
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 9px 15px;
+  border-radius: 999px;
+  background: #ff7900;
+  color: #080808;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Los paneles angostos muestran sólo número y título. */
+.kicker, .description, .cta {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity .35s var(--spot-ease), transform .35s var(--spot-ease);
+}
+
+.panel:not(.active) .kicker,
+.panel:not(.active) .description,
+.panel:not(.active) .cta { display: none; }
+
+.active .kicker, .active .description, .active .cta { opacity: 1; transform: none; transition-delay: .2s; }
+
+/* En pantallas angostas: grilla de 2 × 2, todas visibles; la activa ocupa la fila. */
+@media (max-width: 900px) {
+  .header { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .panels { display: grid; grid-template-columns: 1fr 1fr; height: auto; gap: 8px; }
+  .panel { height: 150px; }
+  .active { grid-column: 1 / -1; grid-row: 1; height: 280px; }
+  .title { font-size: 24px; }
+  .panel:not(.active) .title { writing-mode: horizontal-tb; transform: none; font-size: 24px; }
+  .number { font-size: 28px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel, .photo, .kicker, .description, .cta { transition: none; }
+  .active .title span { animation: none; }
+}

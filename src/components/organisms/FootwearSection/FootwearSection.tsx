@@ -6,6 +6,7 @@ import CollectionFilters from '../CollectionFilters/CollectionFilters';
 import ProductGrid from '../ProductGrid/ProductGrid';
 import { FootwearFilterKey, footwearFilters, footwearProducts } from '../../../data/products';
 
+// Mismo formato que "Vestite de lo que te mueve": título, filtros y grilla de cartas.
 const FootwearSection: FunctionComponent = () => {
   const [selected, setSelected] = useState<FootwearFilterKey>('all');
   const route = useHashRoute();
@@ -28,8 +29,8 @@ const FootwearSection: FunctionComponent = () => {
   }));
 
   return (
-    <ContentSection tone="white" id="calzado" labelledBy="calzado-titulo">
-      <SectionHeading id="calzado-titulo" marker="NUEVAS SILUETAS" title="EL PRÓXIMO PASO ES TUYO." linkLabel="Explorá el calzado" />
+    <ContentSection tone="muted" id="calzado" labelledBy="calzado-titulo">
+      <SectionHeading id="calzado-titulo" marker="NUEVAS SILUETAS" title="ELEGÍ TU TERRENO." linkLabel="Explorá el calzado" />
       <CollectionFilters filters={filters} disclosure="Diseños propios SPOT · Selección conceptual" />
       <ProductGrid products={products} />
     </ContentSection>

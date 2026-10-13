@@ -11,7 +11,7 @@ const CuratedKit: FunctionComponent = () => {
   return (
     <section className={styles.seleccinSpotEquipoDeRut} aria-labelledby="seleccion-titulo">
       <div className={styles.curatedKitScene}>
-        <ProductViewer name="SPOT Órbita 01" image="/images/footwear-orbita-01.png" featured color={color} baseColor="ivory" />
+        <ProductViewer name="SPOT Órbita 01" image="/images/footwear-orbita-01.webp" featured color={color} baseColor="ivory" />
         <div className={styles.sceneColors}><span aria-live="polite">ÓRBITA 01 / {productColors[color].label.toUpperCase()}</span><div role="group" aria-label="Colores de la selección Órbita 01">{(['ivory', 'charcoal', 'orange'] as SwatchColor[]).map(option => <ColorSwatch key={option} color={option} selected={color === option} onSelect={() => setColor(option)} />)}</div><small>Vista de color conceptual</small></div>
       </div>
       <div className={styles.kitDetails}>

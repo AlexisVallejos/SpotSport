@@ -6,6 +6,14 @@ import styles from './IntroSplash.module.css';
 const MAX_WAIT_MS = 8000;
 const FADE_MS = 600;
 
+/** Avisa a la portada que ya puede arrancar su video desde el principio. */
+export const INTRO_DONE_EVENT = 'spot:intro-done';
+const markIntroDone = () => {
+  if (document.documentElement.dataset.introDone) return;
+  document.documentElement.dataset.introDone = 'true';
+  window.dispatchEvent(new Event(INTRO_DONE_EVENT));
+};
+
 const shouldPlayIntro = () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const IntroSplash: FunctionComponent = () => {
@@ -17,7 +25,11 @@ const IntroSplash: FunctionComponent = () => {
   const finish = useCallback(() => {
     setLeaving(true);
     window.setTimeout(() => setVisible(false), FADE_MS);
+    markIntroDone();
   }, []);
+
+  // Sin intro (movimiento reducido) la portada arranca enseguida.
+  useEffect(() => { if (!visible) markIntroDone(); }, [visible]);
 
   // Se intenta reproducir con sonido. Si el navegador lo bloquea (política de
   // autoplay), arranca en silencio y el botón permite activar el audio.

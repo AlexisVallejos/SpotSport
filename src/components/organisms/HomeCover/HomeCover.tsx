@@ -1,15 +1,15 @@
 import { FunctionComponent } from 'react';
 import MainNavigation from '../MainNavigation/MainNavigation';
-import SculpturalHero from '../SculpturalHero/SculpturalHero';
-import MovementManifesto from '../MovementManifesto/MovementManifesto';
+import LavaHero from '../LavaHero/LavaHero';
+import SpotMarquee from '../SpotMarquee/SpotMarquee';
 import styles from './HomeCover.module.css';
 
 const HomeCover: FunctionComponent = () => {
   return (
     <header className={styles.portadaElDeporteEnPrimer}>
       <MainNavigation />
-      <SculpturalHero />
-      <MovementManifesto />
+      <LavaHero />
+      <SpotMarquee />
     </header>
   );
 };
