@@ -1,4 +1,5 @@
-import { FunctionComponent } from 'react';
+import { CSSProperties, FunctionComponent } from 'react';
+import { productColors } from '../../../data/productColors';
 import styles from './ColorSwatch.module.css';
 
 export type SwatchColor =
@@ -18,26 +19,13 @@ export type SwatchColor =
 
 export type ColorSwatchProps = {
   color: SwatchColor;
+  selected?: boolean;
+  onSelect?: () => void;
 };
 
-const colorClass: Record<SwatchColor, string> = {
-  ivory: styles.colorOption,
-  orange: styles.colorOption2,
-  charcoal: styles.colorOption3,
-  black: styles.colorOption4,
-  grey: styles.colorOption5,
-  white: styles.colorOption7,
-  sand: styles.colorOption8,
-  graphite: styles.colorOption9,
-  steel: styles.colorOption10,
-  bone: styles.colorOption11,
-  onyx: styles.colorOption12,
-  ash: styles.colorOption15,
-  stone: styles.colorOption18,
-};
-
-const ColorSwatch: FunctionComponent<ColorSwatchProps> = ({ color }) => {
-  return <div className={colorClass[color]} />;
+const ColorSwatch: FunctionComponent<ColorSwatchProps> = ({ color, selected, onSelect }) => {
+  const { label, hex } = productColors[color];
+  return <button type="button" className={styles.swatch} style={{ '--swatch-color': hex } as CSSProperties} aria-label={`Color ${label.toLowerCase()}`} title={label} aria-pressed={selected} onClick={onSelect}><span /></button>;
 };
 
 export default ColorSwatch;

@@ -123,3 +123,5 @@
 .curatedKitScene{min-height:550px;border-top:1px solid #c9c9c1;border-bottom:1px solid #c9c9c1}
 .kitDetails{background:#eaeae4}
 @media(max-width:599px){.curatedKitScene{min-height:420px;aspect-ratio:1/1}.kitDetails{gap:20px}}
+.sceneColors{position:absolute;left:30px;right:30px;bottom:26px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:10px;letter-spacing:.06em}.sceneColors>div{display:flex}.sceneColors small{width:100%;font-size:9px;color:#666b60;letter-spacing:0}
+@media(max-width:599px){.sceneColors{left:20px;right:20px;bottom:20px}}

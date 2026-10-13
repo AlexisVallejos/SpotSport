@@ -85,3 +85,6 @@
     		transform: none;
   	}
 }
+
+.sportCategory{aspect-ratio:316/390;border-radius:5px}.number{font:800 62px/.95 'Barlow Condensed';color:transparent;-webkit-text-stroke:1px #ffffffb0;transition:color .3s}.sportCategory:hover .number{color:#ffffff25}.exploreSport{border:1px solid #ff7900;border-radius:50%;width:36px;height:36px;align-items:center;justify-content:center;right:20px}.sportCategory:hover .exploreSport{background:#ff7900;color:#080808}.categoryTitle{gap:6px;left:20px}.categoryScrim{background:linear-gradient(180deg,transparent 30%,#000b 80%,#000e)}
+@media(max-width:599px){.number{font-size:42px}.categoryTitle{left:14px}.exploreSport{width:30px;height:30px;right:12px}}

@@ -1,173 +1,20 @@
-.sculpturalHero {
-  	align-self: stretch;
-  	aspect-ratio: 1440 / 760;
-  	min-height: 560px;
-  	overflow: hidden;
-  	flex-shrink: 0;
-  	display: flex;
-  	flex-direction: column;
-  	align-items: flex-start;
-  	padding: clamp(24px, 3.33vw, 48px);
-  	position: relative;
-  	isolation: isolate;
-  	font-size: 11px;
-}
-.sportCinemaIcon {
-  	width: 100%;
-  	height: 100%;
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	object-fit: cover;
-  	z-index: 0;
-}
-.cinemaScrim {
-  	width: 100%;
-  	height: 100%;
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	background: linear-gradient(180deg, rgba(8, 8, 8, 0.53), rgba(8, 8, 8, 0.03) 50%, rgba(8, 8, 8, 0.87));
-  	z-index: 1;
-}
-.orbitalTrajectory {
-  	width: 79.86%;
-  	height: 60.53%;
-  	position: absolute;
-  	top: 8.68%;
-  	left: 9.03%;
-  	border-radius: 50%;
-  	border: 1px solid rgba(255, 255, 255, 0.13);
-  	transform:  rotate(-10deg);
-  	transform-origin: 0 0;
-  	z-index: 2;
-}
-.campaignMetadata {
-  	align-self: stretch;
-  	display: flex;
-  	align-items: flex-start;
-  	justify-content: space-between;
-  	gap: 20px;
-  	z-index: 3;
-  	flex-shrink: 0;
-}
-.sceneLabel {
-  	position: relative;
-  	color: #a7a9b2;
-}
-.foregroundIdentity {
-  	width: 80.56%;
-  	height: 48.68%;
-  	position: absolute;
-  	top: 15.53%;
-  	left: 8.06%;
-  	display: flex;
-  	align-items: flex-start;
-  	z-index: 4;
-}
-.heroMessage {
-  	width: 52%;
-  	position: absolute;
-  	top: 64.74%;
-  	left: 4.44%;
-  	display: flex;
-  	flex-direction: column;
-  	align-items: flex-start;
-  	gap: 18px;
-  	z-index: 5;
-  	font-size: clamp(40px, 5.28vw, 96px);
-  	font-family: 'Barlow Condensed';
-}
-.brandPromise {
-  	align-self: stretch;
-  	position: relative;
-  	line-height: 92%;
-  	font-size: inherit;
-}
-.heroActionRow {
-  	display: flex;
-  	align-items: center;
-  	flex-wrap: wrap;
-  	gap: 14px 28px;
-  	font-size: 13px;
-  	color: #080808;
-  	font-family: Inter;
-}
-.collectionNote {
-  	position: relative;
-  	font-size: 12px;
-  	color: #a7a9b2;
-}
-.scrollCue {
-  	position: absolute;
-  	bottom: 8.3%;
-  	right: 6.6%;
-  	display: flex;
-  	align-items: center;
-  	gap: 12px;
-  	z-index: 6;
-  	font-size: 10px;
-  	color: #fff;
-}
-.scrollCue svg {
-  	transition: transform 0.2s ease;
-}
-.scrollCue:hover svg {
-  	transform: translateY(4px);
-}
-@media (max-width: 1099px) {
-  	.sculpturalHero {
-    		aspect-ratio: auto;
-    		min-height: min(720px, 100svh - 72px);
-    		gap: 28px;
-  	}
-  	.sportCinemaIcon {
-    		object-position: 72% center;
-  	}
-  	.orbitalTrajectory,
-  	.scrollCue {
-    		display: none;
-  	}
-  	.campaignMetadata {
-    		flex-wrap: wrap;
-    		gap: 6px 20px;
-  	}
-  	.foregroundIdentity {
-    		width: 100%;
-    		height: auto;
-    		aspect-ratio: 520 / 138;
-    		position: relative;
-    		top: auto;
-    		left: auto;
-    		margin-top: auto;
-  	}
-  	.heroMessage {
-    		width: 100%;
-    		position: relative;
-    		top: auto;
-    		left: auto;
-    		font-size: clamp(40px, 9.5vw, 76px);
-  	}
-}
-@media (prefers-reduced-motion: reduce) {
-  	.scrollCue svg {
-    		transition: none;
-  	}
-}
-
-.sculpturalHero{view-timeline-name:--hero;view-timeline-axis:block}
-.sceneLabel{color:#dddcd6}
-.cinemaScrim{background:linear-gradient(90deg,rgba(8,8,8,.25),transparent 65%),linear-gradient(0deg,rgba(8,8,8,.86),transparent 60%)}
-@supports(animation-timeline:view()){
- @media(prefers-reduced-motion:no-preference){
-  .sportCinemaIcon{animation:photo-depth linear both;animation-timeline:--hero;animation-range:exit 0% exit 100%}
-  .foregroundIdentity{animation:identity-depth linear both;animation-timeline:--hero;animation-range:exit 0% exit 100%}
-  .orbitalTrajectory{animation:orbit-depth linear both;animation-timeline:--hero;animation-range:exit 0% exit 100%}
- }
-}
-@keyframes photo-depth{from{transform:scale(1.035) translateY(0)}to{transform:scale(1.12) translateY(8%)}}
-@keyframes identity-depth{from{transform:translateY(0)}to{transform:translateY(-55px) scale(.96)}}
-@keyframes orbit-depth{from{transform:rotate(-10deg)}to{transform:rotate(8deg)}}
-@media(max-width:599px){.collectionNote{color:#d1d0c9}.sculpturalHero{min-height:680px;min-height:min(740px,100svh - 64px)}}
-
-@media(max-width:599px){.sportCinemaIcon{object-position:90% center}}
+.hero{position:relative;isolation:isolate;overflow:hidden;min-height:740px;background:#101211;color:#fff;padding:28px 4.45% 30px;font-family:Inter,sans-serif}
+.atmosphere{position:absolute;inset:0;z-index:-3;background:radial-gradient(ellipse at 72% 48%,#a747164f,transparent 48%),linear-gradient(90deg,#101211 8%,#101211b0 60%,#101211d9),url('/images/brand-atmosphere.jpg') center/cover;opacity:.9}
+.metadata{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.17em;color:#bebdb5}
+.backdrop{position:absolute;top:60px;left:4%;font:800 clamp(130px,19.7vw,310px)/.85 'Barlow Condensed',sans-serif;white-space:nowrap;letter-spacing:-.025em;color:#ffffff0e;z-index:-2}
+.orbit{position:absolute;top:24%;left:35%;width:65%;height:42%;border:2px solid #ff8a25;border-radius:50%;transform:rotate(-22deg);box-shadow:0 0 12px #ff7900,inset 0 0 9px #ff790055;z-index:-1}
+.copy{position:relative;z-index:2;margin-top:145px;max-width:510px;pointer-events:none}.copy a,.copy button{pointer-events:auto}
+.eyebrow{font-size:10px;font-weight:600;letter-spacing:.15em;color:#ff9b42}
+.copy h1{font:800 clamp(48px,5.2vw,78px)/.94 'Barlow Condensed',sans-serif;margin:17px 0 20px;letter-spacing:-.025em}
+.copy p{font-size:14px;color:#c7c6c0;line-height:1.7;max-width:310px;margin:0 0 25px}
+.actions{display:flex;gap:12px;align-items:center}.primary,.videoButton{min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:18px;padding:0 20px;font-size:12px;font-weight:650;border-radius:4px}.primary{background:#ff7900;color:#080808}.primary:hover{background:#ffa13c}.videoButton{border:1px solid #ffffff55;background:#10121166}.videoButton:hover{border-color:#ff7900}
+.stage{position:absolute;left:35%;right:0;top:0;height:640px;pointer-events:none}.shoe{height:100%;width:100%;object-fit:contain;transform:rotate(-15deg);filter:drop-shadow(0 38px 25px #0008);animation:shoe-arrive .65s cubic-bezier(.2,.7,.2,1) both}
+.features{position:absolute;right:4.45%;top:90px;display:flex;gap:18px;flex-direction:column;font-size:8px;letter-spacing:.06em;color:#deded7}.features span{display:flex;gap:10px;align-items:center}.features svg{width:30px;height:30px;padding:6px;border:1px solid #ffffff55;border-radius:50%}
+.selection{position:relative;margin-top:62px;display:flex;align-items:center;justify-content:space-between;gap:24px;border-top:1px solid #ffffff20;padding-top:23px}.productInfo>span{font-size:9px;letter-spacing:.16em;color:#ff9b42}.productInfo h2{font:800 27px 'Barlow Condensed';text-transform:uppercase;margin:7px 0 4px}.productInfo p{margin:0;font-size:11px;color:#b8b8b1}.controls{display:flex;align-items:center;gap:16px}.thumbnails{display:flex;gap:10px}.thumbnail{position:relative;width:106px;height:75px;border:1px solid #ffffff30;background:#ffffff07;border-radius:6px;transition:background .25s,border-color .25s}.thumbnail img{width:100%;height:100%;object-fit:contain;transform:scale(1.2)}.thumbnail span{position:absolute;bottom:6px;left:8px;font-size:8px;color:#b8b8b1}.thumbnail:hover{background:#ffffff15}.selected{border-color:#ff7900;background:#ff790014;box-shadow:0 0 0 1px #ff7900}.arrow{display:grid;place-items:center;width:42px;height:42px;border:1px solid #ffffff40;border-radius:50%}.arrow:hover{color:#ff7900;border-color:#ff7900}
+.videoDialog{width:min(1000px,92vw);padding:0;background:#080808;border:1px solid #ffffff40;color:#fff}.videoDialog::backdrop{background:#000d}.videoDialog>button{position:absolute;right:12px;top:12px;padding:10px;background:#080808b0;border-radius:50%;z-index:1}.videoDialog video{width:100%;max-height:85vh}
+@keyframes shoe-arrive{from{opacity:0;transform:translate(45px,16px) rotate(-9deg) scale(.92)}to{opacity:1;transform:translate(0,0) rotate(-15deg) scale(1)}}
+@media(min-width:1600px){.hero{min-height:830px}.stage{height:740px}.copy{margin-top:190px}.selection{margin-top:90px}}
+@media(max-width:1000px){.features{display:none}.stage{left:33%;top:40px;height:530px}.copy{max-width:420px}.copy h1{font-size:58px}.thumbnail{width:80px;height:64px}.controls{gap:10px}.hero{min-height:700px}}
+@media(max-width:650px){.hero{padding:22px 20px 26px;min-height:0}.metadata{font-size:8px}.metadata span:last-child{display:none}.backdrop{top:67px;font-size:24vw}.stage{top:28px;left:4%;right:-9%;height:330px}.orbit{top:130px;left:8%;width:95%;height:130px}.copy{margin-top:287px}.copy h1{font-size:clamp(42px,10.5vw,66px);margin:13px 0}.copy p{font-size:12px;max-width:100%;margin-bottom:20px}.eyebrow{font-size:9px}.primary,.videoButton{padding:0 15px;gap:12px;font-size:11px}.selection{margin-top:25px;align-items:stretch;flex-direction:column;gap:18px;padding-top:18px}.productInfo h2{font-size:23px}.productInfo p{font-size:10px}.controls{justify-content:space-between;gap:8px}.thumbnails{flex:1;gap:7px}.thumbnail{width:auto;flex:1;height:60px;min-width:0}.arrow{width:32px;height:40px;flex-shrink:0}.productInfo>span{font-size:8px}}
+@media(prefers-reduced-motion:reduce){.shoe{animation:none}.thumbnail{transition:none}}
+.hero{width:100%;align-self:stretch;flex-shrink:0}

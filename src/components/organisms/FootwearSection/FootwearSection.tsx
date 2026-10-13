@@ -1,4 +1,5 @@
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { useHashRoute } from '../../../lib/hashRoute';
 import ContentSection from '../ContentSection/ContentSection';
 import SectionHeading from '../SectionHeading/SectionHeading';
 import CollectionFilters from '../CollectionFilters/CollectionFilters';
@@ -7,6 +8,14 @@ import { FootwearFilterKey, footwearFilters, footwearProducts } from '../../../d
 
 const FootwearSection: FunctionComponent = () => {
   const [selected, setSelected] = useState<FootwearFilterKey>('all');
+  const route = useHashRoute();
+  useEffect(() => {
+    if (!route.startsWith('calzado')) return;
+    const discipline = route.split('/')[1];
+    const filter = footwearFilters.find(({ key }) => key === discipline)?.key ?? 'all';
+    setSelected(filter);
+    if (discipline) document.getElementById('calzado')?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+  }, [route]);
 
   const products = footwearProducts
     .filter((product) => selected === 'all' || product.sport === selected)
@@ -15,7 +24,7 @@ const FootwearSection: FunctionComponent = () => {
   const filters = footwearFilters.map(({ key, label }) => ({
     label,
     active: key === selected,
-    onSelect: () => setSelected(key),
+    onSelect: () => { setSelected(key); window.location.hash = key === 'all' ? 'calzado' : `calzado/${key}`; },
   }));
 
   return (

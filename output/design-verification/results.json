@@ -1,0 +1,34 @@
+[
+  {
+    "name": "desktop",
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "colorPreviews": "passed",
+    "product3DRemoved": true
+  },
+  {
+    "name": "mobile",
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "colorPreviews": "passed",
+    "product3DRemoved": true
+  },
+  {
+    "name": "compact",
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "colorPreviews": "passed",
+    "product3DRemoved": true
+  },
+  {
+    "name": "reduced",
+    "overflow": false,
+    "brokenImages": [],
+    "errors": [],
+    "colorPreviews": "passed",
+    "product3DRemoved": true
+  }
+]

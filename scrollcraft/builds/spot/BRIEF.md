@@ -32,3 +32,13 @@ Scroll Craft (nateherkai/scroll-craft) supplies art direction, depth, narrative 
 
 First fingerprint: registry empty, no prior rows to compare.
 No invented specs, prices or commercial availability. No new generated image assets. WebGL unavailable: retain original photography and report unavailability. Real-phone testing remains outside desktop emulation.
+
+## Revision · 2026-10-12 · disciplines and photographic color previews
+The user requests a professional redesign of “¿Qué te mueve?”, removal of product 3D, functional colors, and a text-free hero image for a future video. This revision supersedes the 3D peak and product-viewer decisions above. Preserve the original brand, existing product imagery and page sequence.
+
+- Grammar: natural-flow sports editorial. A tall Running photograph anchors the grid; a wide Training panel and two smaller disciplines create distinct scale and reading order. Mobile uses two wide cards followed by a compact pair.
+- Feeling curve: hero energy → recognition of one's discipline → agency through category filtering and color selection → campaign momentum → calm collection browsing.
+- Signature: category selections carry through to footwear filters; product swatches change the photographic color preview. SVG tonal mapping preserves source texture and transparency; previews are labeled conceptual, not claimed to be separate photographed stock variants.
+- Motion: small view-timeline displacement inside clipped photographic frames plus deliberate hover/focus feedback. No pinning or additional scroll distance. Reduced motion keeps the full static composition.
+- Hero export: existing atmosphere, shoe cutout and orbit only, rendered from native page layers at 3840 × 2160. Keep left-side space for future semantic page copy. No generated branding, text, controls or duplicated products.
+- Product 3D is removed from the storefront. The separate training exercise demo is outside this product-gallery change.
