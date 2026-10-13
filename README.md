@@ -58,6 +58,17 @@ Hoy están disponibles **pago contra entrega** y **retiro en el local**. Mercado
 
 Para comprobar que está vivo: `GET /healthz` responde `ok`.
 
+## Catálogo del comparador (integrante 3)
+
+Las tareas 3.1 a 3.3 agregan un esquema `catalogo` separado de la tienda, una demo ficticia de 20 artículos y 40 ofertas, y un importador CSV/manual con historial transaccional. La demo se carga explícitamente; las migraciones no publican precios ficticios en la tienda.
+
+Ver [guía de uso, DER y diccionario](docs/datos/README.md). Para comprobarlo sin Supabase:
+
+```
+npm test -- supabase/tests/catalogo.test.ts scripts/catalogo/csv.test.ts
+npm run catalogo:importar -- --local 20000000-0000-4000-8000-000000000001 data/catalogo/demo-a.csv
+```
+
 ## Entrenar con cámara
 
 - `src/lib/pose`: geometría, reglas por ejercicio, motor de repeticiones, guion de voz y demo 3D.

@@ -10,6 +10,7 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "catalogo:importar": "tsx scripts/importar-catalogo.ts",
     "voice:pack": "tsx scripts/build-voice-pack.ts",
     "verify:design": "node scripts/verify-design.mjs"
   },

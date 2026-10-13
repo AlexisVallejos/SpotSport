@@ -3,8 +3,9 @@
 import { PGlite } from '@electric-sql/pglite';
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const MIGRATIONS = join(__dirname, '..', 'migrations');
+const MIGRATIONS = fileURLToPath(new URL('../migrations/', import.meta.url));
 
 const SUPABASE_STUBS = `
   create role anon nologin;
