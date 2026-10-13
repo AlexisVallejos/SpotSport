@@ -1,0 +1,33 @@
+.bar {
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	gap: 12px;
+  	position: relative;
+  	padding: 8px 40px;
+  	background-color: #ff7900;
+  	color: #080808;
+  	font-family: Inter;
+  	font-size: 13px;
+  	text-align: center;
+}
+.text {
+  	margin: 0;
+  	line-height: 1.4;
+}
+.link {
+  	margin-left: 10px;
+  	font-weight: 700;
+  	text-decoration: underline;
+}
+.close {
+  	position: absolute;
+  	right: 10px;
+  	top: 50%;
+  	transform: translateY(-50%);
+  	width: 28px;
+  	height: 28px;
+  	font-size: 20px;
+  	line-height: 1;
+  	color: #080808;
+}

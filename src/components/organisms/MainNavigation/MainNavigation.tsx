@@ -1,11 +1,14 @@
 import { FunctionComponent, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useCart } from '../../../context/CartContext';
 import { Icon, Text, Wordmark } from '../../atoms';
 import { SearchBox } from '../../molecules';
-import { bagCount, departments, searchPlaceholder } from '../../../data/navigation';
+import { departments, searchPlaceholder } from '../../../data/navigation';
 import styles from './MainNavigation.module.css';
 
 const MainNavigation: FunctionComponent = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { itemCount } = useCart();
 
   return (
     <nav className={styles.mainNavigation} aria-label="Principal">
@@ -14,6 +17,9 @@ const MainNavigation: FunctionComponent = () => {
       </a>
       <div id="menu-principal" className={`${styles.menuPanel} ${menuOpen ? styles.menuPanelOpen : ''}`}>
         <div className={styles.departments}>
+          <Link to="/tienda" onClick={() => setMenuOpen(false)} className={styles.navigationLink}>
+            Tienda
+          </Link>
           {departments.map((department) => (
             <a key={department} href={department === 'Indumentaria' ? '#indumentaria' : department === 'Deportes' ? '#deportes' : '#calzado'} onClick={() => setMenuOpen(false)} className={styles.navigationLink}>
               {department}
@@ -23,13 +29,13 @@ const MainNavigation: FunctionComponent = () => {
         <SearchBox placeholder={searchPlaceholder} />
       </div>
       <div className={styles.accountAndBag}>
-        <button type="button" className={styles.iconButton} aria-label="Mi cuenta">
+        <Link to="/cuenta" className={styles.iconButton} aria-label="Mi cuenta">
           <Icon name="userRound" />
-        </button>
-        <button type="button" className={`${styles.iconButton} ${styles.bag}`} aria-label={`Bolsa, ${bagCount} productos`}>
+        </Link>
+        <Link to="/carrito" className={`${styles.iconButton} ${styles.bag}`} aria-label={`Carrito, ${itemCount} productos`}>
           <Icon name="shoppingBag" />
-          <Text>{bagCount}</Text>
-        </button>
+          <Text>{String(itemCount)}</Text>
+        </Link>
         <button
           type="button"
           className={`${styles.iconButton} ${styles.menuToggle}`}
