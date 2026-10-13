@@ -4,3 +4,8 @@ dist
 public/mediapipe/
 .cache/
 public/voice-lab/
+
+.env
+.env.local
+.env.*.local
+.claude/

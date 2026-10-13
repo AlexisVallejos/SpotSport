@@ -1,10 +1,12 @@
 import { FunctionComponent } from 'react';
+import AnnouncementBar from '../components/layout/AnnouncementBar';
 import { LandingTemplate } from '../components/templates';
 import {
   ApparelSection,
   BrandClosing,
   ChooseSportSection,
   CuratedKit,
+  FeaturedProducts,
   FootwearSection,
   HomeCover,
   IntroSplash,
@@ -15,8 +17,14 @@ import {
 
 const SPOTTodoElDeporte: FunctionComponent = () => {
   return (
-    <LandingTemplate intro={<IntroSplash />} cover={<HomeCover />} footer={<SiteFooter />}>
+    <LandingTemplate intro={<IntroSplash />} cover={
+        <>
+          <AnnouncementBar />
+          <HomeCover />
+        </>
+      } footer={<SiteFooter />}>
       <ChooseSportSection />
+      <FeaturedProducts />
       <FootwearSection />
       <RunningCampaign />
       <ApparelSection />

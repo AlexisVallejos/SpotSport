@@ -15,3 +15,4 @@ export { default as CuratedKit } from './CuratedKit/CuratedKit';
 export { default as BrandClosing } from './BrandClosing/BrandClosing';
 export { default as SiteFooter } from './SiteFooter/SiteFooter';
 export { default as IntroSplash } from './IntroSplash/IntroSplash';
+export { default as FeaturedProducts } from './FeaturedProducts/FeaturedProducts';

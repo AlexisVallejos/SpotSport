@@ -26,7 +26,7 @@ const TrainingCampaign: FunctionComponent = () => {
         </div>
         <div className={styles.actions}>
           <ActionButton variant="campaign" label="Armá tu equipo de training" />
-          <ActionButton variant="light" label="Entrená con cámara" href="#entrenar" />
+          <ActionButton variant="light" label="Entrená con cámara" href="/entrenar" />
         </div>
       </div>
     </section>
