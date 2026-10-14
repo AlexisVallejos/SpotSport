@@ -9,7 +9,7 @@
   	display: flex;
   	align-items: center;
   	gap: 10px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .sectionMarker6 {
   	overflow: hidden;

@@ -8,7 +8,7 @@
 .backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(8, 8, 8, 0.62);
+  background: var(--scrim);
   backdrop-filter: blur(3px);
 }
 
@@ -22,10 +22,10 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   padding: 0 24px 32px;
-  background: #0f0f0f;
-  border-left: 1px solid #262626;
-  box-shadow: -30px 0 60px -30px #000;
-  color: #fff;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: -30px 0 60px -30px rgba(0, 0, 0, 0.45);
+  color: var(--text);
   font-family: Inter, sans-serif;
 }
 
@@ -38,16 +38,16 @@
   justify-content: space-between;
   margin: 0 -24px;
   padding: 14px 24px;
-  background: rgba(15, 15, 15, 0.9);
+  background: var(--glass);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid #1f1f1f;
+  border-bottom: 1px solid var(--border);
 }
 
 .topLabel {
   font-size: 11px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #ff7900;
+  color: var(--accent-text);
   font-weight: 600;
 }
 
@@ -64,7 +64,7 @@
   gap: 6px;
   height: 40px;
   padding: 0 14px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid var(--border);
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
@@ -73,8 +73,8 @@
 
 .save:hover,
 .saveOn {
-  border-color: #ff7900;
-  color: #ff7900;
+  border-color: var(--accent);
+  color: var(--accent-text);
 }
 
 .close {
@@ -82,14 +82,14 @@
   place-items: center;
   width: 40px;
   height: 40px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid var(--border);
   border-radius: 50%;
   transition: border-color 0.2s, color 0.2s, transform 0.3s var(--spot-ease);
 }
 
 .close:hover {
-  border-color: #ff7900;
-  color: #ff7900;
+  border-color: var(--accent);
+  color: var(--accent-text);
   transform: rotate(90deg);
 }
 
@@ -104,7 +104,7 @@
   aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 14px;
-  background: radial-gradient(ellipse at 50% 40%, #ffffff 0%, #f1f0ea 70%, #e5e3da 100%);
+  background: var(--well);
 }
 
 /* Las fotos de las tiendas tienen fondo blanco: "multiply" lo funde con el degradé del marco. */
@@ -122,8 +122,8 @@
   left: 12px;
   padding: 6px 10px;
   border-radius: 999px;
-  background: #ff7900;
-  color: #080808;
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 12px;
   font-weight: 700;
 }
@@ -141,7 +141,7 @@
   height: 64px;
   overflow: hidden;
   border-radius: 10px;
-  background: #f1f0ea;
+  background: var(--well-flat);
   border: 2px solid transparent;
   opacity: 0.6;
   transition: opacity 0.2s, border-color 0.2s;
@@ -153,7 +153,7 @@
 
 .thumbOn {
   opacity: 1;
-  border-color: #ff7900;
+  border-color: var(--accent);
 }
 
 .thumb img,
@@ -175,7 +175,7 @@
   font-size: 11px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #a7a9b2;
+  color: var(--text-3);
 }
 
 .title {
@@ -193,26 +193,26 @@
 
 .bestPrice {
   font: 800 44px / 1 'Barlow Condensed', sans-serif;
-  color: #ff7900;
+  color: var(--accent-text);
   font-variant-numeric: tabular-nums;
 }
 
 .bestWhere {
   font-size: 14px;
-  color: #d0d1d6;
+  color: var(--text-2);
 }
 
 .bestWhere b {
-  color: #fff;
+  color: var(--text);
 }
 
 .savings {
   margin: 0;
   padding: 10px 12px;
-  border-left: 3px solid #36c26a;
-  background: rgba(54, 194, 106, 0.1);
+  border-left: 3px solid var(--success);
+  background: var(--success-soft);
   font-size: 13px;
-  color: #c9f2d6;
+  color: var(--success-text);
 }
 
 .section {
@@ -220,7 +220,7 @@
   flex-direction: column;
   gap: 12px;
   padding-top: 20px;
-  border-top: 1px solid #222;
+  border-top: 1px solid var(--border);
 }
 
 .sectionTitle {
@@ -245,13 +245,13 @@
   align-items: center;
   gap: 12px;
   padding: 14px;
-  border: 1px solid #262626;
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: #151515;
+  background: var(--surface);
 }
 
 .offerBest {
-  border-color: #ff7900;
+  border-color: var(--accent);
   background: linear-gradient(90deg, rgba(255, 121, 0, 0.12), rgba(255, 121, 0, 0.03));
 }
 
@@ -274,8 +274,8 @@
 .storeName em {
   padding: 3px 8px;
   border-radius: 999px;
-  background: #ff7900;
-  color: #080808;
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 10px;
   font-style: normal;
   font-weight: 700;
@@ -285,7 +285,7 @@
 
 .offerNote {
   font-size: 12px;
-  color: #9a9ca5;
+  color: var(--text-3);
 }
 
 .offerPrice {
@@ -302,13 +302,13 @@
 
 .offerPrice s {
   font-size: 11px;
-  color: #8a8c94;
+  color: var(--text-3);
 }
 
 .diff {
   font-size: 11px;
   font-weight: 600;
-  color: #ff9d57;
+  color: var(--accent-text);
 }
 
 .buy {
@@ -317,7 +317,7 @@
   gap: 4px;
   height: 36px;
   padding: 0 12px;
-  border: 1px solid #333;
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
   font-size: 13px;
   font-weight: 600;
@@ -329,16 +329,16 @@
 }
 
 .buy:hover {
-  background: #ff7900;
-  border-color: #ff7900;
-  color: #080808;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
 }
 
 .muted {
   margin: 0;
   font-size: 13px;
   line-height: 1.5;
-  color: #8a8c94;
+  color: var(--text-3);
 }
 
 .history {
@@ -359,17 +359,17 @@
 
 .historyLine {
   fill: none;
-  stroke: #ff7900;
+  stroke: var(--accent);
   stroke-width: 2;
 }
 
 .history figcaption {
   font-size: 12px;
-  color: #9a9ca5;
+  color: var(--text-3);
 }
 
 .history figcaption b {
-  color: #fff;
+  color: var(--text);
 }
 
 .reviewsHead {
@@ -385,13 +385,13 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #d0d1d6;
+  color: var(--text-2);
 }
 
 .stars {
   display: inline-flex;
   gap: 2px;
-  color: #ffb347;
+  color: var(--star);
 }
 
 .skeleton {
@@ -409,7 +409,7 @@
 .skeleton span {
   height: 56px;
   border-radius: 10px;
-  background: linear-gradient(90deg, #161616 0%, #222 50%, #161616 100%);
+  background: linear-gradient(90deg, var(--surface) 0%, var(--surface-3) 50%, var(--surface) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.2s linear infinite;
 }
@@ -438,7 +438,7 @@
   gap: 6px;
   padding: 14px;
   border-radius: 12px;
-  background: #151515;
+  background: var(--surface);
 }
 
 .reviewTop {
@@ -459,13 +459,13 @@
   margin: 0;
   font-size: 14px;
   line-height: 1.55;
-  color: #d9dae0;
+  color: var(--text-2);
   white-space: pre-line;
 }
 
 .reviewSource {
   font-size: 11px;
-  color: #8a8c94;
+  color: var(--text-3);
 }
 
 .form {
@@ -474,7 +474,7 @@
   gap: 12px;
   margin-top: 4px;
   padding: 16px;
-  border: 1px dashed #2f2f2f;
+  border: 1px dashed var(--border);
   border-radius: 12px;
 }
 
@@ -500,17 +500,17 @@
 }
 
 .rateOn {
-  color: #ffb347;
+  color: var(--star);
 }
 
 .rateOff {
-  color: #555;
+  color: var(--text-4);
 }
 
 .rateOn:hover,
 .rateOff:hover {
   transform: scale(1.12);
-  color: #ffb347;
+  color: var(--star);
 }
 
 .field {
@@ -518,17 +518,17 @@
   flex-direction: column;
   gap: 6px;
   font-size: 12px;
-  color: #a7a9b2;
+  color: var(--text-3);
 }
 
 .field input,
 .field textarea {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #2a2a2a;
+  border: 1px solid var(--border);
   border-radius: 8px;
-  background: #121212;
-  color: #fff;
+  background: var(--surface);
+  color: var(--text);
   /* 16px evita que el teléfono haga zoom al tocar el campo. */
   font: 16px Inter, sans-serif;
   resize: vertical;
@@ -537,7 +537,7 @@
 .field input:focus,
 .field textarea:focus {
   outline: none;
-  border-color: #ff7900;
+  border-color: var(--accent);
 }
 
 .trap {
@@ -551,8 +551,8 @@
 .submit {
   height: 46px;
   border-radius: 999px;
-  background: #ff7900;
-  color: #080808;
+  background: var(--accent);
+  color: var(--on-accent);
   font: 800 18px 'Barlow Condensed', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -561,7 +561,7 @@
 }
 
 .submit:hover {
-  background: #ff8f2a;
+  background: var(--accent-hover);
 }
 
 .submit:disabled {
@@ -576,18 +576,18 @@
 }
 
 .formOk {
-  color: #7be3a0;
+  color: var(--success-text);
 }
 
 .formError {
-  color: #ff9d8a;
+  color: var(--danger-text);
 }
 
 .footnote {
   margin: 0;
   font-size: 11px;
   line-height: 1.5;
-  color: #6f7178;
+  color: var(--text-4);
 }
 
 @media (max-width: 599px) {

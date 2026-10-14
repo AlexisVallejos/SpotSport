@@ -41,3 +41,11 @@
   	height: auto;
   	position: relative;
 }
+
+/* Qué logo se ve depende del tema de la zona (ver --logo-on-dark en global.css). */
+.onDark {
+  	display: var(--logo-on-dark, block) !important;
+}
+.onLight {
+  	display: var(--logo-on-light, none) !important;
+}

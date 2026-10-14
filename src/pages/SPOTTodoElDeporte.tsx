@@ -3,43 +3,37 @@ import AnnouncementBar from '../components/layout/AnnouncementBar';
 import { LandingTemplate } from '../components/templates';
 import {
   ApparelSection,
-  BrandClosing,
   CuratedKit,
   DisciplineDeck,
   FeaturedProducts,
   FootwearSection,
   HomeCover,
   IntroSplash,
-  RunningCampaign,
   SiteFooter,
   TrainingCampaign,
 } from '../components/organisms';
-import ClickSpark from '../components/reactbits/ClickSpark';
 
-// Primero la intro; al terminar, la portada de lava arranca desde el principio.
+// Inicio liviano: portada, deportes, calzado, una campaña, indumentaria y el equipo de running.
+// (RunningCampaign y BrandClosing siguen en organisms/ por si se quieren volver a sumar.)
 const SPOTTodoElDeporte: FunctionComponent = () => {
   return (
-    <ClickSpark sparkColor={['#ff7900', '#ffb347', '#ffffff']} sparkCount={10} sparkRadius={26} sparkSize={9} duration={500} shape="streak" glow={0.6}>
-      <LandingTemplate
-        intro={<IntroSplash />}
-        cover={
-          <>
-            <AnnouncementBar />
-            <HomeCover />
-          </>
-        }
-        footer={<SiteFooter />}
-      >
-        <DisciplineDeck />
-        <FeaturedProducts />
-        <FootwearSection />
-        <RunningCampaign />
-        <ApparelSection />
-        <TrainingCampaign />
-        <CuratedKit />
-        <BrandClosing />
-      </LandingTemplate>
-    </ClickSpark>
+    <LandingTemplate
+      intro={<IntroSplash />}
+      cover={
+        <>
+          <AnnouncementBar />
+          <HomeCover />
+        </>
+      }
+      footer={<SiteFooter />}
+    >
+      <DisciplineDeck />
+      <FeaturedProducts />
+      <FootwearSection />
+      <TrainingCampaign />
+      <ApparelSection />
+      <CuratedKit />
+    </LandingTemplate>
   );
 };
 

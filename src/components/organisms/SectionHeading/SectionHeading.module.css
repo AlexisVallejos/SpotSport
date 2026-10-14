@@ -17,7 +17,7 @@
   	font-size: clamp(36px, 4.45vw, 64px);
   	line-height: 95%;
   	font-family: 'Barlow Condensed';
-  	color: #080808;
+  	color: var(--text);
 }
 @media (max-width: 599px) {
   	.sectionHeading {

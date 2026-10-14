@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../../../context/CartContext';
 import { Icon, Text, Wordmark } from '../../atoms';
 import { SearchBox } from '../../molecules';
+import ThemeToggle from '../../molecules/ThemeToggle/ThemeToggle';
 import { departments, searchPlaceholder } from '../../../data/navigation';
 import styles from './MainNavigation.module.css';
 
@@ -33,8 +34,13 @@ const MainNavigation: FunctionComponent = () => {
           )}
         </div>
         <SearchBox placeholder={searchPlaceholder} />
+        <div className={styles.menuTheme}>
+          <span>Tema</span>
+          <ThemeToggle />
+        </div>
       </div>
       <div className={styles.accountAndBag}>
+        <ThemeToggle className={styles.theme} />
         <Link to="/cuenta" className={styles.iconButton} aria-label="Mi cuenta">
           <Icon name="userRound" />
         </Link>

@@ -7,8 +7,8 @@
   gap: 2px;
   overflow-x: auto;
   border-radius: 999px;
-  background: #141414;
-  border: 1px solid #242424;
+  background: var(--surface);
+  border: 1px solid var(--border);
   scrollbar-width: none;
 }
 
@@ -35,7 +35,7 @@
   font-size: 14px;
   font-weight: 600;
   letter-spacing: -0.005em;
-  color: #9a9ca5;
+  color: var(--text-3);
   transition: color 0.2s ease, transform 0.1s ease-out;
   -webkit-tap-highlight-color: transparent;
 }
@@ -45,11 +45,11 @@
   height: 36px;
   padding: 0 16px;
   font-size: 13px;
-  border: 1px solid #262626;
+  border: 1px solid var(--border);
 }
 
 .item:hover {
-  color: #fff;
+  color: var(--text);
 }
 
 /* Respuesta al apretar, no al soltar. */
@@ -59,22 +59,24 @@
 }
 
 .itemOn {
-  color: #080808;
+  color: var(--thumb-text);
 }
 
 .pills .itemOn {
   border-color: transparent;
+  color: var(--on-accent);
 }
 
 .highlight {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: #fff;
+  background: var(--thumb);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
 }
 
 .pills .highlight {
-  background: #ff7900;
+  background: var(--accent);
 }
 
 .label {

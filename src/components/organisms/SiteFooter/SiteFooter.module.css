@@ -1,13 +1,14 @@
 .footerUniversoSpot {
   	width: 100%;
-  	background-color: #080808;
+  	background-color: var(--bg);
+  	border-top: 1px solid var(--border);
   	display: flex;
   	flex-direction: column;
   	align-items: flex-start;
   	padding: 56px clamp(20px, 4.45vw, 64px) 28px;
   	gap: 40px;
   	font-size: 12px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .footerDirectory {
   	align-self: stretch;
@@ -40,7 +41,7 @@
   	transition: color 0.2s ease;
 }
 .socialLink:hover {
-  	color: #ff7900;
+  	color: var(--accent);
 }
 .communityInvitation {
   	min-width: 0;
@@ -54,20 +55,20 @@
   	font-size: 34px;
   	font-weight: 700;
   	font-family: 'Barlow Condensed';
-  	color: #fff;
+  	color: var(--text);
 }
 .privacyNote {
   	align-self: stretch;
   	position: relative;
   	font-size: 10px;
   	line-height: 150%;
-  	color: #747474;
+  	color: var(--text-4);
 }
 .footerDivider {
   	align-self: stretch;
   	height: 1px;
   	position: relative;
-  	background-color: rgba(255, 255, 255, 0.14);
+  	background-color: var(--border);
 }
 .legalAndProjectNote {
   	align-self: stretch;
@@ -76,16 +77,16 @@
   	justify-content: space-between;
   	gap: 12px 20px;
   	font-size: 10px;
-  	color: #747474;
+  	color: var(--text-4);
 }
 .legalLinks {
   	display: flex;
   	align-items: flex-start;
   	gap: 20px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .legalLink:hover {
-  	color: #fff;
+  	color: var(--text);
 }
 @media (max-width: 1099px) {
   	.footerDirectory {

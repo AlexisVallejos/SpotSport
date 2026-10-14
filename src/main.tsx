@@ -5,6 +5,10 @@ import App from './App';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import './global.css';
+import { watchSystemTheme } from './lib/theme';
+
+// En "Automático", el tema sigue al del sistema también si cambia con la página abierta.
+watchSystemTheme();
 
 // Los enlaces todavía no tienen destino: evitamos que "#" salte al inicio de la página.
 document.addEventListener('click', (event) => {

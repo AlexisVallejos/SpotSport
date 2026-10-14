@@ -6,7 +6,8 @@ import styles from './HomeCover.module.css';
 
 const HomeCover: FunctionComponent = () => {
   return (
-    <header className={styles.portadaElDeporteEnPrimer}>
+    // La portada es video: queda oscura en los dos temas.
+    <header className={`${styles.portadaElDeporteEnPrimer} theme-dark`}>
       <MainNavigation />
       <LavaHero />
       <SpotMarquee />

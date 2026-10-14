@@ -28,7 +28,8 @@ export default function ShopLayout() {
   const name = profile?.full_name?.split(' ')[0] || profile?.email?.split('@')[0] || 'Mi cuenta';
 
   return (
-    <div className={styles.page}>
+    // La tienda tiene su paleta oscura propia: queda oscura en los dos temas.
+    <div className={`${styles.page} theme-dark`}>
       <AnnouncementBar />
       <header className={styles.header}>
         <Link to="/" className={styles.brand} aria-label="SPOT, ir al inicio">

@@ -6,6 +6,7 @@ import { Icon } from '../components/atoms';
 // Directos y no desde los barrels: así esta página no suma peso a la landing.
 import FilterMenu from '../components/molecules/FilterMenu/FilterMenu';
 import GlideTabs from '../components/molecules/GlideTabs/GlideTabs';
+import ThemeToggle from '../components/molecules/ThemeToggle/ThemeToggle';
 import PriceCard from '../components/molecules/PriceCard/PriceCard';
 import NeuralCategories from '../components/organisms/NeuralCategories/NeuralCategories';
 import PriceDrawer from '../components/organisms/PriceDrawer/PriceDrawer';
@@ -207,6 +208,7 @@ const Precios: FunctionComponent = () => {
           <Icon name="arrowLeft" size={18} /> SPOT
         </Link>
         <div className={styles.barLinks}>
+          <ThemeToggle />
           <span className={styles.section}>Comparador de precios</span>
           <button type="button" className={onlyFavorites ? styles.favoritesOn : styles.favorites} aria-pressed={onlyFavorites} onClick={() => update({}, { favoritos: onlyFavorites ? null : '1' })}>
             <Heart size={15} fill={onlyFavorites ? 'currentColor' : 'none'} aria-hidden="true" /> Favoritos {favorites.length ? `(${favorites.length})` : ''}

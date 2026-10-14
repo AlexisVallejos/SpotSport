@@ -34,7 +34,7 @@ const FootwearSection: FunctionComponent = () => {
     <ContentSection tone="muted" id="calzado" labelledBy="calzado-titulo">
       <SectionHeading id="calzado-titulo" marker="AL MEJOR PRECIO" title="ELEGÍ TU TERRENO." linkLabel="Explorá el calzado" linkHref={preciosLink(query)} />
       <CollectionFilters filters={filters} disclosure="Precios reales de Open Sports, Dexter y Trip Store" />
-      <PriceShowcase query={query} />
+      <PriceShowcase query={query} limit={4} />
     </ContentSection>
   );
 };

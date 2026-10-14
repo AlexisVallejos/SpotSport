@@ -1,6 +1,6 @@
 .band {
   width: 100%;
-  padding: 18px 0;
+  padding: 10px 0;
   background: var(--spot-orange);
   color: #080808;
   overflow: hidden;
@@ -14,7 +14,8 @@
 .text {
   flex-shrink: 0;
   padding-right: .35em;
-  font: 800 clamp(34px, 5vw, 76px)/.95 'Barlow Condensed', sans-serif;
+  font: 800 clamp(20px, 2.2vw, 30px)/1 'Barlow Condensed', sans-serif;
+  letter-spacing: .02em;
   letter-spacing: -.01em;
 }
 

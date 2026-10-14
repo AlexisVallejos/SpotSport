@@ -8,7 +8,8 @@ import styles from './TrainingCampaign.module.css';
 
 const TrainingCampaign: FunctionComponent = () => {
   return (
-    <section className={styles.campaaEntrenamientoVolv} aria-labelledby="training-titulo">
+    // Campaña fotográfica: oscura en los dos temas.
+    <section className={`${styles.campaaEntrenamientoVolv} theme-dark`} aria-labelledby="training-titulo">
       <div className={styles.trainingCinema}>
         <img className={styles.trainingPhotographIcon} src={images.trainingLift} alt="" loading="lazy" decoding="async" />
         <p className={styles.campaignWord}>VOLVÉ MÁS FUERTE.</p>

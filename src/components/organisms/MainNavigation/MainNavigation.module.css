@@ -45,6 +45,13 @@
 .bag {
   	gap: 7px;
 }
+.theme {
+  	color: var(--text);
+}
+/* En el teléfono el tema se elige dentro del menú, para no apretar la barra. */
+.menuTheme {
+  	display: none;
+}
 .menuToggle {
   	display: none;
   	color: #fff;
@@ -65,6 +72,16 @@
   	}
   	.menuToggle {
     		display: flex;
+  	}
+  	.theme {
+    		display: none;
+  	}
+  	.menuTheme {
+    		display: flex;
+    		align-items: center;
+    		justify-content: space-between;
+    		font-size: 14px;
+    		color: var(--text-3);
   	}
   	.menuPanel {
     		display: none;

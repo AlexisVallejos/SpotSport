@@ -4,14 +4,14 @@
   	flex-direction: column;
   	align-items: flex-start;
   	gap: 10px;
-  	color: #080808;
+  	color: var(--text);
   	flex-shrink: 0;
 }
 .activeIndicator {
   	align-self: stretch;
   	height: 2px;
   	position: relative;
-  	background-color: #ff7900;
+  	background-color: var(--accent);
 }
 .filter2 {
   	overflow: hidden;
@@ -23,5 +23,5 @@
   	transition: color 0.2s ease;
 }
 .filter2:hover {
-  	color: #080808;
+  	color: var(--text);
 }

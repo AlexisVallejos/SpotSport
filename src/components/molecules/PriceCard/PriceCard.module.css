@@ -5,20 +5,20 @@
   flex-direction: column;
   min-width: 0;
   border-radius: 16px;
-  background: #fff;
-  box-shadow: 0 0 0 1px #0000000d;
-  color: #080808;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--card-border);
+  color: var(--card-text);
   font-family: Inter, sans-serif;
   transition: transform 0.45s var(--spot-ease), box-shadow 0.45s var(--spot-ease);
 }
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 24px 48px -24px #ff790055;
+  box-shadow: 0 0 0 1px var(--card-border), var(--shadow-card);
 }
 
 .card:focus-within {
-  outline: 2px solid #ff7900;
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
@@ -28,7 +28,7 @@
   margin: 8px 8px 0;
   overflow: hidden;
   border-radius: 11px;
-  background: radial-gradient(ellipse at 50% 40%, #ffffff 0%, #f1f0ea 70%, #e9e7df 100%);
+  background: var(--well);
 }
 
 /* Las fotos de las tiendas vienen con fondo blanco: "multiply" las funde con el degradé. */
@@ -67,8 +67,8 @@
 }
 
 .discount {
-  background: #ff7900;
-  color: #080808;
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 .stores {
@@ -78,7 +78,7 @@
 
 .storesSingle {
   background: #ffffffcc;
-  color: #5e6157;
+  color: #4a4d45;
 }
 
 /* Por encima del botón estirado de la carta: guardar no abre el panel. */
@@ -104,7 +104,7 @@
 
 .favorite:hover,
 .favorite[aria-pressed='true'] {
-  color: #e96300;
+  color: #c05000;
   background: #fff;
 }
 
@@ -125,11 +125,11 @@
   font-size: 10px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #74776c;
+  color: var(--card-text-2);
 }
 
 .brand b {
-  color: #e96300;
+  color: var(--accent-text);
 }
 
 .brand span::before {
@@ -164,14 +164,14 @@
   gap: 8px;
   margin-top: auto;
   padding-top: 10px;
-  border-top: 1px solid #ecebe5;
+  border-top: 1px solid var(--card-divider);
 }
 
 .priceLabel {
   display: block;
   font-size: 10px;
   font-weight: 600;
-  color: #41463b;
+  color: var(--card-text-2);
 }
 
 .price {
@@ -185,13 +185,14 @@
 
 .price s {
   font: 500 12px Inter, sans-serif;
-  color: #8a8e82;
+  color: var(--card-text-2);
+  opacity: 0.8;
 }
 
 .saving {
   margin: 0;
   font-size: 11px;
-  color: #1f7a3d;
+  color: var(--success-text);
   font-weight: 600;
 }
 
@@ -202,13 +203,14 @@
   height: 32px;
   flex-shrink: 0;
   border-radius: 50%;
-  border: 1px solid #dcdbd3;
+  border: 1px solid var(--card-divider);
   transition: background 0.3s, border-color 0.3s, transform 0.3s var(--spot-ease);
 }
 
 .card:hover .go {
-  background: #ff7900;
-  border-color: #ff7900;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
   transform: rotate(45deg);
 }
 

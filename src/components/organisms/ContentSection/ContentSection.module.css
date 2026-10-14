@@ -9,10 +9,10 @@
   	scroll-margin-top: 0;
 }
 .elegTuDeporte {
-  	background-color: #f4f4f2;
+  	background-color: var(--bg-alt);
   	gap: clamp(24px, 2.2vw, 32px);
 }
 .novedadesDeCalzado {
-  	background-color: #fff;
+  	background-color: var(--bg);
   	gap: clamp(22px, 1.95vw, 28px);
 }

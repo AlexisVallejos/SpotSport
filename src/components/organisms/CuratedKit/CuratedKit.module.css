@@ -1,6 +1,6 @@
 .seleccinSpotEquipoDeRut {
   	width: 100%;
-  	background-color: #f4f4f2;
+  	background-color: var(--bg-alt);
   	overflow: hidden;
   	flex-shrink: 0;
   	display: flex;
@@ -11,7 +11,7 @@
   	flex: 0 0 56.94%;
   	min-width: 0;
   	aspect-ratio: 820 / 640;
-  	background-color: #ddddd8;
+  	background-color: var(--surface-3);
   	overflow: hidden;
   	position: relative;
   	isolation: isolate;
@@ -23,7 +23,7 @@
   	top: 14.06%;
   	left: 9.76%;
   	border-radius: 50%;
-  	border: 1px solid #b8b8b2;
+  	border: 1px solid var(--border-strong);
   	transform:  rotate(-18deg);
   	transform-origin: 0 0;
   	z-index: 0;
@@ -61,7 +61,7 @@
   	bottom: 5.3%;
   	left: 4.88%;
   	white-space: nowrap;
-  	color: #747474;
+  	color: var(--text-3);
   	z-index: 4;
 }
 .kitDetails {
@@ -81,7 +81,7 @@
   	font-size: clamp(44px, 5.28vw, 76px);
   	line-height: 95%;
   	font-family: 'Barlow Condensed';
-  	color: #000;
+  	color: var(--text);
   	flex-shrink: 0;
 }
 .selectionIntroduction {
@@ -97,7 +97,7 @@
   	flex-direction: column;
   	align-items: flex-start;
   	flex-shrink: 0;
-  	color: #000;
+  	color: var(--text);
 }
 .conceptDisclosure {
   	position: relative;
@@ -120,8 +120,8 @@
   	}
 }
 
-.curatedKitScene{min-height:550px;border-top:1px solid #c9c9c1;border-bottom:1px solid #c9c9c1}
-.kitDetails{background:#eaeae4}
+.curatedKitScene{min-height:550px;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.kitDetails{background:var(--surface-2);color:var(--text)}
 @media(max-width:599px){.curatedKitScene{min-height:420px;aspect-ratio:1/1}.kitDetails{gap:20px}}
-.sceneColors{position:absolute;left:30px;right:30px;bottom:26px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:10px;letter-spacing:.06em}.sceneColors>div{display:flex}.sceneColors small{width:100%;font-size:9px;color:#666b60;letter-spacing:0}
+.sceneColors{position:absolute;left:30px;right:30px;bottom:26px;display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:10px;letter-spacing:.06em}.sceneColors>div{display:flex}.sceneColors small{width:100%;font-size:9px;color:var(--text-3);letter-spacing:0}
 @media(max-width:599px){.sceneColors{left:20px;right:20px;bottom:20px}}

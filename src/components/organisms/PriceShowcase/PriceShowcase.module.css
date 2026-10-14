@@ -10,7 +10,7 @@
 .placeholder {
   aspect-ratio: 3 / 4.4;
   border-radius: 16px;
-  background: linear-gradient(90deg, #ecebe5 0%, #f6f5f1 50%, #ecebe5 100%);
+  background: linear-gradient(90deg, var(--skeleton-a) 0%, var(--skeleton-b) 50%, var(--skeleton-a) 100%);
   background-size: 200% 100%;
   animation: shimmer 1.2s linear infinite;
 }
@@ -28,9 +28,9 @@
   align-self: stretch;
   margin: 0;
   padding: 18px 20px;
-  border: 1px dashed #d6d5ce;
+  border: 1px dashed var(--border-strong);
   font-size: 14px;
-  color: #5e6157;
+  color: var(--text-3);
 }
 
 @media (max-width: 1099px) {

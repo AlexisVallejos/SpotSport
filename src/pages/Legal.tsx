@@ -1,6 +1,7 @@
 import { FunctionComponent, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '../components/atoms';
+import ThemeToggle from '../components/molecules/ThemeToggle/ThemeToggle';
 import styles from './Legal.module.css';
 
 // Privacidad y términos: lo que la web hace de verdad con los datos y con los precios.
@@ -30,6 +31,7 @@ const Legal: FunctionComponent = () => {
         <nav className={styles.links} aria-label="Secciones">
           <a href="#privacidad">Privacidad</a>
           <a href="#terminos">Términos</a>
+          <ThemeToggle />
         </nav>
       </header>
 

@@ -21,7 +21,7 @@
 .hint {
   margin: 0;
   font-size: 13px;
-  color: #8a8c94;
+  color: var(--text-3);
 }
 
 .swipe {
@@ -31,7 +31,7 @@
 @media (max-width: 779px) {
   .swipe {
     display: inline;
-    color: #ff9d57;
+    color: var(--accent-text);
   }
 }
 
@@ -54,9 +54,9 @@
   aspect-ratio: 1200 / 580;
   border-radius: 24px;
   background:
-    radial-gradient(ellipse at 50% 50%, rgba(255, 121, 0, 0.07), transparent 65%),
-    #0b0b0b;
-  border: 1px solid #1c1c1c;
+    radial-gradient(ellipse at 50% 50%, var(--neural-glow), transparent 65%),
+    var(--neural-bg);
+  border: 1px solid var(--border);
   overflow: hidden;
   user-select: none;
 }
@@ -69,7 +69,7 @@
 }
 
 .dust {
-  fill: #ffcf9e;
+  fill: var(--neural-dust);
   opacity: 0.18;
   animation: twinkle 6s ease-in-out infinite;
 }
@@ -82,7 +82,7 @@
 
 .dendrite {
   fill: none;
-  stroke: rgba(255, 150, 70, 0.32);
+  stroke: var(--neural-dendrite);
   stroke-width: calc(1.3px - var(--level) * 0.2px);
   stroke-linecap: round;
   stroke-dasharray: 1;
@@ -103,27 +103,28 @@
 }
 
 .strand {
-  stroke: rgba(255, 121, 0, 0.14);
+  stroke: var(--neural-strand);
   stroke-width: 0.8;
 }
 
 .axon {
-  stroke: rgba(255, 140, 50, 0.38);
+  stroke: var(--neural-axon);
   transition: stroke 0.35s ease;
 }
 
 .edgeOn .axon {
-  stroke: rgba(255, 170, 100, 0.9);
+  stroke: var(--neural-axon-on);
 }
 
 .edgeOn .strand {
-  stroke: rgba(255, 140, 60, 0.4);
+  stroke: var(--neural-axon);
+  opacity: 0.9;
 }
 
 /* La señal: un tramo brillante que recorre el axón encendido del núcleo hacia afuera. */
 .signal {
   fill: none;
-  stroke: #ffe2c4;
+  stroke: var(--neural-signal);
   stroke-linecap: round;
   stroke-dasharray: 0.12 0.88;
   animation: fire 1.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
@@ -139,12 +140,12 @@
 }
 
 .pulse {
-  fill: #ffcf9e;
+  fill: var(--neural-dust);
 }
 
 .pulseOn {
-  fill: #fff4e6;
-  filter: drop-shadow(0 0 4px #ff9d57);
+  fill: var(--neural-signal);
+  filter: drop-shadow(0 0 4px var(--accent));
 }
 
 /* Al pasar por una neurona, lo que no es su camino se apaga un poco. */
@@ -195,7 +196,7 @@
 
 .ring {
   fill: none;
-  stroke: #ff7900;
+  stroke: var(--accent);
   stroke-width: 1.5;
   stroke-dasharray: 3 4;
   transform-box: fill-box;
@@ -238,8 +239,8 @@
   white-space: nowrap;
   font-size: 12.5px;
   font-weight: 600;
-  color: #c9cad0;
-  background: rgba(11, 11, 11, 0.55);
+  color: var(--text-2);
+  background: var(--neural-label-bg);
   backdrop-filter: blur(6px);
   opacity: 0;
   transition: color 0.25s, background 0.25s, opacity 0.5s ease;
@@ -253,21 +254,21 @@
 .label small {
   font-size: 11px;
   font-weight: 500;
-  color: #7c7e86;
+  color: var(--text-4);
   font-variant-numeric: tabular-nums;
 }
 
 .label[data-level='0'] {
   font: 800 20px / 1 'Barlow Condensed', sans-serif;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text);
 }
 
 .label[data-level='1'] {
   font: 800 19px / 1 'Barlow Condensed', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  color: #fff;
+  color: var(--text);
 }
 
 .label[data-level='1'] small,
@@ -284,13 +285,13 @@
 
 .label:hover,
 .label[data-on] {
-  color: #fff;
+  color: var(--text);
   background: rgba(255, 121, 0, 0.16);
 }
 
 .label[aria-pressed='true'] {
-  color: #080808;
-  background: #ff7900;
+  color: var(--on-accent);
+  background: var(--accent);
 }
 
 .label[aria-pressed='true'] small {
@@ -322,7 +323,7 @@
 
 @media (prefers-reduced-transparency: reduce) {
   .label {
-    background: #111;
+    background: var(--surface);
     backdrop-filter: none;
   }
 }

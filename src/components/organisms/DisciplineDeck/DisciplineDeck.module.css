@@ -2,8 +2,8 @@
 .section {
   width: 100%;
   padding: clamp(56px, 7vw, 96px) clamp(20px, 4.45vw, 64px) clamp(48px, 6vw, 80px);
-  background: #080808;
-  color: #fff;
+  background: var(--bg);
+  color: var(--text);
   font-family: Inter, sans-serif;
 }
 
@@ -23,10 +23,10 @@
   font-weight: 600;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: #ffffffb3;
+  color: var(--text-3);
 }
 
-.eyebrow::before { content: ''; width: 6px; height: 6px; background: #ff7900; }
+.eyebrow::before { content: ''; width: 6px; height: 6px; background: var(--accent); }
 
 .heading {
   margin-top: 14px;
@@ -36,7 +36,7 @@
 
 .heading span { color: #ff7900; }
 
-.intro { max-width: 300px; margin: 0; font-size: 14px; line-height: 1.6; color: #c9c7bf; }
+.intro { max-width: 300px; margin: 0; font-size: 14px; line-height: 1.6; color: var(--text-2); }
 
 .panels {
   display: flex;
@@ -52,6 +52,7 @@
   isolation: isolate;
   border-radius: 16px;
   background: #161616;
+  color: #fff;
   transition: flex-grow .6s var(--spot-ease);
 }
 

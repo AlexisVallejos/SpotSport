@@ -18,8 +18,15 @@ const variantClass: Record<WordmarkVariant, string> = {
   footer: styles.spotOrbitalWordmark6,
 };
 
-const Wordmark: FunctionComponent<WordmarkProps> = ({ variant, src = images.logoDarkBg }) => {
-  return <img className={variantClass[variant]} src={src} alt="SPOT" />;
+// Sin src fijo, se dibujan las dos versiones del logo y el tema de la zona muestra la que corresponde.
+const Wordmark: FunctionComponent<WordmarkProps> = ({ variant, src }) => {
+  if (src) return <img className={variantClass[variant]} src={src} alt="SPOT" />;
+  return (
+    <>
+      <img className={`${variantClass[variant]} ${styles.onDark}`} src={images.logoDarkBg} alt="SPOT" />
+      <img className={`${variantClass[variant]} ${styles.onLight}`} src={images.logoLightBg} alt="" aria-hidden="true" />
+    </>
+  );
 };
 
 export default Wordmark;

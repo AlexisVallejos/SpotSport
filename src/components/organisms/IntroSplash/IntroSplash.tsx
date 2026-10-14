@@ -14,7 +14,23 @@ const markIntroDone = () => {
   window.dispatchEvent(new Event(INTRO_DONE_EVENT));
 };
 
-const shouldPlayIntro = () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// La intro es una bienvenida: se ve la primera vez, no en cada visita.
+const SEEN_KEY = 'spot:intro-vista';
+const alreadySeen = () => {
+  try {
+    return localStorage.getItem(SEEN_KEY) === '1';
+  } catch {
+    return false;
+  }
+};
+const rememberSeen = () => {
+  try {
+    localStorage.setItem(SEEN_KEY, '1');
+  } catch {
+    // Sin storage: se vuelve a ver la próxima vez.
+  }
+};
+const shouldPlayIntro = () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches && !alreadySeen();
 
 const IntroSplash: FunctionComponent = () => {
   const [visible, setVisible] = useState(shouldPlayIntro);
@@ -23,6 +39,7 @@ const IntroSplash: FunctionComponent = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const finish = useCallback(() => {
+    rememberSeen();
     setLeaving(true);
     window.setTimeout(() => setVisible(false), FADE_MS);
     markIntroDone();

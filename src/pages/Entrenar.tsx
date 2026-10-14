@@ -23,7 +23,8 @@ const Entrenar: FunctionComponent = () => {
   }, [exercise]);
 
   return (
-    <div className={styles.page}>
+    // Cámara y demo 3D se leen mejor sobre oscuro: esta página queda oscura en los dos temas.
+    <div className={`${styles.page} theme-dark`}>
       <header className={styles.bar}>
         <a href="#inicio" className={styles.back}>
           <Icon name="arrowLeft" size={18} /> SPOT
