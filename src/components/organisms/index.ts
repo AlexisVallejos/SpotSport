@@ -15,10 +15,7 @@ export { default as CuratedKit } from './CuratedKit/CuratedKit';
 export { default as BrandClosing } from './BrandClosing/BrandClosing';
 export { default as SiteFooter } from './SiteFooter/SiteFooter';
 export { default as IntroSplash } from './IntroSplash/IntroSplash';
-<<<<<<< HEAD
 export { default as LavaHero } from './LavaHero/LavaHero';
 export { default as SpotMarquee } from './SpotMarquee/SpotMarquee';
 export { default as DisciplineDeck } from './DisciplineDeck/DisciplineDeck';
-=======
 export { default as FeaturedProducts } from './FeaturedProducts/FeaturedProducts';
->>>>>>> 282289da4fbbc37bb43a2767644a7cab093305cc

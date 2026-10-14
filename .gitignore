@@ -9,3 +9,9 @@ public/voice-lab/
 .env.local
 .env.*.local
 .claude/
+
+# API de precios: bundle y datos que se generan al correrla (data/catalogo/ sí va al repo).
+dist-server
+data/tiendas*.json
+data/historial.json
+data/resenas.json
