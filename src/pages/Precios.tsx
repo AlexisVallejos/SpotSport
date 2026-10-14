@@ -1,12 +1,16 @@
 import { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
-import { Heart } from 'lucide-react';
+import { CornerDownLeft, Heart, Search, Sparkles, X } from 'lucide-react';
 import { Icon } from '../components/atoms';
 // Directos y no desde los barrels: así esta página no suma peso a la landing.
+import FilterMenu from '../components/molecules/FilterMenu/FilterMenu';
+import GlideTabs from '../components/molecules/GlideTabs/GlideTabs';
 import PriceCard from '../components/molecules/PriceCard/PriceCard';
 import PriceDrawer from '../components/organisms/PriceDrawer/PriceDrawer';
 import { useFavorites } from '../lib/favorites';
+import { parseSearch, removeToken } from '../lib/smartQuery';
+import { openSpotSearch, rememberSearch, shortcutLabel } from '../lib/spotSearch';
 import {
   CATEGORIES,
   GENDERS,
@@ -75,7 +79,10 @@ const Precios: FunctionComponent = () => {
     };
   }, []);
 
-  const searchQuery: SearchQuery = useMemo(() => ({ ...query, ids: onlyFavorites ? favorites : null, limit: PAGE }), [query, onlyFavorites, favorites]);
+  // Lo escrito se interpreta en vivo ("remera running mujer" → filtros); Enter lo fija como filtros de verdad.
+  const parsed = useMemo(() => parseSearch(query.q ?? '', { ...query, q: '' }), [query]);
+  const draftParsed = useMemo(() => parseSearch(draft), [draft]);
+  const searchQuery: SearchQuery = useMemo(() => ({ ...parsed.query, ids: onlyFavorites ? favorites : null, limit: PAGE }), [parsed, onlyFavorites, favorites]);
   const searchKey = JSON.stringify(searchQuery);
   const refreshes = status?.refreshing ? status.total : null; // Mientras se llena el catálogo, cada novedad vuelve a buscar.
 
@@ -99,23 +106,34 @@ const Precios: FunctionComponent = () => {
 
   // El buscador escribe en la URL un rato después de que dejás de tipear.
   useEffect(() => setDraft(query.q ?? ''), [query.q]);
+  const committedRef = useRef(query.q ?? '');
+  committedRef.current = query.q ?? '';
   useEffect(() => {
-    if ((query.q ?? '') === draft) return;
-    const timer = window.setTimeout(() => update({ q: draft }), 300);
+    if (committedRef.current === draft) return;
+    const timer = window.setTimeout(() => {
+      if (committedRef.current !== draft) update({ q: draft });
+    }, 200);
     return () => window.clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draft]);
 
+  // Siempre parte de la URL más reciente (no de la de este render): así un cambio no pisa a otro que llegó antes.
   const update = (patch: Partial<SearchQuery>, extra: Record<string, string | null> = {}) => {
-    const next = toParams({ ...query, ...patch });
-    // "Marca" y "tipo" dependen del resto: si cambia la categoría, se limpian.
-    if ('category' in patch) {
-      next.delete('tipo');
-      next.delete('marca');
-    }
-    const favoritos = 'favoritos' in extra ? extra.favoritos : params.get('favoritos');
-    if (favoritos) next.set('favoritos', favoritos);
-    setParams(next, { replace: true });
+    setParams(
+      (previous) => {
+        const current = fromParams(previous);
+        const next = toParams({ ...current, ...patch });
+        // "Marca" y "tipo" dependen del resto: si cambia la categoría, se limpian.
+        if ('category' in patch && patch.category !== current.category) {
+          if (!('type' in patch)) next.delete('tipo');
+          if (!('brand' in patch)) next.delete('marca');
+        }
+        const favoritos = 'favoritos' in extra ? extra.favoritos : previous.get('favoritos');
+        if (favoritos) next.set('favoritos', favoritos);
+        return next;
+      },
+      { replace: true },
+    );
   };
 
   const loadMore = () => {
@@ -142,6 +160,32 @@ const Precios: FunctionComponent = () => {
     else navigate({ pathname: '/precios', search: location.search }, { replace: true });
     openedHere.current = false;
   }, [navigate, location.search]);
+
+  // Enter: las palabras reconocidas pasan a ser filtros (chips) y en el campo queda sólo el texto libre.
+  const commitSearch = () => {
+    if (draft.trim()) rememberSearch(draft);
+    if (!draftParsed.tokens.length) return update({ q: draft });
+    const patch: Partial<SearchQuery> = { q: draftParsed.text };
+    for (const token of draftParsed.tokens) Object.assign(patch, token.patch);
+    setDraft(draftParsed.text);
+    update(patch);
+  };
+
+  const [shortcut, setShortcut] = useState('');
+  useEffect(() => setShortcut(shortcutLabel()), []);
+
+  const sortLabel = SORTS.find((sort) => sort.key === query.sort)?.label;
+  const activeFilters = [
+    query.category && { key: 'categoria', label: CATEGORIES[query.category], clear: () => update({ category: null }) },
+    query.type && { key: 'tipo', label: query.type, clear: () => update({ type: null }) },
+    query.sport && { key: 'deporte', label: query.sport, clear: () => update({ sport: null }) },
+    query.gender && { key: 'genero', label: query.gender, clear: () => update({ gender: null }) },
+    query.brand && { key: 'marca', label: query.brand, clear: () => update({ brand: null }) },
+    query.store && { key: 'tienda', label: STORES[query.store].name, clear: () => update({ store: null }) },
+    query.compared && { key: 'comparables', label: 'En varias tiendas', clear: () => update({ compared: false }) },
+    query.sort && query.sort !== 'recomendado' && { key: 'orden', label: sortLabel ?? query.sort, clear: () => update({ sort: 'recomendado' }) },
+    onlyFavorites && { key: 'favoritos', label: 'Favoritos', clear: () => update({}, { favoritos: null }) },
+  ].filter(Boolean) as { key: string; label: string; clear: () => void }[];
 
   const items = result?.items ?? [];
   const preview = id ? (items.find((product) => product.id === id) ?? null) : null;
@@ -192,95 +236,87 @@ const Precios: FunctionComponent = () => {
         </section>
 
         <div className={styles.controls}>
-          <div className={styles.tabs} role="group" aria-label="Categoría">
-            <button type="button" className={!query.category ? styles.tabOn : styles.tab} aria-pressed={!query.category} onClick={() => update({ category: null })}>
-              Todo
-            </button>
-            {(Object.keys(CATEGORIES) as Category[]).map((category) => (
-              <button key={category} type="button" className={query.category === category ? styles.tabOn : styles.tab} aria-pressed={query.category === category} onClick={() => update({ category })}>
-                {CATEGORIES[category]}
-                {status?.byCategory[category] ? <small>{status.byCategory[category].toLocaleString('es-AR')}</small> : null}
-              </button>
-            ))}
-          </div>
+          <GlideTabs
+            label="Categoría"
+            value={query.category ?? null}
+            onChange={(value) => update({ category: (value as Category | null) ?? null })}
+            items={[
+              { value: null, label: 'Todo', count: status?.total },
+              ...(Object.keys(CATEGORIES) as Category[]).map((category) => ({ value: category, label: CATEGORIES[category], count: status?.byCategory[category] })),
+            ]}
+          />
 
-          <label className={styles.search}>
-            <Icon name="search" size={18} />
-            <input type="search" value={draft} onChange={(event) => setDraft(event.target.value)} placeholder="Buscá: Samba, remera running, Boca, mochila…" aria-label="Buscar productos" />
-          </label>
-
-          <div className={styles.chips} role="group" aria-label="Deporte">
-            <button type="button" className={!query.sport ? styles.chipOn : styles.chip} aria-pressed={!query.sport} onClick={() => update({ sport: null })}>
-              Todos los deportes
-            </button>
-            {SPORTS.map((sport) => (
-              <button key={sport} type="button" className={query.sport === sport ? styles.chipOn : styles.chip} aria-pressed={query.sport === sport} onClick={() => update({ sport })}>
-                {sport}
+          <form className={styles.smart} role="search" onSubmit={(event) => { event.preventDefault(); commitSearch(); }}>
+            <Search size={20} className={styles.smartIcon} aria-hidden="true" />
+            <input
+              type="search"
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder="Escribilo como lo dirías: «botines nike baratos»"
+              aria-label="Buscar productos"
+              autoComplete="off"
+              spellCheck={false}
+            />
+            {draftParsed.tokens.length ? (
+              <button type="submit" className={styles.apply}>
+                <CornerDownLeft size={14} aria-hidden="true" /> Aplicar
               </button>
-            ))}
-          </div>
-
-          <div className={styles.row}>
-            <div className={styles.chips} role="group" aria-label="Para quién">
-              <button type="button" className={!query.gender ? styles.chipOn : styles.chip} aria-pressed={!query.gender} onClick={() => update({ gender: null })}>
-                Todos
+            ) : (
+              <button type="button" className={styles.spotlight} onClick={() => openSpotSearch({ text: draft })} aria-label="Abrir búsqueda rápida">
+                {shortcut}
               </button>
-              {GENDERS.map((gender) => (
-                <button key={gender} type="button" className={query.gender === gender ? styles.chipOn : styles.chip} aria-pressed={query.gender === gender} onClick={() => update({ gender })}>
-                  {gender}
+            )}
+          </form>
+          {draftParsed.tokens.length ? (
+            <div className={styles.understood} aria-live="polite">
+              <Sparkles size={13} aria-hidden="true" /> Entendimos:
+              {draftParsed.tokens.map((token) => (
+                <button key={`${token.kind}-${token.label}`} type="button" className={styles.token} onClick={() => setDraft(removeToken(draft, token))} aria-label={`Ignorar ${token.label}`}>
+                  {token.label} <X size={12} aria-hidden="true" />
                 </button>
               ))}
             </div>
-            <label className={styles.select}>
-              <span>Tipo</span>
-              <select value={query.type ?? ''} onChange={(event) => update({ type: event.target.value || null })}>
-                <option value="">Todos</option>
-                {query.type && !result?.types.some((type) => type.value === query.type) ? <option value={query.type}>{query.type}</option> : null}
-                {(result?.types ?? []).map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.value} ({type.count})
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className={styles.select}>
-              <span>Marca</span>
-              <select value={query.brand ?? ''} onChange={(event) => update({ brand: event.target.value || null })}>
-                <option value="">Todas</option>
-                {query.brand && !result?.brands.some((brand) => brand.value === query.brand) ? <option value={query.brand}>{query.brand}</option> : null}
-                {(result?.brands ?? []).map((brand) => (
-                  <option key={brand.value} value={brand.value}>
-                    {brand.value} ({brand.count})
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className={styles.select}>
-              <span>Tienda</span>
-              <select value={query.store ?? ''} onChange={(event) => update({ store: (event.target.value || null) as StoreId | null })}>
-                <option value="">Las tres</option>
-                {(Object.keys(STORES) as StoreId[]).map((store) => (
-                  <option key={store} value={store}>
-                    {STORES[store].name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className={styles.select}>
-              <span>Ordenar</span>
-              <select value={query.sort} onChange={(event) => update({ sort: event.target.value as SearchQuery['sort'] })}>
-                {SORTS.map((sort) => (
-                  <option key={sort.key} value={sort.key}>
-                    {sort.label}
-                  </option>
-                ))}
-              </select>
-            </label>
+          ) : null}
+
+          <GlideTabs
+            variant="pills"
+            label="Deporte"
+            value={parsed.query.sport ?? null}
+            onChange={(value) => update({ sport: (value as SearchQuery['sport']) ?? null })}
+            items={[{ value: null, label: 'Todos los deportes' }, ...SPORTS.map((sport) => ({ value: sport, label: sport }))]}
+          />
+
+          <div className={styles.toolbar}>
+            <div className={styles.menus}>
+              <FilterMenu label="Para" value={query.gender ?? null} allLabel="Todos" options={GENDERS.map((gender) => ({ value: gender, label: gender }))} onChange={(value) => update({ gender: (value as SearchQuery['gender']) ?? null })} />
+              <FilterMenu label="Tipo" value={query.type ?? null} searchable options={(result?.types ?? []).map((type) => ({ value: type.value, label: type.value, count: type.count }))} onChange={(value) => update({ type: value })} />
+              <FilterMenu label="Marca" value={query.brand ?? null} allLabel="Todas" searchable options={(result?.brands ?? []).map((brand) => ({ value: brand.value, label: brand.value, count: brand.count }))} onChange={(value) => update({ brand: value })} />
+              <FilterMenu label="Tienda" value={query.store ?? null} allLabel="Las tres" options={(Object.keys(STORES) as StoreId[]).map((store) => ({ value: store, label: STORES[store].name }))} onChange={(value) => update({ store: (value as StoreId | null) ?? null })} />
+              <button type="button" className={query.compared ? styles.pillOn : styles.pill} aria-pressed={!!query.compared} onClick={() => update({ compared: !query.compared })}>
+                En varias tiendas
+              </button>
+            </div>
+            <FilterMenu label="Orden" align="end" value={query.sort && query.sort !== 'recomendado' ? query.sort : null} allLabel="Recomendado" options={SORTS.filter((sort) => sort.key !== 'recomendado').map((sort) => ({ value: sort.key, label: sort.label }))} onChange={(value) => update({ sort: (value as SearchQuery['sort']) ?? 'recomendado' })} />
           </div>
-          <label className={styles.toggle}>
-            <input type="checkbox" checked={!!query.compared} onChange={(event) => update({ compared: event.target.checked })} />
-            Solo lo que está en más de una tienda
-          </label>
+
+          {result && !firstLoad ? (
+            <div className={styles.summary} aria-live="polite">
+              <span className={styles.count}>
+                {result.total.toLocaleString('es-AR')} {result.total === 1 ? 'producto' : 'productos'}
+                {onlyFavorites ? ' guardados' : ''}
+              </span>
+              {activeFilters.map((filter) => (
+                <button key={filter.key} type="button" className={styles.activeChip} onClick={filter.clear} aria-label={`Quitar ${filter.label}`}>
+                  {filter.label} <X size={12} aria-hidden="true" />
+                </button>
+              ))}
+              {activeFilters.length > 1 ? (
+                <button type="button" className={styles.clearAll} onClick={() => setParams(new URLSearchParams(), { replace: true })}>
+                  Limpiar todo
+                </button>
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
         {error && !result ? (
@@ -302,10 +338,6 @@ const Precios: FunctionComponent = () => {
 
         {result && !firstLoad ? (
           <>
-            <p className={styles.count} aria-live="polite">
-              {result.total.toLocaleString('es-AR')} {result.total === 1 ? 'producto' : 'productos'}
-              {onlyFavorites ? ' guardados' : ''}
-            </p>
             {result.total === 0 ? <p className={styles.note}>{onlyFavorites ? 'Todavía no guardaste nada. Tocá el corazón de una carta para tenerla acá.' : 'No encontramos nada con esos filtros. Probá con otra búsqueda.'}</p> : null}
             <div className={styles.grid}>
               {items.map((product) => (

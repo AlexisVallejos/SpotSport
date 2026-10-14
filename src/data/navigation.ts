@@ -7,4 +7,4 @@ export const departments = [
   { label: 'Deportes', href: '#deportes' },
 ];
 
-export const searchPlaceholder = '¿Qué estás buscando?';
+export const searchPlaceholder = 'Buscá zapatillas, ropa, marcas…';

@@ -82,6 +82,7 @@ npm run catalogo:importar -- --local 20000000-0000-4000-8000-000000000001 data/c
 - Si una tienda cambia su HTML y deja de leerse, la API sigue mostrando sus últimos precios y lo informa al pie de `/precios`.
 - Newsletter del pie: `POST /api/suscripciones` y `POST /api/suscripciones/baja` guardan o borran el mail en `DATA_DIR/suscriptores.json` (fuera de git, máximo 10 envíos por hora por conexión).
 - `/legal` explica qué datos se guardan (favoritos sólo en el navegador, reseñas, mails del newsletter) y cómo funcionan los precios.
+- **Búsqueda Spotlight** (`SpotSearch`, se abre con el buscador del menú, ⌘K / Ctrl K o `/`): entiende lo que escribís (`src/lib/smartQuery.ts`: "botines nike baratos" → Botines · Nike · Más baratos), muestra resultados en vivo y se maneja con flechas y Enter. En `/precios` el mismo intérprete corre en el campo de búsqueda y Enter convierte lo entendido en filtros.
 - En la landing, Calzado, Indumentaria, "El estudio SPOT", Training y el buscador del menú usan estos productos reales. Este comparador es independiente del esquema `catalogo` de Supabase (que carga fuentes con permiso documentado).
 
 ## Entrenar con cámara

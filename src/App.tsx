@@ -5,6 +5,7 @@ import { RequireAdmin, RequireAuth, RequireMerchant } from './components/layout/
 import ShopLayout from './components/layout/ShopLayout';
 import { Empty } from './components/ui';
 import SPOTTodoElDeporte from './pages/SPOTTodoElDeporte';
+import SpotSearch from './components/organisms/SpotSearch/SpotSearch';
 
 // Cada sección se descarga solo cuando se entra: la landing queda liviana.
 const Entrenar = lazy(() => import('./pages/Entrenar'));
@@ -81,6 +82,7 @@ export default function App() {
 
   return (
     <Suspense fallback={<Fallback />}>
+      <SpotSearch />
       <Routes>
         <Route path="/" element={<SPOTTodoElDeporte />} />
         <Route path="/entrenar" element={<Entrenar />} />
