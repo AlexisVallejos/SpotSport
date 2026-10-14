@@ -1,8 +1,8 @@
 export const COLUMNAS = ['codigo_externo', 'marca', 'categoria', 'modelo', 'nombre', 'talle', 'color',
   'precio', 'moneda', 'url_producto', 'fecha_observacion', 'disponible', 'es_demo'] as const;
 
-export type FilaCatalogo = Record<Exclude<typeof COLUMNAS[number], 'disponible' | 'es_demo'>, string>
-  & { disponible: boolean; es_demo: boolean };
+import type { FilaCatalogo } from '../../shared/catalogo';
+export type { FilaCatalogo } from '../../shared/catalogo';
 
 /** CSV separado por comas: acepta CRLF, BOM, comillas escapadas y campos multilínea. */
 export function leerCSV(texto: string): FilaCatalogo[] {
