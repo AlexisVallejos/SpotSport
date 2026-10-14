@@ -2,6 +2,8 @@
 
 Trabajo preparado el 13/10/2026. El repositorio ya tiene una tienda con `public.products`, `product_variants`, pedidos y cuentas. El comparador académico requiere un producto independiente del comercio y varias ofertas de la misma variante. Por eso se agregó el esquema `catalogo`, sin cambiar los contratos ni los datos de la tienda.
 
+**Actualización del 14/10/2026:** la base ya está aplicada y conectada al proyecto Supabase SPOT. Ver [estado de la conexión, verificaciones y notas de migraciones](conexion-supabase.md). Las instrucciones para crear/aplicar una base nueva se conservan como referencia; no repetirlas sobre la instancia existente.
+
 ## Archivos y entregables
 
 | Tarea | Entrega |

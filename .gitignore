@@ -9,6 +9,7 @@ public/voice-lab/
 .env.local
 .env.*.local
 .claude/
+supabase/.temp/
 
 # API de precios: bundle y datos que se generan al correrla (data/catalogo/ sí va al repo).
 dist-server
