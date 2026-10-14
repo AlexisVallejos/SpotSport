@@ -82,3 +82,23 @@
   	font-size: 16px;
   	font-weight: 700;
 }
+.offers {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 6px;
+  	margin-top: 10px;
+}
+.offer {
+  	display: flex;
+  	justify-content: space-between;
+  	gap: 8px;
+  	padding: 8px 10px;
+  	border: 1px solid #2f2f2f;
+  	color: #fff;
+  	font-size: 13px;
+  	text-decoration: none;
+  	transition: border-color 0.2s ease;
+}
+.offer:hover {
+  	border-color: #ff7900;
+}

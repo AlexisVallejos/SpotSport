@@ -16,10 +16,6 @@ Todas las 21 tablas de la aplicación tienen RLS. El catálogo de demostración 
 
 Se fijó el `search_path` de cuatro triggers y se revocó su invocación directa por clientes; se conservó su ejecución automática. La migración `20261014204116_deployed_function_permissions.sql` reproduce esos ajustes en instalaciones nuevas.
 
-### Productos demo en la tienda (14/10/2026)
-
-Se aplicó `supabase/seeds/tienda_demo.sql`: un comercio aprobado **SPOT Demo (ficticio)** con los 20 productos del catálogo copiados a `public.products` (una variante cada uno, precio = oferta ARS más baja, stock 10, uno destacado por categoría). La cuenta dueña (`tienda-demo@spot.invalid`) no tiene contraseña. Se puede volver a ejecutar sin duplicar; para quitarlo todo, borrar esa cuenta de `auth.users`. Prueba: `supabase/tests/tienda-demo.test.ts`.
-
 ## Usarlo localmente
 
 Reiniciar el servidor de desarrollo si ya estaba abierto: Vite lee `.env.local` al iniciar. Ejecutar `npm run dev` desde la raíz del repositorio. No hace falta modificar el cliente de Supabase ni pegar claves en el código.
