@@ -9,6 +9,7 @@ import SPOTTodoElDeporte from './pages/SPOTTodoElDeporte';
 // Cada sección se descarga solo cuando se entra: la landing queda liviana.
 const Entrenar = lazy(() => import('./pages/Entrenar'));
 const Precios = lazy(() => import('./pages/Precios'));
+const Legal = lazy(() => import('./pages/Legal'));
 const Shop = lazy(() => import('./pages/shop/Shop'));
 const ProductPage = lazy(() => import('./pages/shop/ProductPage'));
 const CartPage = lazy(() => import('./pages/shop/CartPage'));
@@ -85,6 +86,7 @@ export default function App() {
         <Route path="/entrenar" element={<Entrenar />} />
         <Route path="/precios" element={<Precios />} />
         <Route path="/precios/:id" element={<Precios />} />
+        <Route path="/legal" element={<Legal />} />
 
         <Route element={<ShopLayout />}>
           <Route path="tienda" element={<Shop />} />

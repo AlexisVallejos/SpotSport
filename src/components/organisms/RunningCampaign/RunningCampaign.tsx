@@ -2,6 +2,7 @@ import { FunctionComponent } from 'react';
 import { Wordmark } from '../../atoms';
 import { ActionButton, SectionMarker } from '../../molecules';
 import { images } from '../../../data/images';
+import { preciosLink } from '../../../lib/precios';
 import styles from './RunningCampaign.module.css';
 
 const RunningCampaign: FunctionComponent = () => {
@@ -14,7 +15,7 @@ const RunningCampaign: FunctionComponent = () => {
         <SectionMarker variant="light" label="RUNNING / A TU RITMO" />
         <h2 id="running-titulo" className={styles.campaignHeadline}>SALÍ DE<br/>LA VUELTA.<br/>ENTRÁ EN<br/>TU ÓRBITA.</h2>
         <div className={styles.campaignDescription}>No importa el tiempo ni la distancia. Importa ese primer paso que es tuyo.</div>
-        <ActionButton variant="campaign" label="Encontrá tu equipo de running" />
+        <ActionButton variant="campaign" label="Encontrá tu equipo de running" href={preciosLink({ sport: 'Running' })} />
       </div>
       <div className={styles.floatingCampaignIdentity}>
         <Wordmark variant="running" />

@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react';
+import { Link } from 'react-router-dom';
 import { Icon, Text, Wordmark } from '../../atoms';
 import { EmailEntry, FooterLinkGroup } from '../../molecules';
 import { footerLinkGroups, legalLinks } from '../../../data/footer';
@@ -36,9 +37,9 @@ const SiteFooter: FunctionComponent = () => {
         <Text>Precios de Open Sports, Dexter y Trip Store · Se actualizan cada 6 horas</Text>
         <div className={styles.legalLinks}>
           {legalLinks.map((link) => (
-            <a key={link} href="#" className={styles.legalLink}>
-              {link}
-            </a>
+            <Link key={link.label} to={link.href} className={styles.legalLink}>
+              {link.label}
+            </Link>
           ))}
         </div>
       </div>

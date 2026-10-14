@@ -80,6 +80,8 @@ npm run catalogo:importar -- --local 20000000-0000-4000-8000-000000000001 data/c
 - Reseñas: Open Sports y Trip tienen las reseñas desactivadas y Dexter no publica propias, así que se muestran las que dejan los usuarios en SPOT (máximo 5 por hora por conexión, sin enlaces). Si alguna tienda las activa, se suman solas.
 - Guarda todo en `DATA_DIR` (por defecto `data/`, fuera de git): `tiendas-v2.json`, `historial.json` y `resenas.json`. Variables opcionales en `.env.example`.
 - Si una tienda cambia su HTML y deja de leerse, la API sigue mostrando sus últimos precios y lo informa al pie de `/precios`.
+- Newsletter del pie: `POST /api/suscripciones` y `POST /api/suscripciones/baja` guardan o borran el mail en `DATA_DIR/suscriptores.json` (fuera de git, máximo 10 envíos por hora por conexión).
+- `/legal` explica qué datos se guardan (favoritos sólo en el navegador, reseñas, mails del newsletter) y cómo funcionan los precios.
 - En la landing, Calzado, Indumentaria, "El estudio SPOT", Training y el buscador del menú usan estos productos reales. Este comparador es independiente del esquema `catalogo` de Supabase (que carga fuentes con permiso documentado).
 
 ## Entrenar con cámara

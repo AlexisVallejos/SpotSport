@@ -32,3 +32,30 @@
   	display: flex;
   	color: #ff7900;
 }
+.wrapper {
+  	align-self: stretch;
+  	display: flex;
+  	flex-direction: column;
+  	gap: 8px;
+}
+.submit:disabled {
+  	opacity: 0.5;
+  	cursor: progress;
+}
+.message,
+.error {
+  	min-height: 1em;
+  	margin: 0;
+  	font-size: 12px;
+  	line-height: 1.4;
+}
+.message {
+  	color: #a7a9b2;
+}
+.error {
+  	color: #ff9d8a;
+}
+.unsubscribe {
+  	color: #ff7900;
+  	text-decoration: underline;
+}

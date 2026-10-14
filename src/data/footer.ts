@@ -22,4 +22,7 @@ export const footerLinkGroups: FooterLinkGroupProps[] = [
   },
 ];
 
-export const legalLinks = ['Privacidad', 'Términos'];
+export const legalLinks = [
+  { label: 'Privacidad', href: '/legal#privacidad' },
+  { label: 'Términos', href: '/legal#terminos' },
+];
