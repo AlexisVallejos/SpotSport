@@ -55,3 +55,11 @@ begin
     end if;
   end loop;
 end $$;
+
+-- Publicación explícita de fixtures ficticias revisadas por el equipo.
+update catalogo.ofertas o set publicada = true,
+  evidencia_revision = 'Fixture ficticia revisada; sin verificación HTTP', fecha_revision = now()
+from catalogo.fuentes f
+where o.fuente_id = f.id and f.id in
+  ('20000000-0000-4000-8000-000000000001','20000000-0000-4000-8000-000000000002')
+  and f.es_demo and f.permiso_verificado;

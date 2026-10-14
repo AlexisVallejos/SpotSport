@@ -1,4 +1,4 @@
-# DER del catálogo SPOT (3.1)
+# DER del catálogo SPOT (3.1–3.6)
 
 Modelo implementado en el esquema SQL `catalogo`. Los UUID son claves primarias. La tabla `public.profiles` ya existe en la tienda y se reutiliza para la relación de operadores; no se duplican cuentas.
 
@@ -16,6 +16,8 @@ erDiagram
   IMPORTACIONES ||--o{ HISTORIAL_PRECIOS : observa
   COMERCIOS ||--o{ MEMBRESIAS : autoriza
   PERFILES ||--o{ MEMBRESIAS : participa
+  PERFILES |o--o{ IMPORTACIONES : ejecuta
+  PERFILES |o--o{ OFERTAS : revisa
   EJERCICIOS ||--o{ REGLAS_MOVIMIENTO : define
   COMERCIOS {
     uuid id PK
@@ -54,6 +56,11 @@ erDiagram
     numeric precio
     text moneda
     timestamptz fecha_observacion
+    boolean publicada
+    timestamptz vigente_hasta
+    uuid revisada_por FK
+    text evidencia_revision
+    timestamptz fecha_revision
   }
   HISTORIAL_PRECIOS {
     uuid id PK
@@ -67,6 +74,7 @@ erDiagram
     uuid id PK
     uuid fuente_id FK
     uuid fuente_solicitada
+    uuid actor_id FK
     text estado
     text archivo
   }
@@ -89,4 +97,4 @@ En importaciones, `fuente_id` puede ser nulo si el intento pidió una fuente ine
 - Las eliminaciones no borran el histórico en cascada. Una fuente/comercio se desactiva mediante estado/permisos; el diseño de retención se completará antes de habilitar operación real.
 - El registro de permisos es evidencia administrativa: un booleano por sí solo no prueba una autorización legal.
 
-Ejercicios, reglas y membresías están modelados, pero no tienen datos demo ni habilitan la cámara o paneles. La tienda existente conserva su propio modelo de ventas.
+Las membresías ya autorizan la carga de fuentes del comercio; solo el admin puede asignarlas o revocarlas. `actor_id` identifica cargas con sesión; las cargas técnicas pueden tenerlo nulo. La revisión registra admin, fecha y evidencia; una nueva observación la borra y despublica. Ejercicios y reglas conservan solo su esquema, sin activar la cámara. La tienda existente conserva su propio modelo de ventas. Ver [EP-03 y operaciones](catalogo-api.md).

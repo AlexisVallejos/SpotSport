@@ -1,8 +1,10 @@
-# Integrante 3: tareas 3.1 a 3.3
+# Integrante 3: tareas 3.1 a 3.6
 
 Trabajo preparado el 13/10/2026. El repositorio ya tiene una tienda con `public.products`, `product_variants`, pedidos y cuentas. El comparador académico requiere un producto independiente del comercio y varias ofertas de la misma variante. Por eso se agregó el esquema `catalogo`, sin cambiar los contratos ni los datos de la tienda.
 
 **Actualización del 14/10/2026:** la base ya está aplicada y conectada al proyecto Supabase SPOT. Ver [estado de la conexión, verificaciones y notas de migraciones](conexion-supabase.md). Las instrucciones para crear/aplicar una base nueva se conservan como referencia; no repetirlas sobre la instancia existente.
+
+**Entrega 3.4–3.6:** [contrato del catálogo, permisos, operaciones para I2, EP-03, defensa y respaldo/restauración](catalogo-api.md). La lectura pública ya está implementada con RLS; la demo se solicita expresamente con `incluirDemo:true`.
 
 ## Archivos y entregables
 
@@ -11,6 +13,9 @@ Trabajo preparado el 13/10/2026. El repositorio ya tiene una tienda con `public.
 | 3.1 | Migraciones `20261013000004_catalogo_schema.sql` y `20261013000005_catalogo_import.sql`; [DER](DER.md) y [diccionario físico](diccionario.md). |
 | 3.2 | `supabase/seeds/catalogo_demo.sql` y dos CSV en `data/catalogo/`: 20 productos, 20 variantes y 40 ofertas, dos por variante. |
 | 3.3 | Función SQL `public.importar_catalogo`, lector CSV y comando de importación; pruebas SQL y de formato CSV. |
+| 3.4 | `src/services/catalogo/index.ts`, DTO compartido y vistas públicas con RLS; pruebas de búsqueda/filtros/orden. |
+| 3.5 | Migración `20261014212300_catalogo_api_permisos.sql`, pruebas de seguridad/integridad y procedimiento de respaldo/restauración. |
+| 3.6 | `supabase/queries/defensa_catalogo.sql`, EP-03 y servicios de carga/edición, membresías, configuración y moderación para I2. |
 
 Los precios, marcas, comercios y fechas de observación de la demo son ficticios. `https://demo-a.invalid` y `https://demo-b.invalid` son orígenes simulados: **no abrirlos ni presentarlos como tiendas reales**. El rótulo `es_demo` se obtiene de la fuente; ambas fuentes documentan que el equipo creó el dataset. No hay permisos, precios actuales ni acuerdos externos verificados.
 
@@ -39,9 +44,9 @@ Para probar una actualización, copiar `demo-a.csv`, dejar una fila, cambiar su 
 npm run catalogo:importar -- 20000000-0000-4000-8000-000000000001 data/catalogo/demo-a.csv
 ```
 
-La clave administrativa se usa únicamente en este comando de servidor. No colocarla en variables `VITE_*`, código del navegador, CSV, capturas ni Git. El comando no carga `.env` automáticamente. Las variables públicas que ya usa la tienda no sirven para ejecutar el importador. Se mantienen restricciones de acceso básicas: el navegador no puede importar ni leer directamente este esquema en esta etapa. La API pública y los permisos de los paneles corresponden a 3.4/3.5.
+La clave administrativa se usa únicamente en este comando de servidor. No colocarla en variables `VITE_*`, código del navegador, CSV, capturas ni Git. El comando no carga `.env` automáticamente. Las variables públicas no sirven para ejecutar el importador técnico. Desde 3.4–3.6, los operadores usan RPC con su propia sesión y la lectura pública usa vistas con RLS. Una carga nueva o una edición requiere moderación antes de publicarse, incluso si proviene del importador técnico.
 
-La instalación remota requiere un proyecto propio y sus credenciales; las pruebas locales no prueban un despliegue de Supabase ni su conectividad.
+Las pruebas locales no prueban conectividad; el despliegue remoto y sus verificaciones se registran en `conexion-supabase.md`.
 
 ## Formato CSV y carga manual
 
@@ -119,11 +124,11 @@ from catalogo.importaciones order by inicio desc;
 
 Un producto no pertenece a una única tienda; una variante fija su talle/color, mientras cada fuente publica una oferta. La fuente pertenece a un comercio y documenta origen y autorización. El histórico registra las observaciones anteriores. Las FK impiden referencias inexistentes, las claves únicas evitan duplicados y la transacción impide guardar medio lote. El DER y el diccionario reflejan esas tablas ejecutables.
 
-## Lo que sigue fuera de estas tres tareas
+## Alcance pendiente
 
-`listarOfertas`, conexión al comparador visual, autorizaciones de operadores/membresías, moderación, política pública de caducidad, copias de seguridad, verificación HTTP y fuentes/API reales. No se añadieron cobros, cambios en la cámara ni cambios al checkout existente. Las tablas de ejercicios/reglas/membresías quedan definidas sin activar funciones nuevas.
+La conexión de las pantallas de I2, fuentes externas con permiso real, comprobación HTTP automática y un simulacro de restauración remota. Los procedimientos de respaldo/restauración y retención propuesta ya están documentados. No se añadieron cobros, cambios en la cámara ni cambios al checkout existente. Los ejercicios/reglas conservan solo su esquema preparado.
 
-## Verificación realizada (13/10/2026)
+## Verificación inicial (13/10/2026, anterior a la conexión remota)
 
 - Suite completa: **216 pruebas aprobadas en 15 archivos**, incluidas 31 pruebas nuevas de SQL/catálogo y CSV. Se ejecutaron también las pruebas existentes de tienda y cámara.
 - Compilación de producción: `npm run build` terminó correctamente.
