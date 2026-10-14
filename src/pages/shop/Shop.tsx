@@ -1,58 +1,48 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import NotConfigured from '../../components/layout/NotConfigured';
-import NeuralCategories from '../../components/organisms/NeuralCategories/NeuralCategories';
 import LocalCard from '../../components/shop/LocalCard';
 import ProductCard from '../../components/shop/ProductCard';
 import { Empty, Loading, Notice, PageTitle } from '../../components/ui';
 import { listCategories, listProducts } from '../../lib/api/shop';
-import { fromParams, loadStatus, preciosLink, searchProducts, toParams, type CatalogStatus, type SearchQuery, type Sport } from '../../lib/precios';
+import { preciosLink, searchProducts, type SearchQuery } from '../../lib/precios';
 import { isConfigured } from '../../lib/supabase';
 import { useAsync } from '../../lib/useAsync';
 import styles from '../pages.module.css';
 
-/** Neurona elegida → categoría de la tienda (Supabase) para filtrar también a los comercios afiliados. */
-const SPORT_SLUGS: Partial<Record<Sport, string>> = { Running: 'running', Training: 'entrenamiento', Fútbol: 'futbol', Urbana: 'sportstyle' };
-
-function shopSlug(query: SearchQuery): string | undefined {
-  if (query.sport && SPORT_SLUGS[query.sport]) return SPORT_SLUGS[query.sport];
-  if (query.category === 'indumentaria' || query.category === 'accesorios') return query.category;
-  return undefined;
-}
+/** Categorías de la tienda → filtros de la API de precios de los locales. */
+const LOCAL_FILTERS: Record<string, SearchQuery> = {
+  running: { sport: 'Running' },
+  entrenamiento: { sport: 'Training' },
+  futbol: { sport: 'Fútbol' },
+  sportstyle: { sport: 'Urbana' },
+  indumentaria: { category: 'indumentaria' },
+  accesorios: { category: 'accesorios' },
+};
 
 export default function Shop() {
   const [params, setParams] = useSearchParams();
   const q = params.get('q') ?? '';
+  const categorySlug = params.get('cat') ?? '';
   const merchantId = params.get('comercio') ?? '';
   const [draft, setDraft] = useState(q);
-  const [status, setStatus] = useState<CatalogStatus | null>(null);
 
   useEffect(() => setDraft(q), [q]);
-  useEffect(() => {
-    loadStatus().then(setStatus, () => setStatus(null));
-  }, []);
-
-  // Las categorías salen de la red neuronal del comparador (categoria, tipo y deporte en la URL, igual que /precios).
-  const filters = fromParams(params);
-  const filterKey = toParams({ category: filters.category, type: filters.type, sport: filters.sport }).toString();
-  const localQuery = useMemo<SearchQuery>(() => ({ q, category: filters.category, type: filters.type, sport: filters.sport }), [q, filterKey]);
-  const slug = shopSlug(localQuery);
 
   const categories = useAsync(() => (isConfigured ? listCategories() : Promise.resolve([])), []);
-  const categoryId = useMemo(() => categories.data?.find((category) => category.slug === slug)?.id, [categories.data, slug]);
-  // Calzado o un tipo sin equivalente en la tienda: no hay productos afiliados que mostrar con ese filtro.
-  const unmatched = Boolean((localQuery.category || localQuery.type || localQuery.sport) && !categoryId);
+  const categoryId = useMemo(() => categories.data?.find((category) => category.slug === categorySlug)?.id, [categories.data, categorySlug]);
   const products = useAsync(
-    () => (isConfigured && !unmatched ? listProducts({ q, categoryId, merchantId: merchantId || undefined }) : Promise.resolve([])),
-    [q, categoryId, unmatched, merchantId, categories.loading],
+    () => (isConfigured ? listProducts({ q, categoryId, merchantId: merchantId || undefined }) : Promise.resolve([])),
+    [q, categoryId, merchantId, categories.loading],
   );
 
+  const localQuery = useMemo<SearchQuery>(() => ({ q, ...LOCAL_FILTERS[categorySlug] }), [q, categorySlug]);
   // Sin comercio elegido: los productos de un comercio afiliado no se mezclan con los de los locales.
   const locals = useAsync(() => (merchantId ? Promise.resolve(null) : searchProducts({ ...localQuery, limit: 24 })), [localQuery, merchantId]);
 
   if (!isConfigured) return <NotConfigured />;
   const hasLocals = (locals.data?.items.length ?? 0) > 0;
-  const filtered = Boolean(q || localQuery.category || localQuery.sport);
+  const filtered = Boolean(q || categorySlug);
 
   const update = (patch: Record<string, string>) => {
     const next = new URLSearchParams(params);
@@ -61,11 +51,6 @@ export default function Shop() {
       else next.delete(key);
     }
     setParams(next, { replace: true });
-  };
-
-  const selectNeuron = (patch: Partial<SearchQuery>) => {
-    const next = toParams({ category: filters.category, type: filters.type, sport: filters.sport, ...patch });
-    update({ categoria: next.get('categoria') ?? '', tipo: next.get('tipo') ?? '', deporte: next.get('deporte') ?? '' });
   };
 
   const submit = (event: FormEvent) => {
@@ -85,14 +70,21 @@ export default function Shop() {
           style={{ flex: '1 1 240px', minHeight: 36, padding: '0 12px', background: '#0c0c0c', border: '1px solid #2f2f2f', color: '#fff' }}
         />
       </form>
-      <NeuralCategories status={status} query={localQuery} onSelect={selectNeuron} />
-      {merchantId ? (
-        <div className={styles.filters}>
+      <div className={styles.filters} role="group" aria-label="Categorías">
+        <button type="button" className={`${styles.chip} ${!categorySlug ? styles.chipOn : ''}`} onClick={() => update({ cat: '' })}>
+          Todo
+        </button>
+        {(categories.data ?? []).map((category) => (
+          <button key={category.id} type="button" className={`${styles.chip} ${categorySlug === category.slug ? styles.chipOn : ''}`} onClick={() => update({ cat: category.slug })}>
+            {category.name}
+          </button>
+        ))}
+        {merchantId ? (
           <button type="button" className={`${styles.chip} ${styles.chipOn}`} onClick={() => update({ comercio: '' })}>
             Un solo comercio ×
           </button>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
 
       {products.error ? <Notice tone="error">{products.error}</Notice> : null}
       {products.loading ? (
