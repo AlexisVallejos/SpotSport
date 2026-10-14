@@ -1,10 +1,24 @@
 import type { FooterLinkGroupProps } from '../components/molecules';
 
+// Rutas internas (/…) navegan con el router; los "#" son secciones de la landing.
 export const footerLinkGroups: FooterLinkGroupProps[] = [
-  { title: 'EXPLORÁ', links: ['Calzado', 'Indumentaria', 'Accesorios', 'Deportes'] },
   {
-    title: 'TE ACOMPAÑAMOS',
-    links: ['Guía de talles', 'Cuidado de productos', 'Preguntas frecuentes', 'Contacto'],
+    title: 'EXPLORÁ',
+    links: [
+      { label: 'Calzado', href: '#calzado' },
+      { label: 'Indumentaria', href: '#indumentaria' },
+      { label: 'Accesorios', href: '/precios?categoria=accesorios' },
+      { label: 'Deportes', href: '#deportes' },
+    ],
+  },
+  {
+    title: 'COMPARÁ Y COMPRÁ',
+    links: [
+      { label: 'Comparador de precios', href: '/precios' },
+      { label: 'Mejores descuentos', href: '/precios?orden=descuento' },
+      { label: 'Mis favoritos', href: '/precios?favoritos=1' },
+      { label: 'Tienda SPOT', href: '/tienda' },
+    ],
   },
 ];
 

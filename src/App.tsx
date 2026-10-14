@@ -8,6 +8,7 @@ import SPOTTodoElDeporte from './pages/SPOTTodoElDeporte';
 
 // Cada sección se descarga solo cuando se entra: la landing queda liviana.
 const Entrenar = lazy(() => import('./pages/Entrenar'));
+const Precios = lazy(() => import('./pages/Precios'));
 const Shop = lazy(() => import('./pages/shop/Shop'));
 const ProductPage = lazy(() => import('./pages/shop/ProductPage'));
 const CartPage = lazy(() => import('./pages/shop/CartPage'));
@@ -73,14 +74,17 @@ function NotFound() {
 
 export default function App() {
   const { pathname, hash } = useLocation();
-  // Compatibilidad con el enlace anterior de la página de entrenamiento.
+  // Compatibilidad con los enlaces anteriores (#entrenar, #precios).
   if (pathname === '/' && hash === '#entrenar') return <Navigate to="/entrenar" replace />;
+  if (pathname === '/' && hash.startsWith('#precios')) return <Navigate to={hash.slice(1).replace(/^precios/, '/precios')} replace />;
 
   return (
     <Suspense fallback={<Fallback />}>
       <Routes>
         <Route path="/" element={<SPOTTodoElDeporte />} />
         <Route path="/entrenar" element={<Entrenar />} />
+        <Route path="/precios" element={<Precios />} />
+        <Route path="/precios/:id" element={<Precios />} />
 
         <Route element={<ShopLayout />}>
           <Route path="tienda" element={<Shop />} />

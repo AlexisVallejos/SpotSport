@@ -3,6 +3,7 @@ import { Label } from '../../atoms';
 import { ActionButton, SectionMarker, TrainingCategoryRow } from '../../molecules';
 import { images } from '../../../data/images';
 import { trainingCategories } from '../../../data/training';
+import { preciosLink } from '../../../lib/precios';
 import styles from './TrainingCampaign.module.css';
 
 const TrainingCampaign: FunctionComponent = () => {
@@ -21,11 +22,11 @@ const TrainingCampaign: FunctionComponent = () => {
         <div className={styles.description13}>Hay días de avanzar y días de volver a empezar. Equipate para los dos. El resto lo ponés vos.</div>
         <div className={styles.trainingCategories}>
           {trainingCategories.map((category) => (
-            <TrainingCategoryRow key={category} label={category} />
+            <TrainingCategoryRow key={category.label} {...category} />
           ))}
         </div>
         <div className={styles.actions}>
-          <ActionButton variant="campaign" label="Armá tu equipo de training" />
+          <ActionButton variant="campaign" label="Armá tu equipo de training" href={preciosLink({ sport: 'Training' })} />
           <ActionButton variant="light" label="Entrená con cámara" href="/entrenar" />
         </div>
       </div>

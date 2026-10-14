@@ -1,5 +1,7 @@
 .kitItem {
   	align-self: stretch;
+  	width: 100%;
+  	text-align: left;
   	height: 58px;
   	border-bottom: 1px solid #d7d7d2;
   	overflow: hidden;
@@ -10,8 +12,11 @@
   	gap: 20px;
   	transition: border-color 0.2s ease;
 }
-.kitItem:hover {
+.kitItem:not(:disabled):hover {
   	border-bottom-color: #ff7900;
+}
+.kitItem:disabled {
+  	cursor: default;
 }
 .itemDetails {
   	overflow: hidden;

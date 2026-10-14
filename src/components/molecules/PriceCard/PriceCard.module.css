@@ -1,0 +1,263 @@
+/* Carta del comparador: misma superficie blanca que las cartas de la landing, sobre la página negra. */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 0 0 1px #0000000d;
+  color: #080808;
+  font-family: Inter, sans-serif;
+  transition: transform 0.45s var(--spot-ease), box-shadow 0.45s var(--spot-ease);
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 48px -24px #ff790055;
+}
+
+.card:focus-within {
+  outline: 2px solid #ff7900;
+  outline-offset: 3px;
+}
+
+.visual {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  margin: 8px 8px 0;
+  overflow: hidden;
+  border-radius: 11px;
+  background: radial-gradient(ellipse at 50% 40%, #ffffff 0%, #f1f0ea 70%, #e9e7df 100%);
+}
+
+/* Las fotos de las tiendas vienen con fondo blanco: "multiply" las funde con el degradé. */
+.visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8%;
+  mix-blend-mode: multiply;
+  transition: transform 0.6s var(--spot-ease);
+}
+
+.card:hover .visual img {
+  transform: scale(1.06) rotate(-3deg);
+}
+
+.tags {
+  position: absolute;
+  inset: 10px 10px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.discount,
+.stores,
+.storesSingle {
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.discount {
+  background: #ff7900;
+  color: #080808;
+}
+
+.stores {
+  background: #080808;
+  color: #fff;
+}
+
+.storesSingle {
+  background: #ffffffcc;
+  color: #5e6157;
+}
+
+/* Por encima del botón estirado de la carta: guardar no abre el panel. */
+.favorite {
+  position: absolute;
+  z-index: 2;
+  right: 10px;
+  bottom: 10px;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffffd9;
+  color: #262622;
+  box-shadow: 0 2px 8px #0000001a;
+  transition: color 0.2s, background 0.2s, transform 0.2s var(--spot-ease);
+}
+
+.favorite:hover {
+  transform: scale(1.08);
+}
+
+.favorite:hover,
+.favorite[aria-pressed='true'] {
+  color: #e96300;
+  background: #fff;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 6px;
+  padding: 14px 16px 16px;
+}
+
+.brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 8px;
+  margin: 0;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #74776c;
+}
+
+.brand b {
+  color: #e96300;
+}
+
+.brand span::before {
+  content: '·';
+  margin-right: 8px;
+}
+
+.name {
+  margin: 0;
+  font: 800 clamp(20px, 1.7vw, 25px) / 0.98 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: -0.005em;
+}
+
+/* El botón cubre toda la carta: un solo destino táctil y un solo foco para el teclado. */
+.open {
+  text-align: left;
+  outline: none;
+}
+
+.open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+}
+
+.priceRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid #ecebe5;
+}
+
+.priceLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 600;
+  color: #41463b;
+}
+
+.price {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0 8px;
+  font: 800 26px / 1.1 'Barlow Condensed', sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.price s {
+  font: 500 12px Inter, sans-serif;
+  color: #8a8e82;
+}
+
+.saving {
+  margin: 0;
+  font-size: 11px;
+  color: #1f7a3d;
+  font-weight: 600;
+}
+
+.go {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid #dcdbd3;
+  transition: background 0.3s, border-color 0.3s, transform 0.3s var(--spot-ease);
+}
+
+.card:hover .go {
+  background: #ff7900;
+  border-color: #ff7900;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 599px) {
+  .card {
+    border-radius: 13px;
+  }
+  .visual {
+    margin: 6px 6px 0;
+    border-radius: 9px;
+  }
+  .tags {
+    inset: 7px 7px auto;
+  }
+  .discount,
+  .stores,
+  .storesSingle {
+    font-size: 9px;
+    padding: 4px 7px;
+  }
+  .body {
+    padding: 10px 10px 12px;
+  }
+  .name {
+    font-size: 18px;
+  }
+  .price {
+    font-size: 21px;
+  }
+  .go {
+    display: none;
+  }
+  .favorite {
+    right: 7px;
+    bottom: 7px;
+    width: 32px;
+    height: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card,
+  .visual img,
+  .go {
+    transition: none;
+  }
+  .card:hover,
+  .card:hover .visual img,
+  .card:hover .go {
+    transform: none;
+  }
+}

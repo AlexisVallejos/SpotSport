@@ -5,14 +5,16 @@ Marketplace de deportes en React + TypeScript + Vite, con diseño atómico (`src
 - **Tienda y landing**: productos de comercios afiliados, carrito y compra.
 - **Tres tipos de usuario**: cliente, comercio (con aprobación) y admin, cada uno con su panel.
 - **Entrená con cámara**: análisis de postura en el navegador con demo 3D y voz de entrenador (`/entrenar`).
+- **Comparador de precios**: zapatillas, botines, ropa y accesorios de Open Sports, Dexter y Trip Store, con el mejor precio de cada producto (`/precios`).
 
 ## Desarrollo
 
 ```
 npm install
 npm run dev      # http://localhost:5173
+npm run api      # API de precios en http://127.0.0.1:8787 (Vite le pasa /api/)
 npm test         # lógica + base de datos (PGlite)
-npm run build    # genera dist/
+npm run build    # genera dist/ (web) y dist-server/ (API de precios)
 ```
 
 Sin base de datos conectada la landing y `/entrenar` funcionan igual; la tienda y los paneles muestran un aviso de configuración.
@@ -54,9 +56,10 @@ Hoy están disponibles **pago contra entrega** y **retiro en el local**. Mercado
 3. **Build: Dockerfile** (ruta `Dockerfile`, ya está en la raíz).
 4. **Environment / Build Args**: cargar `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` (Vite las incorpora al compilar).
 5. **Domains & Proxy**: puerto del servicio `80`. Usá HTTPS: la cámara del entrenador lo exige.
-6. Deploy.
+6. **Mounts → Volume**: montá un volumen en `/data` para no perder el historial de precios ni las reseñas del comparador en cada deploy.
+7. Deploy. nginx sirve la web y le pasa `/api/` a la API de precios, que corre en el mismo contenedor.
 
-Para comprobar que está vivo: `GET /healthz` responde `ok`.
+Para comprobar que está vivo: `GET /healthz` responde `ok`. La primera vez la API tarda unos 25 minutos en leer las tres tiendas; mientras tanto el comparador muestra un aviso y va mostrando lo que ya leyó.
 
 ## Catálogo del comparador (integrante 3)
 
@@ -68,6 +71,16 @@ Ver [guía de uso, DER y diccionario](docs/datos/README.md). Para comprobarlo si
 npm test -- supabase/tests/catalogo.test.ts scripts/catalogo/csv.test.ts
 npm run catalogo:importar -- --local 20000000-0000-4000-8000-000000000001 data/catalogo/demo-a.csv
 ```
+
+## Comparador de precios (`/precios`)
+
+- `server/` es una API chica en Node, sin dependencias. Cada 6 horas lee los listados públicos de Open Sports, Dexter y Trip Store (zapatillas, botines, indumentaria y accesorios), de a una página por vez y con pausa entre pedidos. Las subcategorías por deporte de cada tienda marcan si un producto es de running, training, fútbol, etc.
+- El mismo producto se cruza entre tiendas por su **código de fabricante** (ej. `DR2660-008`: mismo modelo y color en todas). Los nombres se limpian ("Zapatillas Running Nike Downshifter 14 Mujer" → "Nike Downshifter 14 · Running · Mujer").
+- Endpoints: `GET /api/precios` (estado y totales), `GET /api/precios/buscar?q=&categoria=&tipo=&deporte=&genero=&marca=&tienda=&orden=&desde=&limite=` (los mismos filtros que la URL de `/precios`), `GET /api/precios/<id>` (fotos e historial), `GET` y `POST /api/precios/<id>/resenas`.
+- Reseñas: Open Sports y Trip tienen las reseñas desactivadas y Dexter no publica propias, así que se muestran las que dejan los usuarios en SPOT (máximo 5 por hora por conexión, sin enlaces). Si alguna tienda las activa, se suman solas.
+- Guarda todo en `DATA_DIR` (por defecto `data/`, fuera de git): `tiendas-v2.json`, `historial.json` y `resenas.json`. Variables opcionales en `.env.example`.
+- Si una tienda cambia su HTML y deja de leerse, la API sigue mostrando sus últimos precios y lo informa al pie de `/precios`.
+- En la landing, Calzado, Indumentaria, "El estudio SPOT", Training y el buscador del menú usan estos productos reales. Este comparador es independiente del esquema `catalogo` de Supabase (que carga fuentes con permiso documentado).
 
 ## Entrenar con cámara
 

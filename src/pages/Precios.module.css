@@ -1,0 +1,415 @@
+.page {
+  min-height: 100vh;
+  background-color: #080808;
+  color: #fff;
+  font-family: Inter, sans-serif;
+}
+
+.bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 64px;
+  padding: 0 clamp(16px, 4vw, 48px);
+  background-color: rgba(8, 8, 8, 0.92);
+  border-bottom: 1px solid #1f1f1f;
+  backdrop-filter: blur(8px);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Barlow Condensed';
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: 0.04em;
+}
+
+.back:hover {
+  color: #ff7900;
+}
+
+.barLinks {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.favorites,
+.favoritesOn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid #2a2a2a;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.favorites:hover,
+.favoritesOn {
+  border-color: #ff7900;
+  color: #ff7900;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+  border-bottom: 1px solid #1f1f1f;
+}
+
+.tab,
+.tabOn {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 0 0 12px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font: 800 24px / 1 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #8a8c94;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.tab:hover {
+  color: #fff;
+}
+
+.tabOn {
+  color: #fff;
+  border-bottom-color: #ff7900;
+}
+
+.tab small,
+.tabOn small {
+  font: 600 11px Inter, sans-serif;
+  letter-spacing: 0;
+  color: #6f7178;
+}
+
+.section {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #a7a9b2;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: clamp(24px, 4vw, 56px) clamp(16px, 4vw, 48px) 80px;
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.kicker {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #ff7900;
+  font-weight: 600;
+}
+
+.title {
+  font-family: 'Barlow Condensed';
+  font-weight: 800;
+  font-size: clamp(52px, 7.5vw, 112px);
+  line-height: 0.92;
+}
+
+.lead {
+  margin: 0;
+  max-width: 640px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #a7a9b2;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 40px;
+  margin: 8px 0 0;
+}
+
+.stats div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+}
+
+.stats dt {
+  font-size: 12px;
+  color: #8a8c94;
+}
+
+.stats dd {
+  margin: 0;
+  font: 800 34px / 1 'Barlow Condensed', sans-serif;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 16px;
+  max-width: 640px;
+  background-color: #121212;
+  border: 1px solid #2a2a2a;
+  color: #a7a9b2;
+}
+
+.search:focus-within {
+  border-color: #ff7900;
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: #fff;
+  font: inherit;
+  font-size: 16px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip,
+.chipOn {
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid #2a2a2a;
+  color: #d0d1d6;
+  font-size: 13px;
+}
+
+.chip:hover {
+  border-color: #ff7900;
+}
+
+.chipOn {
+  background-color: #ff7900;
+  border-color: #ff7900;
+  color: #080808;
+  font-weight: 600;
+}
+
+.select {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 4px 0 12px;
+  border: 1px solid #2a2a2a;
+  font-size: 12px;
+  color: #8a8c94;
+}
+
+.select:focus-within {
+  border-color: #ff7900;
+}
+
+.select select {
+  height: 100%;
+  max-width: 200px;
+  padding-right: 4px;
+  background: transparent;
+  border: 0;
+  outline: none;
+  color: #fff;
+  font: 600 13px Inter, sans-serif;
+  cursor: pointer;
+}
+
+.select option {
+  background: #121212;
+  color: #fff;
+}
+
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  font-size: 13px;
+  color: #a7a9b2;
+  cursor: pointer;
+}
+
+.toggle input {
+  accent-color: #ff7900;
+  width: 16px;
+  height: 16px;
+}
+
+.note,
+.count {
+  margin: 0;
+  font-size: 13px;
+  color: #8a8c94;
+}
+
+.count {
+  margin-bottom: -12px;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 20px;
+  border: 1px solid #262626;
+  font-size: 14px;
+  color: #d0d1d6;
+}
+
+.pulse {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #ff7900;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    opacity: 0.25;
+    transform: scale(0.7);
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 16px;
+}
+
+.more {
+  align-self: center;
+  height: 50px;
+  padding: 0 28px;
+  border: 1px solid #ff7900;
+  color: #ff7900;
+  font: 800 18px 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background 0.2s, color 0.2s;
+}
+
+.more:hover {
+  background: #ff7900;
+  color: #080808;
+}
+
+.more:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding-top: 20px;
+  border-top: 1px solid #1f1f1f;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #6f7178;
+}
+
+.sources b {
+  color: #a7a9b2;
+}
+
+.sources span:last-child {
+  flex-basis: 100%;
+}
+
+@media (max-width: 599px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .section {
+    display: none;
+  }
+  .tab,
+  .tabOn {
+    font-size: 20px;
+  }
+  .chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin: 0 -16px;
+    padding: 0 16px;
+    scrollbar-width: none;
+  }
+  .chip,
+  .chipOn {
+    flex-shrink: 0;
+  }
+  .stats {
+    gap: 12px 24px;
+  }
+  .stats dd {
+    font-size: 28px;
+  }
+  .row {
+    align-items: stretch;
+  }
+  .select {
+    flex: 1 1 140px;
+  }
+  .select select {
+    max-width: none;
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse {
+    animation: none;
+  }
+}

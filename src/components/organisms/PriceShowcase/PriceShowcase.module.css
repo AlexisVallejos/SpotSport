@@ -1,0 +1,53 @@
+/* Misma grilla que las cartas de la landing: cuatro por fila, dos en tablet y teléfono. */
+.grid {
+  align-self: stretch;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 24px;
+}
+
+.placeholder {
+  aspect-ratio: 3 / 4.4;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #ecebe5 0%, #f6f5f1 50%, #ecebe5 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+.note {
+  align-self: stretch;
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px dashed #d6d5ce;
+  font-size: 14px;
+  color: #5e6157;
+}
+
+@media (max-width: 1099px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 599px) {
+  .grid {
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .placeholder {
+    animation: none;
+  }
+}

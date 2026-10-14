@@ -6,8 +6,9 @@
   "scripts": {
     "predev": "node scripts/copy-mediapipe.mjs",
     "dev": "vite",
+    "api": "tsx watch server/main.ts",
     "prebuild": "node scripts/copy-mediapipe.mjs",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && tsc -p tsconfig.server.json && vite build && vite build -c vite.server.config.ts",
     "preview": "vite preview",
     "test": "vitest run",
     "catalogo:importar": "tsx scripts/importar-catalogo.ts",

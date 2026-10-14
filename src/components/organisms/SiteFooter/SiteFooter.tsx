@@ -33,7 +33,7 @@ const SiteFooter: FunctionComponent = () => {
       <div className={styles.footerDivider} />
       <div className={styles.legalAndProjectNote}>
         <Text>© SPOT 2026 · TODO EL DEPORTE EN UN SOLO LUGAR</Text>
-        <Text>Propuesta conceptual · Sin precios ni promociones</Text>
+        <Text>Precios de Open Sports, Dexter y Trip Store · Se actualizan cada 6 horas</Text>
         <div className={styles.legalLinks}>
           {legalLinks.map((link) => (
             <a key={link} href="#" className={styles.legalLink}>

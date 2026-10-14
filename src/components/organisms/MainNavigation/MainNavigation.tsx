@@ -12,19 +12,25 @@ const MainNavigation: FunctionComponent = () => {
 
   return (
     <nav className={styles.mainNavigation} aria-label="Principal">
-      <a href="#" className={styles.brand} aria-label="SPOT, ir al inicio">
+      <Link to="/" className={styles.brand} aria-label="SPOT, ir al inicio">
         <Wordmark variant="nav" />
-      </a>
+      </Link>
       <div id="menu-principal" className={`${styles.menuPanel} ${menuOpen ? styles.menuPanelOpen : ''}`}>
         <div className={styles.departments}>
           <Link to="/tienda" onClick={() => setMenuOpen(false)} className={styles.navigationLink}>
             Tienda
           </Link>
-          {departments.map((department) => (
-            <a key={department} href={department === 'Indumentaria' ? '#indumentaria' : department === 'Deportes' ? '#deportes' : '#calzado'} onClick={() => setMenuOpen(false)} className={styles.navigationLink}>
-              {department}
-            </a>
-          ))}
+          {departments.map(({ label, href }) =>
+            href.startsWith('/') ? (
+              <Link key={label} to={href} onClick={() => setMenuOpen(false)} className={styles.navigationLink}>
+                {label}
+              </Link>
+            ) : (
+              <a key={label} href={href} onClick={() => setMenuOpen(false)} className={styles.navigationLink}>
+                {label}
+              </a>
+            ),
+          )}
         </div>
         <SearchBox placeholder={searchPlaceholder} />
       </div>
