@@ -1,0 +1,328 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.title {
+  font: 800 26px / 1 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: #8a8c94;
+}
+
+.swipe {
+  display: none;
+}
+
+@media (max-width: 779px) {
+  .swipe {
+    display: inline;
+    color: #ff9d57;
+  }
+}
+
+.scroller {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* El mapa conserva la proporción del dibujo; en pantallas chicas se vuelve deslizable. */
+.map {
+  position: relative;
+  width: 100%;
+  min-width: 780px;
+  aspect-ratio: 1200 / 580;
+  border-radius: 24px;
+  background:
+    radial-gradient(ellipse at 50% 50%, rgba(255, 121, 0, 0.07), transparent 65%),
+    #0b0b0b;
+  border: 1px solid #1c1c1c;
+  overflow: hidden;
+  user-select: none;
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.dust {
+  fill: #ffcf9e;
+  opacity: 0.18;
+  animation: twinkle 6s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.dendrite {
+  fill: none;
+  stroke: rgba(255, 150, 70, 0.32);
+  stroke-width: calc(1.3px - var(--level) * 0.2px);
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.edge,
+.edgeOn {
+  transition: opacity 0.35s ease;
+}
+
+.strand,
+.axon {
+  fill: none;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+
+.strand {
+  stroke: rgba(255, 121, 0, 0.14);
+  stroke-width: 0.8;
+}
+
+.axon {
+  stroke: rgba(255, 140, 50, 0.38);
+  transition: stroke 0.35s ease;
+}
+
+.edgeOn .axon {
+  stroke: rgba(255, 170, 100, 0.9);
+}
+
+.edgeOn .strand {
+  stroke: rgba(255, 140, 60, 0.4);
+}
+
+/* La señal: un tramo brillante que recorre el axón encendido del núcleo hacia afuera. */
+.signal {
+  fill: none;
+  stroke: #ffe2c4;
+  stroke-linecap: round;
+  stroke-dasharray: 0.12 0.88;
+  animation: fire 1.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes fire {
+  from {
+    stroke-dashoffset: 0.12;
+  }
+  to {
+    stroke-dashoffset: -0.88;
+  }
+}
+
+.pulse {
+  fill: #ffcf9e;
+}
+
+.pulseOn {
+  fill: #fff4e6;
+  filter: drop-shadow(0 0 4px #ff9d57);
+}
+
+/* Al pasar por una neurona, lo que no es su camino se apaga un poco. */
+.map[data-hovering] .edge:not([data-related]) {
+  opacity: 0.32;
+}
+
+.map[data-hovering] .neuron {
+  opacity: 0.45;
+}
+
+.neuron,
+.neuronOn {
+  cursor: pointer;
+  transition: opacity 0.35s ease;
+}
+
+.halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: breathe 4.5s ease-in-out infinite;
+  animation-delay: var(--delay);
+  opacity: 0.55;
+}
+
+.neuronOn .halo {
+  opacity: 1;
+  animation-duration: 2.2s;
+}
+
+@keyframes breathe {
+  50% {
+    transform: scale(1.18);
+    opacity: 0.9;
+  }
+}
+
+.soma {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.3s var(--spot-ease);
+}
+
+.neuron:hover .soma,
+.neuronOn .soma {
+  transform: scale(1.25);
+}
+
+.ring {
+  fill: none;
+  stroke: #ff7900;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 4;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: orbit 12s linear infinite;
+}
+
+@keyframes orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Al aparecer, los axones crecen desde el núcleo: primero las ramas, después las terminaciones. */
+.map[data-ready] .axon,
+.map[data-ready] .strand,
+.map[data-ready] .dendrite {
+  animation: grow 1.1s cubic-bezier(0.22, 0.68, 0, 1) forwards;
+  animation-delay: calc(var(--level) * 0.28s);
+}
+
+.map[data-ready] .dendrite {
+  animation-duration: 0.7s;
+  animation-delay: calc(var(--level) * 0.28s + 0.5s);
+}
+
+@keyframes grow {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.label {
+  position: absolute;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #c9cad0;
+  background: rgba(11, 11, 11, 0.55);
+  backdrop-filter: blur(6px);
+  opacity: 0;
+  transition: color 0.25s, background 0.25s, opacity 0.5s ease;
+}
+
+.map[data-ready] .label {
+  opacity: 1;
+  transition-delay: 0s, 0s, 0.6s;
+}
+
+.label small {
+  font-size: 11px;
+  font-weight: 500;
+  color: #7c7e86;
+  font-variant-numeric: tabular-nums;
+}
+
+.label[data-level='0'] {
+  font: 800 20px / 1 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.label[data-level='1'] {
+  font: 800 19px / 1 'Barlow Condensed', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.label[data-level='1'] small,
+.label[data-level='0'] small {
+  font-family: Inter, sans-serif;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.label[data-level='3'] {
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.label:hover,
+.label[data-on] {
+  color: #fff;
+  background: rgba(255, 121, 0, 0.16);
+}
+
+.label[aria-pressed='true'] {
+  color: #080808;
+  background: #ff7900;
+}
+
+.label[aria-pressed='true'] small {
+  color: rgba(8, 8, 8, 0.7);
+}
+
+.label:active {
+  transform-origin: center;
+  scale: 0.96;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dust,
+  .halo,
+  .ring,
+  .signal {
+    animation: none;
+  }
+  .axon,
+  .strand,
+  .dendrite,
+  .map[data-ready] .axon,
+  .map[data-ready] .strand,
+  .map[data-ready] .dendrite {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .label {
+    background: #111;
+    backdrop-filter: none;
+  }
+}

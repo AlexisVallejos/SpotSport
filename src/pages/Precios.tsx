@@ -7,6 +7,7 @@ import { Icon } from '../components/atoms';
 import FilterMenu from '../components/molecules/FilterMenu/FilterMenu';
 import GlideTabs from '../components/molecules/GlideTabs/GlideTabs';
 import PriceCard from '../components/molecules/PriceCard/PriceCard';
+import NeuralCategories from '../components/organisms/NeuralCategories/NeuralCategories';
 import PriceDrawer from '../components/organisms/PriceDrawer/PriceDrawer';
 import { useFavorites } from '../lib/favorites';
 import { parseSearch, removeToken } from '../lib/smartQuery';
@@ -23,7 +24,6 @@ import {
   timeAgo,
   toParams,
   type CatalogStatus,
-  type Category,
   type Product,
   type SearchQuery,
   type SearchResult,
@@ -236,15 +236,7 @@ const Precios: FunctionComponent = () => {
         </section>
 
         <div className={styles.controls}>
-          <GlideTabs
-            label="Categoría"
-            value={query.category ?? null}
-            onChange={(value) => update({ category: (value as Category | null) ?? null })}
-            items={[
-              { value: null, label: 'Todo', count: status?.total },
-              ...(Object.keys(CATEGORIES) as Category[]).map((category) => ({ value: category, label: CATEGORIES[category], count: status?.byCategory[category] })),
-            ]}
-          />
+          <NeuralCategories status={status} query={parsed.query} onSelect={(patch) => update(patch)} />
 
           <form className={styles.smart} role="search" onSubmit={(event) => { event.preventDefault(); commitSearch(); }}>
             <Search size={20} className={styles.smartIcon} aria-hidden="true" />
