@@ -5,8 +5,8 @@
   	gap: 12px;
   	position: relative;
   	padding: 8px 40px;
-  	background-color: #ff7900;
-  	color: #080808;
+  	background-color: var(--accent);
+  	color: var(--on-accent);
   	font-family: Inter;
   	font-size: 13px;
   	text-align: center;
@@ -29,5 +29,5 @@
   	height: 28px;
   	font-size: 20px;
   	line-height: 1;
-  	color: #080808;
+  	color: var(--on-accent);
 }

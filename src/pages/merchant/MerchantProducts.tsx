@@ -58,7 +58,7 @@ export default function MerchantProducts() {
                       <span>
                         <strong>{product.name}</strong>
                         <br />
-                        <small style={{ color: '#8a8c94' }}>{product.category?.name ?? 'Sin categoría'}</small>
+                        <small style={{ color: 'var(--text-3)' }}>{product.category?.name ?? 'Sin categoría'}</small>
                       </span>
                     </div>
                   </td>

@@ -5,41 +5,6 @@
   font-family: Inter, sans-serif;
 }
 
-.bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  height: 64px;
-  padding: 0 clamp(16px, 4vw, 48px);
-  background-color: color-mix(in srgb, var(--bg) 92%, transparent);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(8px);
-}
-
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Barlow Condensed';
-  font-weight: 800;
-  font-size: 24px;
-  letter-spacing: 0.04em;
-}
-
-.back:hover {
-  color: var(--accent-text);
-}
-
-.barLinks {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
 .favorites,
 .favoritesOn {
   display: inline-flex;
@@ -60,13 +25,6 @@
   color: var(--accent-text);
 }
 
-.section {
-  font-size: 12px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--text-3);
-}
-
 .main {
   display: flex;
   flex-direction: column;
@@ -80,6 +38,12 @@
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+.headActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .kicker {
@@ -414,9 +378,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 10px;
   }
-  .section {
-    display: none;
-  }
   .stats {
     gap: 12px 24px;
   }
@@ -453,15 +414,8 @@
   }
 }
 
-/* 320–360 px: la barra (volver, tema, favoritos) no entraba y la página scrolleaba de costado. */
+/* 320–360 px: el botón de favoritos se achica para no desbordar. */
 @media (max-width: 360px) {
-  .bar {
-    gap: 8px;
-    padding-inline: 12px;
-  }
-  .barLinks {
-    gap: 8px;
-  }
   .favorites,
   .favoritesOn {
     padding: 0 10px;

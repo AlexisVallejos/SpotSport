@@ -12,10 +12,10 @@
   	margin: 0;
   	text-align: center;
   	font-size: 14px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .alt a {
-  	color: #ff7900;
+  	color: var(--accent-text);
   	font-weight: 600;
 }
 
@@ -28,18 +28,18 @@
 .chip {
   	height: 36px;
   	padding: 0 14px;
-  	border: 1px solid #2a2a2a;
+  	border: 1px solid var(--border);
   	font-size: 13px;
-  	color: #d0d1d6;
+  	color: var(--text-2);
   	cursor: pointer;
 }
 .chip:hover {
-  	border-color: #ff7900;
+  	border-color: var(--accent);
 }
 .chipOn {
-  	background-color: #ff7900;
-  	border-color: #ff7900;
-  	color: #080808;
+  	background-color: var(--accent);
+  	border-color: var(--accent);
+  	color: var(--on-accent);
   	font-weight: 600;
 }
 .productGrid {
@@ -61,7 +61,7 @@
 }
 .mainImage {
   	aspect-ratio: 1 / 1;
-  	background-color: #f1f1ee;
+  	background-color: var(--well-flat);
   	display: grid;
   	place-items: center;
   	overflow: hidden;
@@ -80,7 +80,7 @@
   	width: 64px;
   	height: 64px;
   	border: 2px solid transparent;
-  	background-color: #f1f1ee;
+  	background-color: var(--well-flat);
   	padding: 0;
   	overflow: hidden;
 }
@@ -90,7 +90,7 @@
   	object-fit: cover;
 }
 .thumbOn {
-  	border-color: #ff7900;
+  	border-color: var(--accent);
 }
 .info {
   	display: flex;
@@ -116,7 +116,7 @@
   	font-weight: 600;
   	letter-spacing: 0.08em;
   	text-transform: uppercase;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .options {
   	display: flex;
@@ -127,36 +127,36 @@
   	min-width: 48px;
   	height: 42px;
   	padding: 0 14px;
-  	border: 1px solid #333;
+  	border: 1px solid var(--border-strong);
   	font-size: 14px;
-  	color: #fff;
+  	color: var(--text);
   	cursor: pointer;
 }
 .option:hover:not(:disabled) {
-  	border-color: #ff7900;
+  	border-color: var(--accent);
 }
 .optionOn {
-  	border-color: #ff7900;
-  	background-color: rgba(255, 121, 0, 0.14);
+  	border-color: var(--accent);
+  	background-color: var(--accent-soft);
 }
 .option:disabled {
-  	color: #5d5f67;
+  	color: var(--text-4);
   	text-decoration: line-through;
   	cursor: not-allowed;
 }
 .qty {
   	display: inline-flex;
   	align-items: center;
-  	border: 1px solid #333;
+  	border: 1px solid var(--border-strong);
 }
 .qty button {
   	width: 40px;
   	height: 40px;
   	font-size: 20px;
-  	color: #fff;
+  	color: var(--text);
 }
 .qty button:disabled {
-  	color: #4a4c54;
+  	color: var(--text-4);
 }
 .qty span {
   	min-width: 36px;
@@ -167,7 +167,7 @@
   	margin: 0;
   	font-size: 15px;
   	line-height: 1.65;
-  	color: #c9cad0;
+  	color: var(--text-2);
   	white-space: pre-line;
 }
 
@@ -186,7 +186,7 @@
   	gap: 14px;
   	align-items: center;
   	padding: 14px 0;
-  	border-top: 1px solid #1f1f1f;
+  	border-top: 1px solid var(--border);
 }
 .line:first-of-type {
   	border-top: 0;
@@ -194,11 +194,11 @@
 .lineImage {
   	width: 72px;
   	height: 72px;
-  	background-color: #f1f1ee;
+  	background-color: var(--well-flat);
   	display: grid;
   	place-items: center;
   	overflow: hidden;
-  	color: #ff7900;
+  	color: var(--accent-text);
   	font-family: 'Barlow Condensed';
   	font-weight: 800;
   	font-size: 28px;
@@ -232,7 +232,7 @@
 .sumTotal {
   	margin-top: 8px;
   	padding-top: 12px;
-  	border-top: 1px solid #2a2a2a;
+  	border-top: 1px solid var(--border);
   	font-size: 20px;
   	font-weight: 700;
 }
@@ -240,21 +240,21 @@
   	display: flex;
   	gap: 12px;
   	padding: 14px;
-  	border: 1px solid #2f2f2f;
+  	border: 1px solid var(--border);
   	cursor: pointer;
   	font-size: 14px;
 }
 .radioCard input {
-  	accent-color: #ff7900;
+  	accent-color: var(--accent);
   	margin-top: 2px;
 }
 .radioCard small {
   	display: block;
-  	color: #8a8c94;
+  	color: var(--text-3);
 }
 .radioOn {
-  	border-color: #ff7900;
-  	background-color: rgba(255, 121, 0, 0.06);
+  	border-color: var(--accent);
+  	background-color: var(--accent-soft);
 }
 .radioOff {
   	opacity: 0.55;
@@ -273,7 +273,7 @@
   	justify-content: space-between;
   	gap: 12px;
   	padding: 8px 0;
-  	border-top: 1px solid #1f1f1f;
+  	border-top: 1px solid var(--border);
   	font-size: 14px;
 }
 
@@ -286,8 +286,8 @@
   	position: relative;
   	width: 96px;
   	height: 96px;
-  	background-color: #1b1b1b;
-  	border: 1px solid #2a2a2a;
+  	background-color: var(--surface-2);
+  	border: 1px solid var(--border);
 }
 .imageBox img {
   	width: 100%;
@@ -300,8 +300,8 @@
   	right: 2px;
   	width: 22px;
   	height: 22px;
-  	background-color: rgba(8, 8, 8, 0.85);
-  	color: #fff;
+  	background-color: var(--glass);
+  	color: var(--text);
   	line-height: 1;
 }
 .variantRow {
@@ -310,7 +310,7 @@
   	gap: 10px;
   	align-items: end;
   	padding: 12px 0;
-  	border-top: 1px solid #1f1f1f;
+  	border-top: 1px solid var(--border);
 }
 .variantRow:first-of-type {
   	border-top: 0;
@@ -319,9 +319,9 @@
   	width: 70px;
   	min-height: 34px;
   	padding: 4px 8px;
-  	background-color: #0c0c0c;
-  	border: 1px solid #2f2f2f;
-  	color: #fff;
+  	background-color: var(--bg);
+  	border: 1px solid var(--border);
+  	color: var(--text);
   	font: inherit;
 }
 
@@ -335,11 +335,11 @@
   	width: 44px;
   	height: 44px;
   	flex-shrink: 0;
-  	background-color: #1b1b1b;
+  	background-color: var(--surface-2);
   	overflow: hidden;
   	display: grid;
   	place-items: center;
-  	color: #ff7900;
+  	color: var(--accent-text);
   	font-weight: 800;
 }
 .productThumb img {

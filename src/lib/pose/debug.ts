@@ -1,4 +1,4 @@
-import { bestSide, type Landmarks } from './geometry';
+import { bestSide, type Landmarks, type Side } from './geometry';
 import type { PoseRule } from './rules';
 
 export type Reading = {
@@ -17,13 +17,13 @@ export type Reading = {
 };
 
 /** What the analyzer is looking at right now, for calibrating thresholds against a real body and camera. */
-export function measure(rule: PoseRule, lm: Landmarks): Reading {
-  const required = rule.required(lm);
+export function measure(rule: PoseRule, lm: Landmarks, side: Side = bestSide(lm)): Reading {
+  const required = rule.required(lm, side);
   const scores = required.map((index) => lm[index]?.visibility ?? 0);
   const reps = rule.mode === 'reps' ? rule : null;
-  const metric = reps ? reps.metric(lm) : null;
+  const metric = reps ? reps.metric(lm, side) : null;
   return {
-    side: bestSide(lm),
+    side,
     visible: scores.filter((score) => score >= 0.5).length,
     total: required.length,
     minVisibility: scores.length ? Math.min(...scores) : 0,
@@ -31,6 +31,6 @@ export function measure(rule: PoseRule, lm: Landmarks): Reading {
     rest: reps?.rest ?? null,
     peak: reps?.peak ?? null,
     progress: reps && metric !== null ? Math.min(1, Math.max(0, (reps.rest - metric) / (reps.rest - reps.peak))) : null,
-    checks: rule.checks.map((check) => ({ message: check.message, ok: check.ok(lm) })),
+    checks: rule.checks.map((check) => ({ message: check.message, ok: check.ok(lm, side) })),
   };
 }

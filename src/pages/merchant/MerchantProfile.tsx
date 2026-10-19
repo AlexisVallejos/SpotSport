@@ -59,7 +59,7 @@ export default function MerchantProfile() {
             <span className={styles.productThumb} style={{ width: 72, height: 72, fontSize: 28 }}>
               {merchant.logo_url ? <img src={merchant.logo_url} alt="" /> : merchant.name.charAt(0)}
             </span>
-            <label style={{ cursor: 'pointer', color: '#ff7900', fontWeight: 600 }}>
+            <label style={{ cursor: 'pointer', color: 'var(--accent-text)', fontWeight: 600 }}>
               Cambiar logo
               <input type="file" accept="image/*" hidden disabled={busy} onChange={(event) => void changeLogo(event.target.files)} />
             </label>

@@ -1,9 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { FRAMING, type TrackerState } from './engine';
+import { CENTER, NO_PERSON } from './framing';
 import { RULES } from './rules';
 import { CHEERS, clipKey, CORRECTIONS, createNarrator, forSpeech, introText, nextSetText, numberWords, SEEN, setDoneText, splitSentences, summaryText } from './script';
 
-const base: TrackerState = { status: 'active', ready: true, reps: 0, badReps: 0, holdMs: 0, progress: 0, message: '', tone: 'info', failing: [], errors: {} };
+const base: TrackerState = { status: 'active', ready: true, reps: 0, badReps: 0, holdMs: 0, progress: 0, message: '', tone: 'info', failing: [], errors: {}, missing: [], side: null, log: [] };
 const at = (patch: Partial<TrackerState>): TrackerState => ({ ...base, ...patch });
 
 const SHALLOW = 'Bajá más: muslos paralelos al piso.';
@@ -33,6 +34,15 @@ describe('createNarrator (reps): few words, spaced out', () => {
     expect(CORRECTIONS[FRAMING]).toContain(first?.text);
     expect(narrator.update(framing, 1000)).toBeNull();
     expect(narrator.update(framing, 20_000)?.urgent).toBe(false);
+  });
+
+  it('says what to do about the framing, not always "step back"', () => {
+    const narrator = createNarrator(RULES.squat);
+    const nobody = at({ status: 'framing', tone: 'warn', message: NO_PERSON });
+    // Right after the camera turns on the person is still at the keyboard.
+    expect(narrator.update(nobody, 0)).toBeNull();
+    expect(CORRECTIONS[NO_PERSON]).toContain(narrator.update(nobody, 7000)?.text);
+    expect(CORRECTIONS[CENTER]).toContain(narrator.update(at({ status: 'framing', tone: 'warn', message: CENTER }), 13_000)?.text);
   });
 
   it('stays quiet before the person shows up', () => {
@@ -162,6 +172,15 @@ describe('texts', () => {
   it('summarizes a hold in rounded seconds', () => {
     expect(summaryText(RULES.plank, { reps: 0, badReps: 0, holdMs: 62_000, errors: {} })).toBe('Listo, terminaste. Aguantaste unos sesenta segundos.');
     expect(summaryText(RULES.plank, { reps: 0, badReps: 0, holdMs: 1000, errors: {} })).toBe('Listo, terminaste. Casi no aguantaste, probemos de nuevo.');
+  });
+
+  it('says long holds in minutes and halves', () => {
+    expect(summaryText(RULES.plank, { reps: 0, badReps: 0, holdMs: 150_000, errors: {} })).toBe('Listo, terminaste. Aguantaste unos dos minutos y medio.');
+    expect(summaryText(RULES.plank, { reps: 0, badReps: 0, holdMs: 100_000, errors: {} })).toBe('Listo, terminaste. Aguantaste un minuto y medio.');
+  });
+
+  it('summarizes long sessions with more than forty reps', () => {
+    expect(summaryText(RULES.squat, { reps: 71, badReps: 0, holdMs: 0, errors: {} })).toBe('Listo, terminaste. Setenta y una repeticiones bien hechas.');
   });
 
   it('cleans symbols for the speech engine', () => {

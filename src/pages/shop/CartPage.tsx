@@ -35,7 +35,7 @@ export default function CartPage() {
                   </Link>
                   <div>
                     <div className={styles.lineName}>{line.name}</div>
-                    <div style={{ color: '#a7a9b2', fontSize: 13 }}>{line.variantLabel}</div>
+                    <div style={{ color: 'var(--text-3)', fontSize: 13 }}>{line.variantLabel}</div>
                     <div className={styles.qty} style={{ marginTop: 8 }}>
                       <button type="button" onClick={() => cart.setQuantity(line.variantId, line.quantity - 1)} aria-label="Menos">
                         −
@@ -56,7 +56,7 @@ export default function CartPage() {
               ))}
             </Card>
           ))}
-          {cart.groups.length > 1 ? <p style={{ color: '#8a8c94', fontSize: 13 }}>Tu compra se divide en un pedido por comercio: cada uno lo prepara y lo envía por separado.</p> : null}
+          {cart.groups.length > 1 ? <p style={{ color: 'var(--text-3)', fontSize: 13 }}>Tu compra se divide en un pedido por comercio: cada uno lo prepara y lo envía por separado.</p> : null}
         </div>
 
         <Card title="Resumen" className={styles.summary}>
@@ -68,7 +68,7 @@ export default function CartPage() {
             <span>Total</span>
             <span>{formatPrice(cart.subtotalCents)}</span>
           </div>
-          <p style={{ fontSize: 12, color: '#8a8c94' }}>El precio y el stock se confirman al comprar.</p>
+          <p style={{ fontSize: 12, color: 'var(--text-3)' }}>El precio y el stock se confirman al comprar.</p>
           <ButtonLink to="/checkout" block>
             Continuar compra
           </ButtonLink>

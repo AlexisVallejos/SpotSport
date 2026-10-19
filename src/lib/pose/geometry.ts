@@ -51,10 +51,15 @@ export function isVisible(lm: Landmarks, index: number, min = 0.5): boolean {
   return !!point && (point.visibility ?? 1) >= min;
 }
 
+/** How well the camera sees one side of the body: 0–4, the sum of its main joints' visibility. */
+export function sideScore(lm: Landmarks, side: Side): number {
+  const joints = JOINTS[side];
+  return [joints.shoulder, joints.hip, joints.knee, joints.ankle].reduce((sum, index) => sum + (lm[index]?.visibility ?? 0), 0);
+}
+
 /** The side of the body the camera sees better (for side-view exercises). */
 export function bestSide(lm: Landmarks): Side {
-  const score = (joints: Joints) => [joints.shoulder, joints.hip, joints.knee, joints.ankle].reduce((sum, index) => sum + (lm[index]?.visibility ?? 0), 0);
-  return score(JOINTS.left) >= score(JOINTS.right) ? 'left' : 'right';
+  return sideScore(lm, 'left') >= sideScore(lm, 'right') ? 'left' : 'right';
 }
 
 /** Whether p sits above the straight line from a to c (smaller y = higher on screen). */

@@ -21,21 +21,21 @@
   	cursor: not-allowed;
 }
 .primary {
-  	background-color: #ff7900;
-  	color: #080808;
+  	background-color: var(--accent);
+  	color: var(--on-accent);
 }
 .primary:hover:not(:disabled) {
   	filter: brightness(1.08);
 }
 .secondary {
-  	border-color: #3a3a3a;
-  	color: #fff;
+  	border-color: var(--border-strong);
+  	color: var(--text);
 }
 .secondary:hover:not(:disabled) {
-  	border-color: #ff7900;
+  	border-color: var(--accent);
 }
 .ghost {
-  	color: #ff7900;
+  	color: var(--accent-text);
   	padding: 0 8px;
 }
 .ghost:hover:not(:disabled) {
@@ -43,7 +43,7 @@
 }
 .danger {
   	border-color: #ff3b30;
-  	color: #ff3b30;
+  	color: var(--danger-text);
 }
 .danger:hover:not(:disabled) {
   	background-color: rgba(255, 59, 48, 0.12);
@@ -69,15 +69,15 @@
   	font-weight: 600;
   	letter-spacing: 0.08em;
   	text-transform: uppercase;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .input {
   	width: 100%;
   	min-height: 44px;
   	padding: 10px 12px;
-  	background-color: #0c0c0c;
-  	border: 1px solid #2f2f2f;
-  	color: #fff;
+  	background-color: var(--bg);
+  	border: 1px solid var(--border);
+  	color: var(--text);
   	font: inherit;
   	font-size: 15px;
 }
@@ -87,18 +87,18 @@ textarea.input {
 }
 .input:focus {
   	outline: none;
-  	border-color: #ff7900;
+  	border-color: var(--accent);
 }
 .input::placeholder {
-  	color: #6b6d76;
+  	color: var(--text-4);
 }
 .hint {
   	font-size: 12px;
-  	color: #8a8c94;
+  	color: var(--text-3);
 }
 .fieldError {
   	font-size: 12px;
-  	color: #ff6b61;
+  	color: var(--danger-text);
 }
 .check {
   	display: inline-flex;
@@ -106,21 +106,21 @@ textarea.input {
   	gap: 8px;
   	font-family: Inter;
   	font-size: 14px;
-  	color: #d9dae0;
+  	color: var(--text-2);
   	cursor: pointer;
 }
 .check input {
   	width: 16px;
   	height: 16px;
-  	accent-color: #ff7900;
+  	accent-color: var(--accent);
 }
 
 .card {
-  	background-color: #111;
-  	border: 1px solid #242424;
+  	background-color: var(--surface);
+  	border: 1px solid var(--border);
   	padding: 20px;
   	font-family: Inter;
-  	color: #fff;
+  	color: var(--text);
 }
 .cardTitle {
   	margin: 0 0 12px;
@@ -139,43 +139,43 @@ textarea.input {
   	font-weight: 700;
   	letter-spacing: 0.06em;
   	text-transform: uppercase;
-  	border: 1px solid #3a3a3a;
-  	color: #d0d1d6;
+  	border: 1px solid var(--border-strong);
+  	color: var(--text-2);
   	white-space: nowrap;
 }
 .toneOk {
-  	border-color: #3ddc84;
-  	color: #3ddc84;
+  	border-color: var(--success);
+  	color: var(--success-text);
 }
 .toneWarn {
-  	border-color: #ffb020;
-  	color: #ffb020;
+  	border-color: var(--star);
+  	color: var(--star);
 }
 .toneBad {
   	border-color: #ff3b30;
-  	color: #ff6b61;
+  	color: var(--danger-text);
 }
 .toneBrand {
-  	border-color: #ff7900;
-  	color: #ff7900;
+  	border-color: var(--accent);
+  	color: var(--accent-text);
 }
 
 .notice {
   	padding: 12px 14px;
-  	border-left: 3px solid #ff7900;
-  	background-color: rgba(255, 121, 0, 0.08);
+  	border-left: 3px solid var(--accent);
+  	background-color: var(--accent-soft);
   	font-family: Inter;
   	font-size: 14px;
   	line-height: 1.5;
-  	color: #e6e7ec;
+  	color: var(--text-2);
 }
 .noticeError {
   	border-color: #ff3b30;
   	background-color: rgba(255, 59, 48, 0.1);
 }
 .noticeOk {
-  	border-color: #3ddc84;
-  	background-color: rgba(61, 220, 132, 0.08);
+  	border-color: var(--success);
+  	background-color: var(--success-soft);
 }
 
 .pageTitle {
@@ -193,21 +193,21 @@ textarea.input {
   	font-size: clamp(36px, 5vw, 56px);
   	line-height: 0.95;
   	text-transform: uppercase;
-  	color: #fff;
+  	color: var(--text);
 }
 .pageTitle p {
   	margin: 6px 0 0;
   	font-family: Inter;
   	font-size: 14px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 
 .empty {
   	padding: 48px 20px;
   	text-align: center;
-  	border: 1px dashed #333;
+  	border: 1px dashed var(--border-strong);
   	font-family: Inter;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .empty strong {
   	display: block;
@@ -215,7 +215,7 @@ textarea.input {
   	font-family: 'Barlow Condensed';
   	font-size: 26px;
   	text-transform: uppercase;
-  	color: #fff;
+  	color: var(--text);
 }
 
 .spinner {
@@ -224,7 +224,7 @@ textarea.input {
   	padding: 48px;
   	font-family: Inter;
   	font-size: 14px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 
 .stats {
@@ -237,8 +237,8 @@ textarea.input {
   	flex-direction: column;
   	gap: 4px;
   	padding: 16px;
-  	background-color: #111;
-  	border: 1px solid #242424;
+  	background-color: var(--surface);
+  	border: 1px solid var(--border);
   	font-family: Inter;
 }
 .statValue {
@@ -246,25 +246,25 @@ textarea.input {
   	font-weight: 800;
   	font-size: 40px;
   	line-height: 1;
-  	color: #ff7900;
+  	color: var(--accent-text);
 }
 .statLabel {
   	font-size: 12px;
   	letter-spacing: 0.06em;
   	text-transform: uppercase;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 
 .tableWrap {
   	overflow-x: auto;
-  	border: 1px solid #242424;
+  	border: 1px solid var(--border);
 }
 .table {
   	width: 100%;
   	border-collapse: collapse;
   	font-family: Inter;
   	font-size: 14px;
-  	color: #e6e7ec;
+  	color: var(--text-2);
 }
 .table th {
   	padding: 10px 12px;
@@ -273,14 +273,14 @@ textarea.input {
   	font-weight: 600;
   	letter-spacing: 0.08em;
   	text-transform: uppercase;
-  	color: #8a8c94;
-  	background-color: #0e0e0e;
-  	border-bottom: 1px solid #242424;
+  	color: var(--text-3);
+  	background-color: var(--bg-alt);
+  	border-bottom: 1px solid var(--border);
   	white-space: nowrap;
 }
 .table td {
   	padding: 12px;
-  	border-bottom: 1px solid #1c1c1c;
+  	border-bottom: 1px solid var(--border);
   	vertical-align: middle;
 }
 .table tr:last-child td {
@@ -304,6 +304,6 @@ textarea.input {
   	gap: 16px;
 }
 .muted {
-  	color: #a7a9b2;
+  	color: var(--text-3);
   	font-size: 13px;
 }

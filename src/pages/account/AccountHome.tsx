@@ -79,7 +79,7 @@ export default function AccountHome() {
             </Notice>
           ) : (
             <Card title="¿Querés vender en SPOT?">
-              <p style={{ color: '#a7a9b2' }}>Sumá tu comercio, publicá tus productos y vendé a todo el país. Revisamos cada pedido de afiliación.</p>
+              <p style={{ color: 'var(--text-3)' }}>Sumá tu comercio, publicá tus productos y vendé a todo el país. Revisamos cada pedido de afiliación.</p>
               <ButtonLink to="/cuenta/afiliarse" variant="secondary">
                 {merchant ? 'Ver mi solicitud' : 'Quiero vender'}
               </ButtonLink>

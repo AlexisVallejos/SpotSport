@@ -76,7 +76,7 @@ export default function ProductPage() {
   return (
     <div className={styles.detail}>
       <div className={styles.gallery}>
-        <div className={styles.mainImage}>{product.images[image] ? <img src={product.images[image]} alt={product.name} /> : <span style={{ fontSize: 96, color: '#ff7900', fontWeight: 800 }}>{product.name.charAt(0)}</span>}</div>
+        <div className={styles.mainImage}>{product.images[image] ? <img src={product.images[image]} alt={product.name} /> : <span style={{ fontSize: 96, color: 'var(--accent-text)', fontWeight: 800 }}>{product.name.charAt(0)}</span>}</div>
         {product.images.length > 1 ? (
           <div className={styles.thumbs}>
             {product.images.map((url, index) => (
@@ -93,7 +93,7 @@ export default function ProductPage() {
           {product.category ? <Badge tone="brand">{product.category.name}</Badge> : null}
           <h1>{product.name}</h1>
           {product.merchant ? (
-            <p style={{ margin: '8px 0 0', color: '#a7a9b2', fontSize: 14 }}>
+            <p style={{ margin: '8px 0 0', color: 'var(--text-3)', fontSize: 14 }}>
               Vendido por <Link to={`/tienda?comercio=${product.merchant.id}`}>{product.merchant.name}</Link>
               {product.merchant.city ? ` · ${product.merchant.city}` : ''}
             </p>
@@ -146,7 +146,7 @@ export default function ProductPage() {
                         +
                       </button>
                     </div>
-                    {lowStock ? <p style={{ margin: '8px 0 0', color: '#ffb020', fontSize: 13 }}>¡Quedan {selected.stock}!</p> : null}
+                    {lowStock ? <p style={{ margin: '8px 0 0', color: 'var(--star)', fontSize: 13 }}>¡Quedan {selected.stock}!</p> : null}
                   </div>
                   <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                     <Button onClick={() => add(true)}>Comprar</Button>

@@ -145,7 +145,7 @@ export default function AdminAnnouncements() {
             {draft.placement !== 'topbar' ? (
               <div>
                 {draft.image_url ? <img src={draft.image_url} alt="" style={{ maxWidth: 320, display: 'block', marginBottom: 8 }} /> : null}
-                <label style={{ cursor: 'pointer', color: '#ff7900', fontWeight: 600 }}>
+                <label style={{ cursor: 'pointer', color: 'var(--accent-text)', fontWeight: 600 }}>
                   {draft.image_url ? 'Cambiar imagen' : 'Subir imagen'}
                   <input type="file" accept="image/*" hidden onChange={(event) => void upload(event.target.files)} />
                 </label>
@@ -190,7 +190,7 @@ export default function AdminAnnouncements() {
                     {item.body ? (
                       <>
                         <br />
-                        <small style={{ color: '#8a8c94' }}>{item.body}</small>
+                        <small style={{ color: 'var(--text-3)' }}>{item.body}</small>
                       </>
                     ) : null}
                   </td>

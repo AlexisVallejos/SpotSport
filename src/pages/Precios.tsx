@@ -1,15 +1,13 @@
 import { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
 import { CornerDownLeft, Heart, Search, Sparkles, X } from 'lucide-react';
-import { Icon } from '../components/atoms';
 // Directos y no desde los barrels: así esta página no suma peso a la landing.
 import FilterMenu from '../components/molecules/FilterMenu/FilterMenu';
 import GlideTabs from '../components/molecules/GlideTabs/GlideTabs';
-import ThemeToggle from '../components/molecules/ThemeToggle/ThemeToggle';
 import PriceCard from '../components/molecules/PriceCard/PriceCard';
-import NeuralCategories from '../components/organisms/NeuralCategories/NeuralCategories';
 import PriceDrawer from '../components/organisms/PriceDrawer/PriceDrawer';
+import SiteHeader from '../components/organisms/SiteHeader/SiteHeader';
 import { useFavorites } from '../lib/favorites';
 import { parseSearch, removeToken } from '../lib/smartQuery';
 import { openSpotSearch, rememberSearch, shortcutLabel } from '../lib/spotSearch';
@@ -203,18 +201,7 @@ const Precios: FunctionComponent = () => {
 
   return (
     <div className={styles.page}>
-      <header className={styles.bar}>
-        <Link to="/" className={styles.back}>
-          <Icon name="arrowLeft" size={18} /> SPOT
-        </Link>
-        <div className={styles.barLinks}>
-          <ThemeToggle />
-          <span className={styles.section}>Comparador de precios</span>
-          <button type="button" className={onlyFavorites ? styles.favoritesOn : styles.favorites} aria-pressed={onlyFavorites} onClick={() => update({}, { favoritos: onlyFavorites ? null : '1' })}>
-            <Heart size={15} fill={onlyFavorites ? 'currentColor' : 'none'} aria-hidden="true" /> Favoritos {favorites.length ? `(${favorites.length})` : ''}
-          </button>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main className={styles.main} id="contenido">
         <section className={styles.head} aria-labelledby="precios-titulo">
@@ -235,11 +222,14 @@ const Precios: FunctionComponent = () => {
               ))}
             </dl>
           ) : null}
+          <div className={styles.headActions}>
+            <button type="button" className={onlyFavorites ? styles.favoritesOn : styles.favorites} aria-pressed={onlyFavorites} onClick={() => update({}, { favoritos: onlyFavorites ? null : '1' })}>
+              <Heart size={15} fill={onlyFavorites ? 'currentColor' : 'none'} aria-hidden="true" /> Favoritos {favorites.length ? `(${favorites.length})` : ''}
+            </button>
+          </div>
         </section>
 
         <div className={styles.controls}>
-          <NeuralCategories status={status} query={parsed.query} onSelect={(patch) => update(patch)} />
-
           <form className={styles.smart} role="search" onSubmit={(event) => { event.preventDefault(); commitSearch(); }}>
             <Search size={20} className={styles.smartIcon} aria-hidden="true" />
             <input

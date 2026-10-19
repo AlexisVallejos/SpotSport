@@ -69,7 +69,7 @@ export default function Shop() {
           onChange={(event) => setDraft(event.target.value)}
           placeholder="Buscar por nombre"
           aria-label="Buscar productos"
-          style={{ flex: '1 1 240px', minHeight: 36, padding: '0 12px', background: '#0c0c0c', border: '1px solid #2f2f2f', color: '#fff' }}
+          style={{ flex: '1 1 240px', minHeight: 36, padding: '0 12px', background: 'var(--surface)', border: '1px solid var(--border)', color: 'var(--text)' }}
         />
       </form>
       <div className={styles.filters} role="group" aria-label="Categorías">
@@ -108,9 +108,9 @@ export default function Shop() {
           <header style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'end', justifyContent: 'space-between', gap: 12, marginBottom: 16 }}>
             <div>
               <h2 style={{ margin: 0, fontFamily: "'Barlow Condensed'", fontWeight: 800, fontSize: 32, textTransform: 'uppercase' }}>En locales</h2>
-              <p style={{ margin: '4px 0 0', color: '#8a8c94' }}>Precios publicados por Open Sports, Dexter y Trip Store. La compra se hace en el sitio de cada local.</p>
+              <p style={{ margin: '4px 0 0', color: 'var(--text-3)' }}>Precios publicados por Open Sports, Dexter y Trip Store. La compra se hace en el sitio de cada local.</p>
             </div>
-            <Link to={preciosLink(localQuery)} style={{ color: '#ff7900' }}>
+            <Link to={preciosLink(localQuery)} style={{ color: 'var(--accent-text)' }}>
               Ver los {locals.data!.total.toLocaleString('es-AR')} en el comparador →
             </Link>
           </header>

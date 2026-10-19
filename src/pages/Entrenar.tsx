@@ -1,6 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Icon } from '../components/atoms';
+import SiteHeader from '../components/organisms/SiteHeader/SiteHeader';
 // Directo y no desde el barrel: así MediaPipe queda fuera del bundle de la landing.
 import ExerciseCatalog from '../components/organisms/ExerciseCatalog/ExerciseCatalog';
 import PoseCoach from '../components/organisms/PoseCoach/PoseCoach';
@@ -25,13 +24,8 @@ const Entrenar: FunctionComponent = () => {
 
   return (
     // Cámara y demo 3D se leen mejor sobre oscuro: esta página queda oscura en los dos temas.
-    <div className={`${styles.page} theme-dark`}>
-      <header className={styles.bar}>
-        <Link to="/" className={styles.back}>
-          <Icon name="arrowLeft" size={18} /> SPOT
-        </Link>
-        <span className={styles.section}>Entrená con cámara</span>
-      </header>
+    <div className={`${styles.page}`}>
+      <SiteHeader />
       <main className={styles.main}>
         {exercise ? <PoseCoach key={exercise.id} exercise={exercise} rule={ruleFor(exercise.name)} onExit={() => setExercise(null)} /> : <ExerciseCatalog onStart={setExercise} />}
       </main>

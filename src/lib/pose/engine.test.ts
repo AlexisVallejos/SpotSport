@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createTracker, FRAMING, GET_READY, isSetDone, type Tracker } from './engine';
+import { createTracker, FRAMING, GET_READY, GO, isSetDone, type Tracker } from './engine';
+import { NO_PERSON } from './framing';
 import { JOINTS, type Landmarks, type Point } from './geometry';
 import { RULES } from './rules';
 
@@ -63,11 +64,11 @@ function session(rule = RULES.squat) {
 describe('createTracker (reps)', () => {
   it('asks to step back when the body is not visible', () => {
     const { tracker } = session();
-    expect(tracker.update(null, 0)).toMatchObject({ status: 'framing', message: FRAMING });
+    expect(tracker.update(null, 0)).toMatchObject({ status: 'framing', message: NO_PERSON });
     const hidden = squat(170);
     hidden[JOINTS.left.ankle].visibility = 0.1;
     hidden[JOINTS.right.ankle].visibility = 0.1;
-    expect(tracker.update(hidden, 33).status).toBe('framing');
+    expect(tracker.update(hidden, 33)).toMatchObject({ status: 'framing', message: FRAMING, missing: ['pies'] });
   });
 
   it('does not trust landmarks the camera only half sees', () => {
@@ -82,7 +83,7 @@ describe('createTracker (reps)', () => {
     const { feed } = session();
     const state = feed(squat(170), 400);
     expect(state).toMatchObject({ ready: false, reps: 0, message: GET_READY });
-    expect(feed(squat(170), 900).ready).toBe(true);
+    expect(feed(squat(170), 900)).toMatchObject({ ready: true, message: GO });
   });
 
   it('does not count sitting down and standing up as a squat', () => {
@@ -144,6 +145,73 @@ describe('createTracker (reps)', () => {
     const state = feed(squat(172), 300);
     expect(state.reps).toBe(0);
     expect(state.badReps).toBe(0);
+  });
+
+  it('keeps the rep in progress through a brief occlusion', () => {
+    const { feed, ramp } = session();
+    feed(squat(172), 1200);
+    ramp(172, 90, 900);
+    const hidden = squat(90);
+    hidden[JOINTS.left.knee].visibility = 0.1;
+    hidden[JOINTS.right.knee].visibility = 0.1;
+    expect(feed(hidden, 300).status).toBe('active');
+    ramp(90, 172, 900);
+    expect(feed(squat(172), 200)).toMatchObject({ reps: 1, badReps: 0 });
+  });
+
+  it('keeps following the body when the joints fold at the bottom and are seen a bit worse', () => {
+    const { feed, ramp } = session();
+    feed(squat(172), 1200);
+    ramp(172, 110, 500);
+    const folded = squat(90);
+    for (const index of [JOINTS.left.knee, JOINTS.left.ankle, JOINTS.right.knee, JOINTS.right.ankle]) folded[index].visibility = 0.5;
+    expect(feed(folded, 1000).status).toBe('active');
+    ramp(90, 172, 900);
+    expect(feed(squat(172), 200)).toMatchObject({ reps: 1, badReps: 0 });
+  });
+
+  it('gives up after a longer occlusion and asks for the position again', () => {
+    const { feed } = session();
+    feed(squat(172), 1200);
+    expect(feed(null, 1000)).toMatchObject({ status: 'framing', ready: false });
+    expect(feed(squat(172), 300).ready).toBe(false);
+  });
+
+  it('logs every repetition with how long it took', () => {
+    const { feed, ramp } = session();
+    feed(squat(172), 1200);
+    ramp(172, 90, 900);
+    ramp(90, 172, 900);
+    feed(squat(172), 200);
+    ramp(172, 130, 800);
+    ramp(130, 172, 800);
+    const state = feed(squat(172), 200);
+    expect(state.log.map((mark) => mark.ok)).toEqual([true, false]);
+    expect(state.log[0].ms).toBeGreaterThan(1000);
+    expect(state.log[0].ms).toBeLessThan(1800);
+  });
+
+  it('does not flip sides when the other one is seen better for a frame or two', () => {
+    const { tracker, feed } = session();
+    const leftBetter = squat(172);
+    for (const index of Object.values(JOINTS.right)) leftBetter[index].visibility = 0.8;
+    expect(feed(leftBetter, 600).side).toBe('left');
+    const rightBetter = squat(172);
+    for (const index of Object.values(JOINTS.left)) rightBetter[index].visibility = 0.7;
+    expect(feed(rightBetter, 100).side).toBe('left');
+    expect(feed(rightBetter, 600).side).toBe('right');
+    expect(tracker.update(leftBetter, 99_999).side).toBe('right');
+  });
+
+  it('keeps the count but asks for the starting position again after a pause', () => {
+    const { tracker, feed, ramp } = session();
+    feed(squat(172), 1200);
+    ramp(172, 90, 900);
+    ramp(90, 172, 900);
+    tracker.rearm();
+    const state = feed(squat(172), 300);
+    expect(state).toMatchObject({ reps: 1, ready: false });
+    expect(feed(squat(172), 1000).ready).toBe(true);
   });
 
   it('needs the starting position again after a reset', () => {

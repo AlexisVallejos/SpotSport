@@ -1,16 +1,21 @@
 import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
 import type { PoseLandmarker } from '@mediapipe/tasks-vision';
+import { Maximize, Minimize, Pause, Play } from 'lucide-react';
 import { Icon } from '../../atoms';
-import ExerciseDemo from '../ExerciseDemo/ExerciseDemo';
 import { measure, type Reading } from '../../../lib/pose/debug';
 import { createTracker, isSetDone, type Tracker, type TrackerState } from '../../../lib/pose/engine';
-import type { Landmarks } from '../../../lib/pose/geometry';
-import { loadLandmarker, POSE_CONNECTIONS } from '../../../lib/pose/landmarker';
-import type { PoseRule } from '../../../lib/pose/rules';
+import { fallbackLandmarker, loadLandmarker, type LandmarkerInfo, type Quality } from '../../../lib/pose/landmarker';
+import { drawOverlay } from '../../../lib/pose/overlay';
+import type { PoseRule, Triple } from '../../../lib/pose/rules';
 import { phrasesFor } from '../../../lib/pose/phrases';
-import { createNarrator, introText, nextSetText, REST_MS, SETS, setDoneText, summaryText, type Narrator } from '../../../lib/pose/script';
+import { createNarrator, introText, nextSetText, setDoneText, summaryText, type Narrator } from '../../../lib/pose/script';
+import { activity, readConfig, saveSession, sumSets, tempo, withTarget, writeConfig, type Activity, type SessionConfig, type SetResult } from '../../../lib/pose/session';
+import { createSmoother } from '../../../lib/pose/smoothing';
 import { readVoicePref, speak, stopSpeaking, voiceSupported, warmVoice, writeVoicePref } from '../../../lib/voice';
 import type { Exercise } from '../../../lib/wger';
+import RepDots from './RepDots';
+import SessionSetup from './SessionSetup';
+import SessionSummary from './SessionSummary';
 import styles from './PoseCoach.module.css';
 
 export type PoseCoachProps = {
@@ -21,12 +26,13 @@ export type PoseCoachProps = {
 
 type Phase = 'setup' | 'starting' | 'live' | 'done' | 'error';
 type Problem = 'denied' | 'nocamera' | 'insecure' | 'model' | 'other';
-type Totals = { reps: number; badReps: number; holdMs: number; errors: Record<string, number> };
+type Flash = { key: number; text: string; tone: 'ok' | 'warn' | 'info' };
 
-const EMPTY: Totals = { reps: 0, badReps: 0, holdMs: 0, errors: {} };
-const OK = '#3ddc84';
-const BAD = '#ff3b30';
-const NEUTRAL = '#ff7900';
+/** Below this many analyzed frames per second, for a few seconds in a row, the full model is swapped for lite. */
+const SLOW_FPS = 14;
+const SLOW_WINDOWS = 3;
+/** Once a machine proved slow, the next session starts with lite directly. */
+let preferred: Quality = 'full';
 
 const PROBLEMS: Record<Problem, { title: string; text: string }> = {
   denied: { title: 'Sin permiso para la cámara', text: 'Tocá el ícono de la cámara o del candado en la barra de direcciones, elegí «Permitir» y volvé a intentar.' },
@@ -36,6 +42,33 @@ const PROBLEMS: Record<Problem, { title: string; text: string }> = {
   other: { title: 'No pudimos abrir la cámara', text: 'Intentá de nuevo. Si sigue fallando, recargá la página.' },
 };
 
+/** What went wrong, technically: shown small under the explanation, to tell apart a driver from a permission. */
+function detailOf(error: unknown): string {
+  if (error instanceof Error || error instanceof DOMException) return `${error.name}: ${error.message}`.slice(0, 180);
+  return String(error).slice(0, 180);
+}
+
+/** Ideal resolution first; some webcams and drivers reject any constraint, so then the plainest request. */
+async function openCamera(): Promise<MediaStream> {
+  try {
+    return await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } }, audio: false });
+  } catch (error) {
+    const name = error instanceof DOMException ? error.name : '';
+    if (name === 'NotAllowedError' || name === 'SecurityError' || name === 'NotFoundError') throw error;
+    return await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+  }
+}
+
+/** play() is interrupted when the stream is attached twice (React's dev double effects); once more is enough. */
+async function playVideo(video: HTMLVideoElement) {
+  try {
+    await video.play();
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') await video.play();
+    else throw error;
+  }
+}
+
 function problemOf(error: unknown): Problem {
   const name = error instanceof DOMException ? error.name : '';
   if (name === 'NotAllowedError' || name === 'SecurityError') return 'denied';
@@ -43,81 +76,70 @@ function problemOf(error: unknown): Problem {
   return 'other';
 }
 
-function add(totals: Totals, state: TrackerState): Totals {
-  const errors = { ...totals.errors };
-  for (const [key, count] of Object.entries(state.errors)) errors[key] = (errors[key] ?? 0) + count;
-  return { reps: totals.reps + state.reps, badReps: totals.badReps + state.badReps, holdMs: totals.holdMs + state.holdMs, errors };
-}
+const toResult = (state: TrackerState): SetResult => ({ reps: state.reps, badReps: state.badReps, holdMs: state.holdMs, log: state.log, errors: state.errors });
+const hasActivity = (state: TrackerState | null) => !!state && (state.reps + state.badReps > 0 || state.holdMs >= 1000);
 
-/** Skeleton over the video: face points skipped, joints red when a check fails. */
-function draw(canvas: HTMLCanvasElement, video: HTMLVideoElement, lm: Landmarks | null, failing: number[], judged: boolean) {
-  const width = video.videoWidth;
-  const height = video.videoHeight;
-  if (canvas.width !== width) canvas.width = width;
-  if (canvas.height !== height) canvas.height = height;
-  const context = canvas.getContext('2d');
-  if (!context) return;
-  context.clearRect(0, 0, width, height);
-  if (!lm) return;
-  const seen = (index: number) => index >= 11 && (lm[index]?.visibility ?? 1) >= 0.5;
-  const bad = new Set(failing);
-  context.lineWidth = Math.max(3, width / 280);
-  context.lineCap = 'round';
-  context.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-  for (const { start, end } of POSE_CONNECTIONS) {
-    if (!seen(start) || !seen(end)) continue;
-    context.beginPath();
-    context.moveTo(lm[start].x * width, lm[start].y * height);
-    context.lineTo(lm[end].x * width, lm[end].y * height);
-    context.stroke();
-  }
-  lm.forEach((point, index) => {
-    if (!seen(index)) return;
-    context.beginPath();
-    context.fillStyle = bad.has(index) ? BAD : judged ? OK : NEUTRAL;
-    context.arc(point.x * width, point.y * height, bad.has(index) ? width / 80 : width / 150, 0, Math.PI * 2);
-    context.fill();
-  });
-}
-
-const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }) => {
+const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule: baseRule, onExit }) => {
+  const stageRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const frameRef = useRef(0);
+  const landmarkerRef = useRef<PoseLandmarker | null>(null);
+  const infoRef = useRef<LandmarkerInfo | null>(null);
   const trackerRef = useRef<Tracker | null>(null);
   const liveRef = useRef<TrackerState | null>(null);
   const narratorRef = useRef<Narrator | null>(null);
   const voiceOnRef = useRef(readVoicePref());
   const setRef = useRef(1);
-  const totalsRef = useRef<Totals>(EMPTY);
+  const resultsRef = useRef<SetResult[]>([]);
+  const restUntilRef = useRef(0);
+  const pausedRef = useRef(false);
+  const [config, setConfig] = useState<SessionConfig | null>(() => (baseRule ? readConfig(baseRule) : null));
+  // The rule with the target the person chose: the tracker, the coach and the screen read it from here.
+  const rule = baseRule && config ? withTarget(baseRule, config.target) : null;
+  const ruleRef = useRef(rule);
+  ruleRef.current = rule;
+  const sets = config?.sets ?? 1;
   const [phase, setPhase] = useState<Phase>('setup');
   const [problem, setProblem] = useState<Problem>('other');
+  const [problemDetail, setProblemDetail] = useState('');
   const [live, setLive] = useState<TrackerState | null>(null);
   const [set, setSet] = useState(1);
-  const [totals, setTotals] = useState<Totals>(EMPTY);
-  const [flash, setFlash] = useState('');
+  const [results, setResults] = useState<SetResult[]>([]);
+  const [flash, setFlash] = useState<Flash | null>(null);
   const [restLeft, setRestLeft] = useState(0);
-  const restUntilRef = useRef(0);
   const [personSeen, setPersonSeen] = useState(false);
+  const [bodySeen, setBodySeen] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
   const [voiceOn, setVoiceOn] = useState(voiceOnRef.current);
+  const [stats, setStats] = useState<Activity | null>(null);
   // Live numbers for calibrating: the Datos button, or ?debug in the address.
   const debugRef = useRef(typeof location !== 'undefined' && /[?&]debug/.test(location.href));
   const [debugOn, setDebugOn] = useState(debugRef.current);
   const [reading, setReading] = useState<Reading | null>(null);
   const [fps, setFps] = useState(0);
+  const [model, setModel] = useState<LandmarkerInfo | null>(null);
   const canSpeak = voiceSupported();
+  // iPhone Safari only lets a <video> go fullscreen, not the whole stage: there the button would do nothing.
+  const canFullscreen = typeof document !== 'undefined' && document.fullscreenEnabled;
 
   const say = useCallback((text: string, urgent = false) => {
     if (voiceOnRef.current) speak(text, urgent);
   }, []);
 
   // Short on purpose: what we are doing and where to stand. The steps are in the demo.
-  const intro = useCallback(() => introText(rule), [rule]);
+  const intro = useCallback(() => introText(baseRule), [baseRule]);
 
   useEffect(() => {
-    warmVoice(phrasesFor(rule));
-  }, [rule]);
+    warmVoice(phrasesFor(baseRule, sets));
+  }, [baseRule, sets]);
+
+  function changeConfig(next: SessionConfig) {
+    setConfig(next);
+    if (baseRule) writeConfig(baseRule, next);
+  }
 
   function toggleVoice() {
     const next = !voiceOnRef.current;
@@ -132,7 +154,19 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
     cancelAnimationFrame(frameRef.current);
     streamRef.current?.getTracks().forEach((track) => track.stop());
     streamRef.current = null;
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
   }, []);
+
+  const fail = useCallback(
+    (kind: Problem, error?: unknown) => {
+      stop();
+      stopSpeaking();
+      setProblem(kind);
+      setProblemDetail(error === undefined ? '' : detailOf(error));
+      setPhase('error');
+    },
+    [stop],
+  );
 
   useEffect(() => stop, [stop]);
   useEffect(() => stopSpeaking, []);
@@ -142,95 +176,203 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
     if (phase === 'setup') say(intro());
   }, [phase, intro, say]);
 
+  // Each screen starts at the top: on a phone the camera button is at the bottom of a long setup screen.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [phase]);
+
   useEffect(() => {
     if (!flash) return;
-    const timer = window.setTimeout(() => setFlash(''), 3000);
+    const timer = window.setTimeout(() => setFlash(null), 1600);
     return () => window.clearTimeout(timer);
   }, [flash]);
 
+  useEffect(() => {
+    const onChange = () => setFullscreen(document.fullscreenElement === stageRef.current && !!stageRef.current);
+    document.addEventListener('fullscreenchange', onChange);
+    return () => document.removeEventListener('fullscreenchange', onChange);
+  }, []);
+
+  const showFlash = useCallback((text: string, tone: Flash['tone']) => setFlash({ key: performance.now(), text, tone }), []);
+
   const finish = useCallback(() => {
-    if (liveRef.current) totalsRef.current = add(totalsRef.current, liveRef.current);
+    // A set left halfway still counts for the summary, if something was done in it.
+    if (hasActivity(liveRef.current)) resultsRef.current = [...resultsRef.current, toResult(liveRef.current!)];
     liveRef.current = null;
-    setTotals(totalsRef.current);
+    setResults(resultsRef.current);
     stop();
     setPhase('done');
-    say(summaryText(rule, totalsRef.current), true);
-  }, [stop, rule, say]);
+    const current = ruleRef.current;
+    const totals = sumSets(resultsRef.current);
+    const history = saveSession({ at: Date.now(), exercise: exercise.name, rule: current?.id ?? null, sets: resultsRef.current.length, reps: totals.reps, badReps: totals.badReps, holdMs: totals.holdMs });
+    setStats(activity(history, Date.now()));
+    say(summaryText(current, totals), true);
+  }, [stop, say, exercise.name]);
 
   const completeSet = useCallback(
     (state: TrackerState) => {
-      if (setRef.current >= SETS) {
+      resultsRef.current = [...resultsRef.current, toResult(state)];
+      liveRef.current = null;
+      setResults(resultsRef.current);
+      if (setRef.current >= sets) {
         finish();
         return;
       }
-      totalsRef.current = add(totalsRef.current, state);
-      setTotals(totalsRef.current);
-      say(setDoneText(setRef.current, SETS), true);
+      say(setDoneText(setRef.current, sets), true);
       // A real rest: nothing counts and nothing is said until it ends or you skip it.
-      restUntilRef.current = performance.now() + REST_MS;
-      setRestLeft(Math.ceil(REST_MS / 1000));
+      const restMs = (config?.restS ?? 15) * 1000;
+      restUntilRef.current = performance.now() + restMs;
+      setRestLeft(Math.ceil(restMs / 1000));
       setRef.current += 1;
       setSet(setRef.current);
-      liveRef.current = null;
       setLive(null);
     },
-    [finish, say],
+    [finish, say, sets, config?.restS],
   );
 
-  const loop = useCallback(
-    (landmarker: PoseLandmarker) => {
-      const video = videoRef.current;
-      const canvas = canvasRef.current;
-      if (!video || !canvas) return;
-      let lastVideoTime = -1;
-      let lastPaint = 0;
-      let frames = 0;
-      let windowStart = performance.now();
-      const tick = () => {
-        frameRef.current = requestAnimationFrame(tick);
-        if (video.readyState < 2 || video.currentTime === lastVideoTime) return;
-        lastVideoTime = video.currentTime;
-        const now = performance.now();
-        const lm = landmarker.detectForVideo(video, now).landmarks[0] ?? null;
-        if (restUntilRef.current > 0) {
-          if (now < restUntilRef.current) {
-            draw(canvas, video, lm, [], false);
-            if (now - lastPaint > 250) {
-              lastPaint = now;
-              setRestLeft(Math.ceil((restUntilRef.current - now) / 1000));
-            }
-            return;
-          }
-          restUntilRef.current = 0;
-          setRestLeft(0);
-          trackerRef.current?.reset();
-          say(nextSetText(setRef.current), true);
+  const loop = useCallback(() => {
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!video || !canvas || !ctx) return;
+    const smoother = createSmoother();
+    let lastVideoTime = -1;
+    let lastPaint = 0;
+    let frames = 0;
+    let windowStart = performance.now();
+    let slowWindows = 0;
+    let downgrading = false;
+    let lastLog = 0;
+    let wasReady = false;
+    let switching = false;
+
+    const tick = () => {
+      frameRef.current = requestAnimationFrame(tick);
+      const landmarker = landmarkerRef.current;
+      if (!landmarker || video.readyState < 2 || video.currentTime === lastVideoTime) return;
+      lastVideoTime = video.currentTime;
+      const now = performance.now();
+      const width = video.videoWidth;
+      const height = video.videoHeight;
+      if (canvas.width !== width) canvas.width = width;
+      if (canvas.height !== height) canvas.height = height;
+
+      let raw = null;
+      try {
+        raw = landmarker.detectForVideo(video, now).landmarks[0] ?? null;
+      } catch (error) {
+        // Some GPU drivers load the model and fail on the first frame: step down to a safer landmarker.
+        if (switching) return;
+        const next = infoRef.current ? fallbackLandmarker(infoRef.current) : null;
+        if (!next) {
+          fail('model', error);
           return;
         }
-        const tracker = trackerRef.current;
-        const state = tracker ? tracker.update(lm, now) : null;
-        liveRef.current = state;
-        const line = state ? narratorRef.current?.update(state, now) : null;
-        if (line) say(line.text, line.urgent);
-        draw(canvas, video, lm, state?.failing ?? [], !!tracker);
-        frames += 1;
-        if (now - windowStart > 1000) {
-          if (debugRef.current) setFps(Math.round((frames * 1000) / (now - windowStart)));
-          frames = 0;
-          windowStart = now;
+        switching = true;
+        landmarkerRef.current = null;
+        next
+          .then(({ landmarker: safer, info }) => {
+            landmarkerRef.current = safer;
+            infoRef.current = info;
+            preferred = 'lite';
+            setModel(info);
+            switching = false;
+          })
+          .catch((reason: unknown) => fail('model', reason));
+        return;
+      }
+      const lm = smoother.smooth(raw, now);
+      const current = ruleRef.current;
+      const plain = { failing: [], judged: false, measured: null, degrees: null, reached: false, guide: false };
+
+      frames += 1;
+      if (now - windowStart > 1000) {
+        const rate = (frames * 1000) / (now - windowStart);
+        if (debugRef.current) setFps(Math.round(rate));
+        // A machine that cannot keep up gives late, jumpy angles: lite is less precise but steadier there.
+        slowWindows = infoRef.current?.quality === 'full' && rate < SLOW_FPS ? slowWindows + 1 : 0;
+        if (slowWindows >= SLOW_WINDOWS && !downgrading) {
+          downgrading = true;
+          preferred = 'lite';
+          void loadLandmarker('lite')
+            .then(({ landmarker: lite, info }) => {
+              landmarkerRef.current = lite;
+              infoRef.current = info;
+              setModel(info);
+            })
+            .catch(() => {});
         }
-        if (now - lastPaint > 100) {
-          lastPaint = now;
-          if (debugRef.current) setReading(rule && lm ? measure(rule, lm) : null);
-          setLive(state);
-          if (lm) setPersonSeen(true);
+        frames = 0;
+        windowStart = now;
+      }
+
+      if (restUntilRef.current > 0) {
+        drawOverlay(ctx, width, height, { lm, ...plain });
+        if (now < restUntilRef.current) {
+          if (now - lastPaint > 250) {
+            lastPaint = now;
+            setRestLeft(Math.ceil((restUntilRef.current - now) / 1000));
+          }
+          return;
         }
-        if (state && rule && isSetDone(rule, state)) completeSet(state);
-      };
-      tick();
-    },
-    [rule, completeSet, say],
-  );
+        restUntilRef.current = 0;
+        setRestLeft(0);
+        trackerRef.current?.reset();
+        lastLog = 0;
+        wasReady = false;
+        say(nextSetText(setRef.current), true);
+        return;
+      }
+
+      if (pausedRef.current) {
+        drawOverlay(ctx, width, height, { lm, ...plain });
+        return;
+      }
+
+      const tracker = trackerRef.current;
+      const state = tracker ? tracker.update(lm, now) : null;
+      liveRef.current = state;
+      const line = state ? narratorRef.current?.update(state, now) : null;
+      if (line) say(line.text, line.urgent);
+
+      // The counted angle, drawn on the body while it is being judged.
+      let measured: Triple | null = null;
+      let degrees: number | null = null;
+      if (current?.mode === 'reps' && lm && state?.status === 'active' && state.side) {
+        measured = current.measured(lm, state.side);
+        degrees = current.metric(lm, state.side);
+      }
+      drawOverlay(ctx, width, height, {
+        lm,
+        failing: state?.failing ?? [],
+        judged: !!state && state.status === 'active',
+        measured,
+        degrees,
+        reached: !!state && state.progress >= 1,
+        guide: !lm || state?.status === 'framing',
+      });
+
+      if (state) {
+        if (state.log.length > lastLog) {
+          const mark = state.log[state.log.length - 1];
+          showFlash(mark.ok ? `+1` : 'No contó', mark.ok ? 'ok' : 'warn');
+          lastLog = state.log.length;
+        }
+        if (state.ready && !wasReady && state.log.length === 0 && state.holdMs < 1000) showFlash('¡Listo! Arrancá', 'info');
+        wasReady = state.ready;
+      }
+
+      if (now - lastPaint > 100) {
+        lastPaint = now;
+        if (debugRef.current) setReading(current && lm ? measure(current, lm, state?.side ?? undefined) : null);
+        setLive(state);
+        setBodySeen(!!lm);
+        if (lm) setPersonSeen(true);
+      }
+      if (state && current && isSetDone(current, state)) completeSet(state);
+    };
+    tick();
+  }, [completeSet, say, showFlash, fail]);
 
   async function start() {
     stopSpeaking();
@@ -245,21 +387,22 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
       return;
     }
     setPhase('starting');
+    setProblemDetail('');
     let stream: MediaStream;
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } }, audio: false });
+      stream = await openCamera();
     } catch (error) {
-      setProblem(problemOf(error));
-      setPhase('error');
+      fail(problemOf(error), error);
       return;
     }
     streamRef.current = stream;
     try {
-      await loadLandmarker();
-    } catch {
-      stop();
-      setProblem('model');
-      setPhase('error');
+      const { landmarker, info } = await loadLandmarker(preferred);
+      landmarkerRef.current = landmarker;
+      infoRef.current = info;
+      setModel(info);
+    } catch (error) {
+      fail('model', error);
       return;
     }
     if (streamRef.current !== stream) return;
@@ -267,11 +410,16 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
     narratorRef.current = rule ? createNarrator(rule) : null;
     liveRef.current = null;
     setRef.current = 1;
-    totalsRef.current = EMPTY;
+    resultsRef.current = [];
+    restUntilRef.current = 0;
+    pausedRef.current = false;
     setSet(1);
-    setTotals(EMPTY);
+    setResults([]);
     setLive(null);
+    setRestLeft(0);
+    setPaused(false);
     setPersonSeen(false);
+    setBodySeen(false);
     setPhase('live');
   }
 
@@ -282,17 +430,12 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
     if (!video || !stream) return;
     video.srcObject = stream;
     let cancelled = false;
-    video
-      .play()
-      .then(() => loadLandmarker())
-      .then((landmarker) => {
-        if (!cancelled) loop(landmarker);
+    playVideo(video)
+      .then(() => {
+        if (!cancelled) loop();
       })
-      .catch(() => {
-        if (cancelled) return;
-        stop();
-        setProblem('other');
-        setPhase('error');
+      .catch((error: unknown) => {
+        if (!cancelled) fail('other', error);
       });
     return () => {
       cancelled = true;
@@ -304,6 +447,22 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
     stop();
     stopSpeaking();
     onExit();
+  }
+
+  function togglePause() {
+    const next = !pausedRef.current;
+    pausedRef.current = next;
+    setPaused(next);
+    if (next) stopSpeaking();
+    // Coming back, the starting position is asked again: whatever happened during the pause does not count.
+    else trackerRef.current?.rearm();
+  }
+
+  function toggleFullscreen() {
+    const stage = stageRef.current;
+    if (!stage) return;
+    if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+    else void stage.requestFullscreen?.().catch(() => {});
   }
 
   const voiceButton = canSpeak ? (
@@ -319,6 +478,7 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
         <p className={styles.kicker}>{exercise.name}</p>
         <h1 className={styles.title}>{title}</h1>
         <p className={styles.text}>{text}</p>
+        {problemDetail ? <p className={styles.detail}>Detalle técnico: {problemDetail}</p> : null}
         <div className={styles.actions}>
           <button type="button" className={styles.primary} onClick={start}>
             Reintentar
@@ -332,101 +492,85 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
   }
 
   if (phase === 'setup' || phase === 'starting') {
-    return (
-      <section className={`${styles.card} ${rule ? styles.withDemo : ''}`} aria-labelledby="coach-titulo">
-        {rule ? (
-          <div className={styles.demoSlot}>
-            <ExerciseDemo rule={rule} />
-          </div>
-        ) : null}
-        <div className={styles.setupText}>
-        <p className={styles.kicker}>PREPARATE</p>
-        <h1 id="coach-titulo" className={styles.title}>
-          {exercise.name}
-        </h1>
-        <ul className={styles.list}>
-          <li>{rule ? rule.setup : 'Ubicá la cámara a 2–3 metros, que se te vea el cuerpo entero.'}</li>
-          <li>Buena luz de frente, nada brillante detrás tuyo.</li>
-          <li>El video se analiza en esta compu: no se graba ni se sube.</li>
-          {rule ? <li>{SETS} series de {rule.mode === 'reps' ? `${rule.target} repeticiones` : `${rule.target} segundos`}. Las repeticiones mal hechas no cuentan.</li> : <li>Este ejercicio no tiene corrección todavía: vas a ver tu esqueleto en vivo.</li>}
-        </ul>
-        <div className={styles.actions}>
-          <button type="button" className={styles.primary} onClick={start} disabled={phase === 'starting'}>
-            <Icon name="camera" /> {phase === 'starting' ? 'Abriendo cámara…' : 'Activar cámara'}
-          </button>
-          <button type="button" className={styles.secondary} onClick={exit}>
-            Volver
-          </button>
-          {voiceButton}
-        </div>
-        </div>
-      </section>
-    );
+    return <SessionSetup exercise={exercise} rule={baseRule} config={config} starting={phase === 'starting'} voiceButton={voiceButton} onConfig={changeConfig} onStart={start} onBack={exit} />;
   }
 
   if (phase === 'done') {
-    const worst = Object.entries(totals.errors).sort((a, b) => b[1] - a[1])[0];
-    return (
-      <section className={styles.card} aria-labelledby="resumen-titulo">
-        <p className={styles.kicker}>RESUMEN</p>
-        <h1 id="resumen-titulo" className={styles.title}>
-          {exercise.name}
-        </h1>
-        {rule ? (
-          <div className={styles.summary}>
-            {rule.mode === 'reps' ? (
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{totals.reps}</span>
-                <span className={styles.statLabel}>repeticiones bien hechas</span>
-              </div>
-            ) : (
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{Math.round(totals.holdMs / 1000)} s</span>
-                <span className={styles.statLabel}>en buena postura</span>
-              </div>
-            )}
-            {rule.mode === 'reps' ? (
-              <div className={styles.stat}>
-                <span className={styles.statValue}>{totals.badReps}</span>
-                <span className={styles.statLabel}>para corregir</span>
-              </div>
-            ) : null}
-            <div className={styles.stat}>
-              <span className={styles.statValue}>{worst ? worst[1] : 0}</span>
-              <span className={styles.statLabel}>{worst ? `veces: «${worst[0]}»` : 'correcciones'}</span>
-            </div>
-          </div>
-        ) : (
-          <p className={styles.text}>Sesión terminada.</p>
-        )}
-        <div className={styles.actions}>
-          <button type="button" className={styles.primary} onClick={start}>
-            Otra vez
-          </button>
-          <button type="button" className={styles.secondary} onClick={exit}>
-            Elegir otro ejercicio
-          </button>
-        </div>
-      </section>
-    );
+    return <SessionSummary exercise={exercise} rule={rule} sets={results} activity={stats} onAgain={start} onAdjust={() => setPhase('setup')} onExit={exit} />;
   }
 
   const target = rule?.target ?? 0;
   const count = rule && live ? (rule.mode === 'reps' ? live.reps : Math.floor(live.holdMs / 1000)) : 0;
   const fill = rule && live ? (rule.mode === 'reps' ? live.progress : Math.min(1, live.holdMs / (rule.target * 1000))) : 0;
   const framing = !rule ? !personSeen : !live || live.status === 'framing';
+  const message =
+    restLeft > 0
+      ? `Descansá. Después seguimos con la serie ${set}.`
+      : paused
+        ? 'En pausa.'
+        : rule
+          ? (live?.message ?? 'Ubicate frente a la cámara.')
+          : personSeen
+            ? 'Te veo: controlá el movimiento con tu esqueleto.'
+            : 'Buscándote… ubicate frente a la cámara.';
+  const tone = rule && restLeft === 0 && !paused ? (live?.tone ?? 'info') : 'info';
+  const pill = !bodySeen
+    ? { tone: styles.pillBad, text: 'No te veo' }
+    : framing
+      ? { tone: styles.pillWarn, text: live?.missing.length ? `Me falta ver: ${live.missing.join(', ')}` : 'Te veo a medias' }
+      : { tone: styles.pillOk, text: 'Te veo bien' };
+  const pace = live ? tempo(live.log) : null;
 
   return (
-    <section className={styles.stage} aria-label={`Entrenando: ${exercise.name}`}>
-      <div className={styles.videoWrap}>
+    <section ref={stageRef} className={`${styles.stage} ${fullscreen ? styles.stageFull : ''}`} aria-label={`Entrenando: ${exercise.name}`}>
+      {/* Sobre el video todo queda oscuro en los dos temas: se lee mejor encima de una imagen. */}
+      <div className={`${styles.videoWrap} theme-dark`}>
         <video ref={videoRef} className={styles.video} muted playsInline />
         <canvas ref={canvasRef} className={styles.canvas} aria-hidden="true" />
-        {framing ? <p className={styles.framing}>{live?.message ?? 'Buscándote… ubicate frente a la cámara.'}</p> : null}
+
+        <p className={`${styles.pill} ${pill.tone}`} role="status">
+          <span className={styles.pillDot} aria-hidden="true" />
+          {pill.text}
+        </p>
+
+        {rule ? (
+          <div className={styles.counter} aria-hidden="true">
+            <span className={styles.counterSet}>
+              SERIE {set}/{sets}
+            </span>
+            <span className={styles.counterValue}>
+              {count}
+              <small>
+                /{target}
+                {rule.mode === 'hold' ? ' s' : ''}
+              </small>
+            </span>
+            {rule.mode === 'reps' ? <RepDots log={live?.log ?? []} target={target} /> : null}
+          </div>
+        ) : null}
+
+        {rule ? (
+          <div className={styles.gauge} aria-hidden="true">
+            <div className={`${styles.gaugeFill} ${fill >= 1 ? styles.gaugeDone : ''}`} style={{ height: `${Math.round(fill * 100)}%` }} />
+            <span className={styles.gaugeLabel}>{rule.mode === 'reps' ? 'PROFUNDIDAD' : 'TIEMPO'}</span>
+          </div>
+        ) : null}
+
+        {restLeft === 0 && !paused ? <p className={`${styles.banner} ${styles[tone]}`}>{message}</p> : null}
+
+        {flash ? (
+          <p key={flash.key} className={`${styles.flash} ${styles[`flash_${flash.tone}`]}`} aria-hidden="true">
+            {flash.text}
+          </p>
+        ) : null}
+
         {restLeft > 0 ? (
           <div className={styles.rest} role="status">
             <p className={styles.restTitle}>Descansá</p>
             <p className={styles.restTime}>{restLeft}</p>
-            <p className={styles.restNext}>Después: serie {set} de {SETS}</p>
+            <p className={styles.restNext}>
+              Después: serie {set} de {sets}
+            </p>
             <button
               type="button"
               className={styles.secondary}
@@ -437,7 +581,29 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
             </button>
           </div>
         ) : null}
-        {flash ? <p className={styles.flash}>{flash}</p> : null}
+
+        {paused && restLeft === 0 ? (
+          <div className={styles.rest} role="status">
+            <p className={styles.restTitle}>En pausa</p>
+            <p className={styles.restNext}>Cuando vuelvas, ponete en la posición de inicio.</p>
+            <button type="button" className={styles.primary} onClick={togglePause}>
+              <Play size={18} aria-hidden="true" /> Seguir
+            </button>
+          </div>
+        ) : null}
+
+        <div className={styles.videoControls}>
+          {rule ? (
+            <button type="button" onClick={togglePause} aria-label={paused ? 'Seguir' : 'Pausar'} title={paused ? 'Seguir' : 'Pausar'}>
+              {paused ? <Play size={20} aria-hidden="true" /> : <Pause size={20} aria-hidden="true" />}
+            </button>
+          ) : null}
+          {canFullscreen ? (
+            <button type="button" onClick={toggleFullscreen} aria-label={fullscreen ? 'Salir de pantalla completa' : 'Pantalla completa'} title={fullscreen ? 'Salir de pantalla completa' : 'Pantalla completa (se ve mejor de lejos)'}>
+              {fullscreen ? <Minimize size={20} aria-hidden="true" /> : <Maximize size={20} aria-hidden="true" />}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <aside className={styles.panel}>
@@ -445,7 +611,7 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
         {rule ? (
           <>
             <p className={styles.setLabel}>
-              SERIE {set}/{SETS}
+              SERIE {set} DE {sets}
             </p>
             <p className={styles.count} aria-live="polite">
               {count}
@@ -455,12 +621,34 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
               </span>
             </p>
             <div className={styles.bar} aria-hidden="true">
-              <div className={styles.barFill} style={{ width: `${Math.round(fill * 100)}%` }} />
+              <div className={`${styles.barFill} ${fill >= 1 ? styles.barDone : ''}`} style={{ width: `${Math.round(fill * 100)}%` }} />
             </div>
-            <p className={`${styles.message} ${styles[live?.tone ?? 'info']}`} aria-live="polite">
-              {live?.message ?? 'Ubicate frente a la cámara.'}
+            <p className={`${styles.message} ${styles[tone]}`} aria-live="polite">
+              {message}
             </p>
-            {rule.mode === 'reps' ? <p className={styles.stats}>Para corregir en esta serie: {live?.badReps ?? 0}</p> : null}
+            {rule.mode === 'reps' ? (
+              <>
+                <RepDots log={live?.log ?? []} large />
+                <p className={styles.stats}>
+                  Bien: {live?.reps ?? 0} · Para corregir: {live?.badReps ?? 0}
+                  {pace !== null ? ` · ${(pace / 1000).toLocaleString('es-AR', { maximumFractionDigits: 1 })} s por repetición` : ''}
+                </p>
+              </>
+            ) : null}
+            {results.length > 0 ? (
+              <ol className={styles.doneSets} aria-label="Series terminadas">
+                {results.map((result, index) => (
+                  <li key={index}>
+                    Serie {index + 1}: {rule.mode === 'reps' ? `${result.reps} bien · ${result.badReps} a corregir` : `${Math.round(result.holdMs / 1000)} s`}
+                  </li>
+                ))}
+              </ol>
+            ) : null}
+            {exercise.tip ? (
+              <p className={styles.tipLine}>
+                <strong>Tip:</strong> {exercise.tip}
+              </p>
+            ) : null}
           </>
         ) : (
           <p className={`${styles.message} ${styles.info}`}>Análisis de postura todavía no disponible para este ejercicio. Mirá tu esqueleto para controlar el movimiento.</p>
@@ -486,10 +674,13 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule, onExit }
         </div>
         {debugOn ? (
           <div className={styles.debug} aria-live="off">
+            <p>
+              modelo: <b>{model ? `${model.quality} · ${model.delegate}` : '…'}</b> · {fps} fps
+            </p>
             {reading && rule ? (
               <>
                 <p>
-                  lado: <b>{reading.side === 'left' ? 'izquierdo' : 'derecho'}</b> · articulaciones: <b>{reading.visible}/{reading.total}</b> · visibilidad mín: <b>{reading.minVisibility.toFixed(2)}</b> · {fps} fps
+                  lado: <b>{reading.side === 'left' ? 'izquierdo' : 'derecho'}</b> · articulaciones: <b>{reading.visible}/{reading.total}</b> · visibilidad mín: <b>{reading.minVisibility.toFixed(2)}</b>
                 </p>
                 {reading.metric !== null ? (
                   <p>

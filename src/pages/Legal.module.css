@@ -5,38 +5,13 @@
   font-family: Inter, sans-serif;
 }
 
-.bar {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  height: 64px;
-  padding: 0 clamp(16px, 4vw, 48px);
-  background-color: color-mix(in srgb, var(--bg) 92%, transparent);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(8px);
-}
-
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Barlow Condensed';
-  font-weight: 800;
-  font-size: 24px;
-  letter-spacing: 0.04em;
-}
-
-.back:hover,
 .links a:hover {
   color: var(--accent-text);
 }
 
 .links {
   display: flex;
+  margin-top: 24px;
   align-items: center;
   gap: 20px;
   font-size: 12px;
@@ -66,7 +41,7 @@
   margin-top: 56px;
   padding-top: 32px;
   border-top: 1px solid var(--border);
-  scroll-margin-top: 80px;
+  scroll-margin-top: 112px;
 }
 
 .section h2 {
@@ -86,23 +61,4 @@
   font-size: 15px;
   line-height: 1.65;
   color: var(--text-2);
-}
-
-/* Celular: la barra no entra en una línea (links + tema); se achica en vez de desbordar. */
-@media (max-width: 480px) {
-  .bar {
-    gap: 12px;
-    padding-inline: 16px;
-  }
-  .links {
-    gap: 12px;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-  }
-}
-/* Pantallas muy angostas (320 px): quedan "volver" y el tema; las dos secciones están una debajo de la otra. */
-@media (max-width: 400px) {
-  .links a {
-    display: none;
-  }
 }

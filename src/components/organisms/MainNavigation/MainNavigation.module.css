@@ -27,15 +27,16 @@
   	font-weight: 500;
   	transition: color 0.2s ease;
 }
-.navigationLink:hover {
-  	color: #ff7900;
+.navigationLink:hover,
+.navigationLink[aria-current='page'] {
+  	color: var(--accent-text);
 }
 .accountAndBag {
   	display: flex;
   	align-items: center;
   	gap: 22px;
   	font-size: 11px;
-  	color: #ff7900;
+  	color: var(--accent-text);
   	flex-shrink: 0;
 }
 .iconButton {
@@ -44,6 +45,46 @@
 }
 .bag {
   	gap: 7px;
+}
+.account {
+  	position: relative;
+}
+.account summary {
+  	cursor: pointer;
+  	list-style: none;
+}
+.account summary::-webkit-details-marker {
+  	display: none;
+}
+.accountMenu {
+  	position: absolute;
+  	right: 0;
+  	top: calc(100% + 12px);
+  	min-width: 210px;
+  	display: flex;
+  	flex-direction: column;
+  	background-color: var(--surface);
+  	border: 1px solid var(--border);
+  	box-shadow: var(--shadow-lg);
+  	font-size: 14px;
+  	color: var(--text-2);
+  	z-index: 30;
+}
+.accountName {
+  	padding: 12px 16px 8px;
+  	font-size: 12px;
+  	color: var(--text-3);
+}
+.accountMenu a,
+.accountMenu button {
+  	padding: 12px 16px;
+  	text-align: left;
+  	color: inherit;
+}
+.accountMenu a:hover,
+.accountMenu button:hover {
+  	background-color: var(--surface-2);
+  	color: var(--accent-text);
 }
 .theme {
   	color: var(--text);
@@ -54,7 +95,7 @@
 }
 .menuToggle {
   	display: none;
-  	color: #fff;
+  	color: var(--text);
 }
 @media (max-width: 1099px) {
   	.mainNavigation {
@@ -104,6 +145,6 @@
     		width: 100%;
     		padding: 14px 0px;
     		font-size: 18px;
-    		border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    		border-bottom: 1px solid var(--border-strong);
   	}
 }

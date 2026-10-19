@@ -1,7 +1,6 @@
 import { FunctionComponent, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { Icon } from '../components/atoms';
-import ThemeToggle from '../components/molecules/ThemeToggle/ThemeToggle';
+import { useLocation } from 'react-router-dom';
+import SiteHeader from '../components/organisms/SiteHeader/SiteHeader';
 import styles from './Legal.module.css';
 
 // Privacidad y términos: lo que la web hace de verdad con los datos y con los precios.
@@ -24,16 +23,7 @@ const Legal: FunctionComponent = () => {
 
   return (
     <div className={styles.page}>
-      <header className={styles.bar}>
-        <Link to="/" className={styles.back}>
-          <Icon name="arrowLeft" size={18} /> SPOT
-        </Link>
-        <nav className={styles.links} aria-label="Secciones">
-          <a href="#privacidad">Privacidad</a>
-          <a href="#terminos">Términos</a>
-          <ThemeToggle />
-        </nav>
-      </header>
+      <SiteHeader />
 
       <main className={styles.main} id="contenido">
         <h1 className={styles.title}>
@@ -41,6 +31,10 @@ const Legal: FunctionComponent = () => {
           <br />Y TÉRMINOS.
         </h1>
         <p className={styles.lead}>Qué datos guarda SPOT, para qué, y cómo funcionan los precios que mostramos. Sin letra chica.</p>
+        <nav className={styles.links} aria-label="Secciones">
+          <a href="#privacidad">Privacidad</a>
+          <a href="#terminos">Términos</a>
+        </nav>
 
         <section id="privacidad" className={styles.section} aria-labelledby="privacidad-titulo">
           <h2 id="privacidad-titulo">Privacidad</h2>

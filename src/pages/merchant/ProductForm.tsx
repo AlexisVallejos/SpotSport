@@ -131,11 +131,11 @@ export default function ProductForm() {
           </div>
           {draft.images.length < MAX_IMAGES ? (
             <p>
-              <label style={{ cursor: 'pointer', color: '#ff7900', fontWeight: 600 }}>
+              <label style={{ cursor: 'pointer', color: 'var(--accent-text)', fontWeight: 600 }}>
                 {uploading ? 'Subiendo…' : 'Agregar imágenes'}
                 <input type="file" accept="image/*" multiple hidden disabled={uploading} onChange={(event) => void addImages(event.target.files)} />
               </label>{' '}
-              <span style={{ color: '#8a8c94', fontSize: 13 }}>
+              <span style={{ color: 'var(--text-3)', fontSize: 13 }}>
                 Hasta {MAX_IMAGES}, de 5 MB cada una. La primera es la principal.
               </span>
             </p>
@@ -143,7 +143,7 @@ export default function ProductForm() {
         </Card>
 
         <Card title="Variantes, precios y stock">
-          <p style={{ color: '#a7a9b2', fontSize: 13, marginTop: 0 }}>Cada combinación de talle y color tiene su precio y su stock. Si el producto es de talle único, dejá talle y color vacíos.</p>
+          <p style={{ color: 'var(--text-3)', fontSize: 13, marginTop: 0 }}>Cada combinación de talle y color tiene su precio y su stock. Si el producto es de talle único, dejá talle y color vacíos.</p>
           {draft.variants.map((variant, index) => (
             <div key={variant.id ?? `new-${index}`} className={styles.variantRow}>
               <TextField label="Talle" value={variant.size} onChange={(event) => patchVariant(index, { size: event.target.value })} placeholder="42, M…" />

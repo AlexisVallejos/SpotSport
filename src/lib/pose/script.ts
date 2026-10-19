@@ -1,4 +1,5 @@
 import { FRAMING, type TrackerState } from './engine';
+import { CENTER, CLOSER, NO_PERSON } from './framing';
 import type { PoseRule } from './rules';
 
 /** What the coach says out loud. `urgent` cuts whatever is being said. */
@@ -18,16 +19,16 @@ export function numberWords(n: number, feminine = false): string {
 const word = (n: number) => numberWords(n);
 const capital = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
-/** Sets per session. */
+/** Default sets per session (the person can choose 1–5). */
 export const SETS = 3;
-/** Rest between sets, in milliseconds. */
-export const REST_MS = 15_000;
 
 // A coach who talks all the time is tiring: few words, spaced out. The count is big on screen, so it is not read out.
 /** Minimum time between two spoken lines (set boundaries and the summary are exempt). */
 const MIN_GAP_MS = 4500;
 const SAME_WORDS_MS = 10_000;
 const FRAMING_MS = 15_000;
+/** Right after the camera turns on the person is still at the keyboard: "I can't see you" would be premature. */
+const NO_PERSON_GRACE_MS = 6000;
 const HOLD_WARN_MS = 12_000;
 
 export const CHEERS = ['¡Muy bien!', '¡Eso es!', '¡Así, bárbaro!', '¡Buenísimo!'];
@@ -41,6 +42,9 @@ export const PLACE_ANY = 'Ubicate para que se te vea entero.';
 /** Spoken versions (voseo, argentinismos) of the on-screen corrections: short, one idea. Anything missing is read as written. */
 export const CORRECTIONS: Record<string, string[]> = {
   [FRAMING]: ['Alejate un poco.', 'Pará, alejate un poquito.'],
+  [NO_PERSON]: ['No te veo.', 'No te veo, ubicate en cámara.'],
+  [CENTER]: ['Correte al centro.', 'Un poco más al centro.'],
+  [CLOSER]: ['Acercate un poco.', 'Acercate un poquito.'],
   'Ponete de costado a la cámara.': ['Ponete de costado a la cámara.', 'Girate, de costado.'],
   'Mantené el pecho arriba.': ['Pecho arriba.', 'Subí el pecho.'],
   'Bajá más: muslos paralelos al piso.': ['Bajá un poco más.', 'Dale, más abajo.'],
@@ -95,8 +99,10 @@ export function createNarrator(rule: PoseRule | null): Narrator {
   let spoken: Record<string, number> = {};
   let used: Record<string, number> = {};
   let lastLine = -Infinity;
+  let startedAt: number | null = null;
 
   function reset() {
+    startedAt = null;
     seen = false;
     reps = 0;
     badReps = 0;
@@ -134,8 +140,11 @@ export function createNarrator(rule: PoseRule | null): Narrator {
   const quiet = (now: number) => now - lastLine < MIN_GAP_MS;
 
   function update(state: TrackerState, now: number): Line | null {
+    startedAt ??= now;
     if (state.status === 'framing') {
-      if (state.tone === 'warn' && state.message === FRAMING && !quiet(now) && fresh(FRAMING, now, FRAMING_MS)) return say(correction(FRAMING), now);
+      // Framing advice is spoken only when it has a spoken version, and not again for a while.
+      const early = state.message === NO_PERSON && now - startedAt < NO_PERSON_GRACE_MS;
+      if (state.tone === 'warn' && CORRECTIONS[state.message] && !early && !quiet(now) && fresh(state.message, now, FRAMING_MS)) return say(correction(state.message), now);
       return null;
     }
 
@@ -201,18 +210,26 @@ export function nextSetText(set: number): string {
 
 type Totals = { reps: number; badReps: number; holdMs: number; errors: Record<string, number> };
 
-export const SUMMARY_MAX = 40;
+/** Counts said during a set ("cinco", "diez"…): the target goes up to 30. */
+export const COUNT_MAX = 40;
+/** Totals in the summary: up to 5 sets of 20 fit in Spanish words below 100. */
+export const SUMMARY_MAX = 99;
+
+/** How long a hold lasted, the way a person would say it: seconds up to 95, then minutes and halves. */
+function holdLine(seconds: number): string {
+  if (seconds < 3) return 'Casi no aguantaste, probemos de nuevo.';
+  if (seconds < 97.5) return `Aguantaste unos ${word(Math.max(5, Math.round(seconds / 5) * 5))} segundos.`;
+  const halves = Math.round(seconds / 30);
+  const whole = Math.floor(halves / 2);
+  const half = halves % 2 === 1 ? ' y medio' : '';
+  return whole === 1 ? `Aguantaste un minuto${half}.` : `Aguantaste unos ${word(whole)} minutos${half}.`;
+}
 
 export function summaryText(rule: PoseRule | null, totals: Totals): string {
   if (!rule) return 'Listo, terminaste.';
   const worst = Object.entries(totals.errors).sort((a, b) => b[1] - a[1])[0];
   const learned = worst ? ` ${CORRECTIONS[worst[0]]?.[0] ?? worst[0]}` : '';
-  if (rule.mode === 'hold') {
-    const seconds = totals.holdMs / 1000;
-    if (seconds < 3) return `Listo, terminaste. Casi no aguantaste, probemos de nuevo.${learned}`;
-    const rounded = Math.min(95, Math.max(5, Math.round(seconds / 5) * 5));
-    return `Listo, terminaste. Aguantaste unos ${word(rounded)} segundos.${learned}`;
-  }
+  if (rule.mode === 'hold') return `Listo, terminaste. ${holdLine(totals.holdMs / 1000)}${learned}`;
   const reps = Math.min(SUMMARY_MAX, totals.reps);
   const bad = Math.min(SUMMARY_MAX, totals.badReps);
   const good = reps === 0 ? 'Ninguna repetición bien hecha.' : reps === 1 ? 'Una repetición bien hecha.' : `${capital(numberWords(reps, true))} repeticiones bien hechas.`;

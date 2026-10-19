@@ -4,16 +4,16 @@
   	flex-direction: column;
   	gap: 20px;
   	padding: clamp(20px, 4vw, 40px);
-  	background-color: #111;
-  	border: 1px solid #2a2a2a;
-  	color: #fff;
+  	background-color: var(--surface);
+  	border: 1px solid var(--border);
+  	color: var(--text);
   	font-family: Inter;
 }
 .kicker {
   	margin: 0;
   	font-size: 11px;
   	letter-spacing: 0.2em;
-  	color: #ff7900;
+  	color: var(--accent-text);
   	font-weight: 600;
   	text-transform: uppercase;
 }
@@ -28,7 +28,7 @@
   	margin: 0;
   	font-size: 15px;
   	line-height: 1.6;
-  	color: #c9cad0;
+  	color: var(--text-2);
 }
 .list {
   	margin: 0;
@@ -38,7 +38,7 @@
   	gap: 10px;
   	font-size: 15px;
   	line-height: 1.5;
-  	color: #d9dae0;
+  	color: var(--text-2);
 }
 .actions {
   	display: flex;
@@ -60,8 +60,8 @@
   	letter-spacing: 0.04em;
 }
 .primary {
-  	background-color: #ff7900;
-  	color: #080808;
+  	background-color: var(--accent);
+  	color: var(--on-accent);
 }
 .primary:hover {
   	filter: brightness(1.08);
@@ -71,69 +71,53 @@
   	cursor: progress;
 }
 .secondary {
-  	border: 1px solid #3a3a3a;
-  	color: #fff;
+  	border: 1px solid var(--border-strong);
+  	color: var(--text);
 }
 .secondary:hover {
-  	border-color: #ff7900;
+  	border-color: var(--accent);
 }
 .stage {
   	display: grid;
   	grid-template-columns: minmax(0, 1fr) 340px;
   	gap: 20px;
   	align-items: start;
-  	color: #fff;
+  	color: var(--text);
   	font-family: Inter;
 }
 .videoWrap {
   	position: relative;
-  	background-color: #000;
+  	background-color: var(--bg);
   	min-height: 240px;
 }
 .video,
 .canvas {
   	display: block;
   	width: 100%;
+}
+/* Como un espejo: el video se ve invertido. El canvas no; overlay.ts invierte las coordenadas para que los números se lean bien. */
+.video {
   	transform: scaleX(-1);
 }
 .canvas {
   	position: absolute;
   	inset: 0;
   	height: 100%;
-}
-.framing,
-.flash {
-  	position: absolute;
-  	left: 12px;
-  	right: 12px;
-  	margin: 0;
-  	padding: 12px 14px;
-  	font-size: 15px;
-  	font-weight: 600;
-}
-.framing {
-  	top: 12px;
-  	background-color: rgba(8, 8, 8, 0.85);
-  	border-left: 4px solid #ff7900;
-}
-.flash {
-  	bottom: 12px;
-  	background-color: #ff7900;
-  	color: #080808;
+  	pointer-events: none;
 }
 .panel {
   	display: flex;
   	flex-direction: column;
   	gap: 16px;
   	padding: 20px;
-  	background-color: #111;
-  	border: 1px solid #2a2a2a;
+  	background-color: var(--surface);
+  	border: 1px solid var(--border);
 }
 .setLabel {
   	margin: 0;
   	font-size: 12px;
   	letter-spacing: 0.16em;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .count {
   	margin: 0;
@@ -144,7 +128,7 @@
 }
 .target {
   	font-size: 32px;
-  	color: #8a8c94;
+  	color: var(--text-3);
   	margin-left: 6px;
 }
 .bar {
@@ -153,8 +137,11 @@
 }
 .barFill {
   	height: 100%;
-  	background-color: #ff7900;
-  	transition: width 0.15s linear;
+  	background-color: var(--accent);
+  	transition: width 0.15s linear, background-color 0.2s ease;
+}
+.barDone {
+  	background-color: #3ddc84;
 }
 .message {
   	margin: 0;
@@ -165,21 +152,21 @@
   	border-left: 4px solid;
 }
 .ok {
-  	border-color: #3ddc84;
-  	background-color: rgba(61, 220, 132, 0.1);
+  	border-color: var(--success);
+  	background-color: var(--success-soft);
 }
 .warn {
   	border-color: #ff3b30;
   	background-color: rgba(255, 59, 48, 0.12);
 }
 .info {
-  	border-color: #ff7900;
-  	background-color: rgba(255, 121, 0, 0.08);
+  	border-color: var(--accent);
+  	background-color: var(--accent-soft);
 }
 .stats {
   	margin: 0;
   	font-size: 13px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
 }
 .summary {
   	display: grid;
@@ -191,19 +178,19 @@
   	flex-direction: column;
   	gap: 6px;
   	padding: 16px;
-  	border: 1px solid #2a2a2a;
+  	border: 1px solid var(--border);
 }
 .statValue {
   	font-family: 'Barlow Condensed';
   	font-weight: 800;
   	font-size: 56px;
   	line-height: 1;
-  	color: #ff7900;
+  	color: var(--accent-text);
 }
 .statLabel {
   	font-size: 13px;
   	line-height: 1.4;
-  	color: #c9cad0;
+  	color: var(--text-2);
 }
 @media (max-width: 899px) {
   	.stage {
@@ -214,8 +201,12 @@
   	}
 }
 @media (prefers-reduced-motion: reduce) {
-  	.barFill {
+  	.barFill,
+  	.gaugeFill {
     		transition: none;
+  	}
+  	.flash {
+    		animation: none;
   	}
 }
 .voice {
@@ -225,17 +216,17 @@
   	gap: 8px;
   	height: 52px;
   	padding: 0 18px;
-  	border: 1px solid #3a3a3a;
-  	color: #d0d1d6;
+  	border: 1px solid var(--border-strong);
+  	color: var(--text-2);
   	font-size: 14px;
   	font-weight: 600;
 }
 .voice:hover {
-  	border-color: #ff7900;
+  	border-color: var(--accent);
 }
 .voice[aria-pressed="true"] {
-  	color: #ff7900;
-  	border-color: #ff7900;
+  	color: var(--accent-text);
+  	border-color: var(--accent);
 }
 .withDemo {
   	max-width: 1080px;
@@ -263,24 +254,24 @@
   	flex-direction: column;
   	gap: 4px;
   	padding: 10px 12px;
-  	background-color: #0b0b0b;
-  	border: 1px dashed #3a3a3a;
+  	background-color: var(--bg);
+  	border: 1px dashed var(--border-strong);
   	font-family: ui-monospace, Consolas, monospace;
   	font-size: 12px;
   	line-height: 1.4;
-  	color: #b9bac2;
+  	color: var(--text-3);
 }
 .debug p {
   	margin: 0;
 }
 .debug b {
-  	color: #fff;
+  	color: var(--text);
 }
 .checkOk {
-  	color: #3ddc84;
+  	color: var(--success-text);
 }
 .checkBad {
-  	color: #ff3b30;
+  	color: var(--danger-text);
 }
 .rest {
   	position: absolute;
@@ -301,7 +292,7 @@
   	font-weight: 800;
   	font-size: 40px;
   	text-transform: uppercase;
-  	color: #ff7900;
+  	color: var(--accent-text);
 }
 .restTime {
   	font-family: 'Barlow Condensed';
@@ -311,6 +302,467 @@
 }
 .restNext {
   	font-size: 14px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
   	margin-bottom: 8px !important;
+}
+
+/* ───────── Pantalla en vivo: lo importante se lee desde 2–3 metros ───────── */
+.pill {
+  	position: absolute;
+  	top: 14px;
+  	left: 14px;
+  	display: inline-flex;
+  	align-items: center;
+  	gap: 8px;
+  	max-width: calc(100% - 200px);
+  	margin: 0;
+  	padding: 8px 14px;
+  	border-radius: 999px;
+  	background-color: rgba(8, 8, 8, 0.78);
+  	font-size: 14px;
+  	font-weight: 600;
+  	backdrop-filter: blur(6px);
+}
+.pillDot {
+  	flex-shrink: 0;
+  	width: 10px;
+  	height: 10px;
+  	border-radius: 50%;
+  	background-color: currentColor;
+}
+.pillOk {
+  	color: var(--success-text);
+}
+.pillWarn {
+  	color: #ffb340;
+}
+.pillBad {
+  	color: var(--danger-text);
+}
+.counter {
+  	position: absolute;
+  	top: 14px;
+  	right: 14px;
+  	display: flex;
+  	flex-direction: column;
+  	align-items: flex-end;
+  	gap: 6px;
+  	padding: 12px 16px;
+  	background-color: rgba(8, 8, 8, 0.72);
+  	backdrop-filter: blur(6px);
+}
+.counterSet {
+  	font-size: 12px;
+  	letter-spacing: 0.16em;
+  	color: var(--text-2);
+}
+.counterValue {
+  	font-family: 'Barlow Condensed';
+  	font-weight: 800;
+  	font-size: clamp(56px, 8vw, 104px);
+  	line-height: 0.85;
+  	font-variant-numeric: tabular-nums;
+}
+.counterValue small {
+  	font-size: 0.36em;
+  	color: var(--text-3);
+  	margin-left: 4px;
+}
+.gauge {
+  	position: absolute;
+  	left: 14px;
+  	top: 64px;
+  	bottom: 76px;
+  	width: 14px;
+  	background-color: rgba(8, 8, 8, 0.6);
+  	border: 1px solid var(--border-strong);
+  	display: flex;
+  	align-items: flex-end;
+}
+.gaugeFill {
+  	width: 100%;
+  	background-color: var(--accent);
+  	transition: height 0.12s linear, background-color 0.2s ease;
+}
+.gaugeDone {
+  	background-color: #3ddc84;
+}
+.gaugeLabel {
+  	position: absolute;
+  	left: 22px;
+  	top: 0;
+  	font-size: 10px;
+  	letter-spacing: 0.16em;
+  	color: rgba(255, 255, 255, 0.7);
+  	writing-mode: vertical-rl;
+}
+.banner {
+  	position: absolute;
+  	left: 50%;
+  	bottom: 16px;
+  	transform: translateX(-50%);
+  	max-width: calc(100% - 140px);
+  	margin: 0;
+  	padding: 12px 18px;
+  	background-color: rgba(8, 8, 8, 0.82);
+  	border-left: 4px solid var(--accent);
+  	font-size: clamp(15px, 1.6vw, 22px);
+  	font-weight: 700;
+  	line-height: 1.3;
+  	text-align: center;
+  	backdrop-filter: blur(6px);
+}
+/* Sobre el video el fondo queda oscuro para leerse; el tono va sólo en el borde. */
+.banner.ok {
+  	border-left-color: var(--success);
+}
+.banner.warn {
+  	border-left-color: #ff3b30;
+}
+.flash {
+  	position: absolute;
+  	left: 50%;
+  	top: 42%;
+  	margin: 0;
+  	font-family: 'Barlow Condensed';
+  	font-weight: 800;
+  	font-size: clamp(56px, 10vw, 140px);
+  	line-height: 1;
+  	text-transform: uppercase;
+  	text-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+  	pointer-events: none;
+  	white-space: nowrap;
+  	animation: pop 1.5s ease-out forwards;
+}
+.flash_ok {
+  	color: var(--success-text);
+}
+.flash_warn {
+  	color: var(--danger-text);
+  	font-size: clamp(40px, 6vw, 84px);
+}
+.flash_info {
+  	color: var(--accent-text);
+  	font-size: clamp(40px, 6vw, 84px);
+}
+@keyframes pop {
+  	0% {
+    		opacity: 0;
+    		transform: translate(-50%, -50%) scale(0.6);
+  	}
+  	15% {
+    		opacity: 1;
+    		transform: translate(-50%, -50%) scale(1.08);
+  	}
+  	30% {
+    		transform: translate(-50%, -50%) scale(1);
+  	}
+  	75% {
+    		opacity: 1;
+  	}
+  	100% {
+    		opacity: 0;
+    		transform: translate(-50%, -60%) scale(1);
+  	}
+}
+.videoControls {
+  	position: absolute;
+  	right: 14px;
+  	bottom: 16px;
+  	display: flex;
+  	gap: 8px;
+}
+.videoControls button {
+  	display: grid;
+  	place-items: center;
+  	width: 44px;
+  	height: 44px;
+  	background-color: rgba(8, 8, 8, 0.78);
+  	border: 1px solid var(--border-strong);
+  	color: var(--text);
+}
+.videoControls button:hover {
+  	border-color: var(--accent);
+  	color: var(--accent-text);
+}
+/* Pantalla completa: el video ocupa todo y el panel lateral se esconde (todo lo necesario está sobre el video). */
+.stageFull {
+  	display: flex;
+  	align-items: center;
+  	justify-content: center;
+  	background-color: var(--bg);
+}
+.stageFull .panel {
+  	display: none;
+}
+.stageFull .videoWrap {
+  	width: 100%;
+  	height: 100%;
+  	display: flex;
+  	align-items: center;
+}
+.stageFull .video {
+  	height: 100%;
+  	object-fit: contain;
+}
+.stageFull .canvas {
+  	object-fit: contain;
+}
+.dots {
+  	display: flex;
+  	flex-wrap: wrap;
+  	gap: 5px;
+  	max-width: 220px;
+  	justify-content: flex-end;
+}
+.dots span {
+  	width: 9px;
+  	height: 9px;
+  	border-radius: 50%;
+}
+.dotsLarge {
+  	justify-content: flex-start;
+  	max-width: none;
+  	gap: 6px;
+}
+.dotsLarge span {
+  	width: 14px;
+  	height: 14px;
+}
+.dotOk {
+  	background-color: #3ddc84;
+}
+.dotBad {
+  	background-color: #ff3b30;
+}
+.dotEmpty {
+  	border: 1px solid var(--border-strong);
+}
+.doneSets {
+  	margin: 0;
+  	padding: 0;
+  	list-style: none;
+  	display: flex;
+  	flex-direction: column;
+  	gap: 4px;
+  	font-size: 13px;
+  	color: var(--text-3);
+}
+.tipLine {
+  	margin: 0;
+  	font-size: 13px;
+  	line-height: 1.5;
+  	color: var(--text-2);
+}
+.tipLine strong {
+  	color: var(--accent-text);
+}
+@media (max-width: 599px) {
+  	.pill {
+    		top: 10px;
+    		left: 10px;
+    		max-width: calc(100% - 130px);
+    		font-size: 12px;
+    		padding: 6px 10px;
+  	}
+  	.counter {
+    		top: 10px;
+    		right: 10px;
+    		padding: 8px 10px;
+  	}
+  	.counterValue {
+    		font-size: 48px;
+  	}
+  	.dots {
+    		display: none;
+  	}
+  	.gauge {
+    		left: 10px;
+    		top: 54px;
+    		bottom: 70px;
+    		width: 10px;
+  	}
+  	.gaugeLabel {
+    		display: none;
+  	}
+  	/* En el celular el video es chico: el mensaje va en el panel, justo debajo, y no tapa el cuerpo. */
+  	.banner {
+    		display: none;
+  	}
+  	.stageFull .banner {
+    		display: block;
+    		left: 10px;
+    		right: 10px;
+    		bottom: 64px;
+    		transform: none;
+    		max-width: none;
+    		font-size: 15px;
+  	}
+  	.videoControls {
+    		right: 10px;
+    		bottom: 10px;
+  	}
+}
+
+/* ───────── Preparación ───────── */
+.config {
+  	display: grid;
+  	grid-template-columns: repeat(3, minmax(0, 1fr));
+  	gap: 10px;
+}
+.stepper {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 8px;
+  	padding: 12px;
+  	border: 1px solid var(--border);
+  	background-color: var(--bg);
+}
+.stepperLabel {
+  	font-size: 11px;
+  	letter-spacing: 0.14em;
+  	text-transform: uppercase;
+  	color: var(--text-3);
+}
+.stepperControls {
+  	display: flex;
+  	align-items: center;
+  	justify-content: space-between;
+  	gap: 6px;
+}
+.stepperControls button {
+  	display: grid;
+  	place-items: center;
+  	width: 34px;
+  	height: 34px;
+  	border: 1px solid var(--border-strong);
+  	color: var(--text);
+}
+.stepperControls button:hover:not(:disabled) {
+  	border-color: var(--accent);
+  	color: var(--accent-text);
+}
+.stepperControls button:disabled {
+  	opacity: 0.35;
+  	cursor: not-allowed;
+}
+.stepperControls output {
+  	font-family: 'Barlow Condensed';
+  	font-weight: 800;
+  	font-size: 34px;
+  	line-height: 1;
+  	font-variant-numeric: tabular-nums;
+}
+.stepperControls output small {
+  	font-size: 0.5em;
+  	color: var(--text-3);
+  	margin-left: 2px;
+}
+.configNote {
+  	grid-column: 1 / -1;
+  	margin: 0;
+  	font-size: 13px;
+  	color: var(--text-3);
+}
+.checklist {
+  	margin: 0;
+  	padding: 0;
+  	list-style: none;
+  	display: flex;
+  	flex-direction: column;
+  	gap: 10px;
+  	font-size: 14px;
+  	line-height: 1.5;
+  	color: var(--text-2);
+}
+.checklist li {
+  	display: grid;
+  	grid-template-columns: 96px minmax(0, 1fr);
+  	gap: 12px;
+}
+.checklist strong {
+  	font-size: 11px;
+  	letter-spacing: 0.14em;
+  	text-transform: uppercase;
+  	color: var(--accent-text);
+  	padding-top: 3px;
+}
+@media (max-width: 479px) {
+  	.config {
+    		grid-template-columns: minmax(0, 1fr);
+    		gap: 8px;
+  	}
+  	.stepper {
+    		flex-direction: row;
+    		align-items: center;
+    		justify-content: space-between;
+    		padding: 8px 12px;
+  	}
+  	.stepperControls {
+    		gap: 14px;
+  	}
+  	.stepperControls output {
+    		min-width: 52px;
+    		text-align: center;
+    		font-size: 28px;
+  	}
+  	.checklist li {
+    		grid-template-columns: minmax(0, 1fr);
+    		gap: 2px;
+  	}
+}
+
+/* ───────── Resumen ───────── */
+.summaryCard {
+  	max-width: 860px;
+}
+.setList {
+  	margin: 0;
+  	padding: 0;
+  	list-style: none;
+  	display: flex;
+  	flex-direction: column;
+  	border-top: 1px solid var(--border);
+}
+.setList li {
+  	display: flex;
+  	flex-wrap: wrap;
+  	align-items: center;
+  	gap: 8px 16px;
+  	padding: 12px 0;
+  	border-bottom: 1px solid var(--border);
+}
+.setName {
+  	min-width: 72px;
+  	font-family: 'Barlow Condensed';
+  	font-weight: 800;
+  	font-size: 20px;
+  	text-transform: uppercase;
+}
+.setList .dots {
+  	justify-content: flex-start;
+  	max-width: 320px;
+}
+.setNumbers {
+  	margin-left: auto;
+  	font-size: 13px;
+  	color: var(--text-3);
+}
+.lesson,
+.saved {
+  	margin: 0;
+  	font-size: 14px;
+  	line-height: 1.55;
+  	color: var(--text-2);
+}
+.lesson {
+  	padding: 12px 14px;
+  	border-left: 4px solid var(--accent);
+  	background-color: var(--accent-soft);
+}
+.lesson strong {
+  	color: var(--accent-text);
+}
+.saved {
+  	color: var(--text-3);
 }

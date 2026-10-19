@@ -72,12 +72,12 @@ export default function AdminMerchants() {
                 <td>
                   <strong>{merchant.name}</strong>
                   <br />
-                  <small style={{ color: '#8a8c94' }}>{[merchant.city, merchant.description].filter(Boolean).join(' · ') || '—'}</small>
+                  <small style={{ color: 'var(--text-3)' }}>{[merchant.city, merchant.description].filter(Boolean).join(' · ') || '—'}</small>
                 </td>
                 <td>
                   {merchant.owner?.full_name || '—'}
                   <br />
-                  <small style={{ color: '#8a8c94' }}>{merchant.owner?.email}</small>
+                  <small style={{ color: 'var(--text-3)' }}>{merchant.owner?.email}</small>
                 </td>
                 <td>
                   <small>
@@ -92,7 +92,7 @@ export default function AdminMerchants() {
                   {merchant.rejection_reason ? (
                     <>
                       <br />
-                      <small style={{ color: '#8a8c94' }}>{merchant.rejection_reason}</small>
+                      <small style={{ color: 'var(--text-3)' }}>{merchant.rejection_reason}</small>
                     </>
                   ) : null}
                 </td>

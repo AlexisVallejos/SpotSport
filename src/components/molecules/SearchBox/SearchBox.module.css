@@ -9,18 +9,18 @@
   	padding: 0 8px 0 14px;
   	flex-shrink: 0;
   	border-radius: 999px;
-  	background-color: rgba(255, 255, 255, 0.07);
-  	border: 1px solid rgba(255, 255, 255, 0.08);
+  	background-color: var(--hover);
+  	border: 1px solid var(--border);
   	backdrop-filter: blur(12px);
   	font-size: 12px;
-  	color: #a7a9b2;
+  	color: var(--text-3);
   	text-align: left;
   	transition: background-color 0.2s, border-color 0.2s, transform 0.1s ease-out;
 }
 .search:hover {
-  	background-color: rgba(255, 255, 255, 0.11);
-  	border-color: rgba(255, 121, 0, 0.5);
-  	color: #fff;
+  	background-color: var(--hover-strong);
+  	border-color: var(--accent-line);
+  	color: var(--text);
 }
 .search:active {
   	transform: scale(0.98);
@@ -34,10 +34,10 @@
 }
 .kbd {
   	padding: 2px 7px;
-  	border: 1px solid rgba(255, 255, 255, 0.14);
+  	border: 1px solid var(--border-strong);
   	border-radius: 6px;
   	font: 600 10px Inter, sans-serif;
-  	color: #9a9ca5;
+  	color: var(--text-3);
 }
 @media (max-width: 1099px) {
   	.search {

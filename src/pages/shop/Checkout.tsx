@@ -96,11 +96,11 @@ export default function Checkout() {
         <Card title="Tu pedido" className={styles.summary}>
           {cart.groups.map((group) => (
             <div key={group.merchantId} style={{ marginBottom: 12 }}>
-              <strong style={{ fontSize: 13, color: '#ff7900' }}>{group.merchantName}</strong>
+              <strong style={{ fontSize: 13, color: 'var(--accent-text)' }}>{group.merchantName}</strong>
               {group.lines.map((line) => (
                 <div key={line.variantId} className={styles.sumRow}>
                   <span>
-                    {line.quantity} × {line.name} <small style={{ color: '#8a8c94' }}>{line.variantLabel}</small>
+                    {line.quantity} × {line.name} <small style={{ color: 'var(--text-3)' }}>{line.variantLabel}</small>
                   </span>
                   <span>{formatPrice(line.priceCents * line.quantity)}</span>
                 </div>

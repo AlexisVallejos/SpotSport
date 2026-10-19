@@ -54,7 +54,7 @@ export default function Orders() {
                 <strong>{formatPrice(checkout.totalCents)}</strong>
               </div>
               {checkout.orders.map((order) => (
-                <div key={order.id} style={{ borderTop: '1px solid #1f1f1f', paddingTop: 12, marginTop: 12 }}>
+                <div key={order.id} style={{ borderTop: '1px solid var(--border)', paddingTop: 12, marginTop: 12 }}>
                   <div className={styles.orderHead}>
                     <span>
                       <strong>{order.merchant?.name ?? 'Comercio'}</strong> · {PAYMENT_METHOD_LABEL[order.payment_method]}
@@ -67,7 +67,7 @@ export default function Orders() {
                   {(order.items ?? []).map((item) => (
                     <div key={item.id} className={styles.orderItem}>
                       <span>
-                        {item.quantity} × {item.product_name} {item.variant_label ? <small style={{ color: '#8a8c94' }}>{item.variant_label}</small> : null}
+                        {item.quantity} × {item.product_name} {item.variant_label ? <small style={{ color: 'var(--text-3)' }}>{item.variant_label}</small> : null}
                       </span>
                       <span>{formatPrice(item.line_total_cents)}</span>
                     </div>

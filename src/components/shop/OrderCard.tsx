@@ -11,7 +11,7 @@ export default function OrderCard({ order, actions, showCustomer }: { order: Ord
       <div className={styles.orderHead}>
         <span>
           <strong>Pedido del {formatDate(order.created_at)}</strong>
-          {order.merchant ? <span style={{ color: '#a7a9b2' }}> · {order.merchant.name}</span> : null}
+          {order.merchant ? <span style={{ color: 'var(--text-3)' }}> · {order.merchant.name}</span> : null}
         </span>
         <span style={{ display: 'flex', gap: 6 }}>
           <Badge tone={order.status === 'delivered' ? 'ok' : order.status === 'cancelled' ? 'bad' : 'warn'}>{ORDER_STATUS_LABEL[order.status]}</Badge>
@@ -22,7 +22,7 @@ export default function OrderCard({ order, actions, showCustomer }: { order: Ord
       {(order.items ?? []).map((item) => (
         <div key={item.id} className={styles.orderItem}>
           <span>
-            {item.quantity} × {item.product_name} {item.variant_label ? <small style={{ color: '#8a8c94' }}>{item.variant_label}</small> : null}
+            {item.quantity} × {item.product_name} {item.variant_label ? <small style={{ color: 'var(--text-3)' }}>{item.variant_label}</small> : null}
           </span>
           <span>{formatPrice(item.line_total_cents)}</span>
         </div>
@@ -33,7 +33,7 @@ export default function OrderCard({ order, actions, showCustomer }: { order: Ord
         <span>{formatPrice(order.total_cents)}</span>
       </div>
 
-      <div style={{ fontSize: 13, color: '#a7a9b2', display: 'grid', gap: 2, marginTop: 6 }}>
+      <div style={{ fontSize: 13, color: 'var(--text-3)', display: 'grid', gap: 2, marginTop: 6 }}>
         <span>{PAYMENT_METHOD_LABEL[order.payment_method]}</span>
         <span>
           Entrega: {order.shipping_name} · {order.shipping_phone}
