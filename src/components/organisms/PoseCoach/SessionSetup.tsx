@@ -1,6 +1,7 @@
 import { FunctionComponent, ReactNode } from 'react';
 import { Minus, Plus } from 'lucide-react';
 import { Icon } from '../../atoms';
+import ExerciseVideo from '../../molecules/ExerciseVideo/ExerciseVideo';
 import ExerciseDemo from '../ExerciseDemo/ExerciseDemo';
 import type { PoseRule } from '../../../lib/pose/rules';
 import { LIMITS, targetRange, type SessionConfig } from '../../../lib/pose/session';
@@ -48,6 +49,11 @@ const SessionSetup: FunctionComponent<SessionSetupProps> = ({ exercise, rule, co
   const range = rule ? targetRange(rule) : null;
   return (
     <section className={`${styles.card} ${rule ? styles.withDemo : ''}`} aria-labelledby="coach-titulo">
+      {rule ? (
+        <div className={styles.setupBg} aria-hidden="true">
+          <ExerciseVideo id={rule.id} />
+        </div>
+      ) : null}
       {rule ? (
         <div className={styles.demoSlot}>
           <ExerciseDemo rule={rule} />

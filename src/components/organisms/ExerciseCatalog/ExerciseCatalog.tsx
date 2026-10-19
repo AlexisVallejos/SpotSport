@@ -3,6 +3,7 @@ import { ArrowRight, Camera, Flame, Mic, ShieldCheck, Target } from 'lucide-reac
 import { Icon } from '../../atoms';
 import { ExerciseCard } from '../../molecules';
 // Directo y no desde el barrel: así las figuras quedan fuera del bundle de la landing.
+import ExerciseVideo from '../../molecules/ExerciseVideo/ExerciseVideo';
 import PoseFigure from '../../molecules/PoseFigure/PoseFigure';
 import { TRAINING_PHOTOS } from '../../../data/trainingPhotos';
 import { LOCAL_EXERCISES } from '../../../lib/exercises/local';
@@ -124,9 +125,9 @@ const ExerciseCatalog: FunctionComponent<ExerciseCatalogProps> = ({ onStart }) =
           </ul>
         </div>
         <div className={styles.heroArt} aria-hidden="true">
-          <img src={TRAINING_PHOTOS.squat.src} alt="" style={{ objectPosition: TRAINING_PHOTOS.squat.position }} />
+          <ExerciseVideo id="squat" />
           <div className={styles.heroFigure}>
-            <PoseFigure id="squat" />
+            <img src={TRAINING_PHOTOS.squat.src} alt="" style={{ objectPosition: TRAINING_PHOTOS.squat.position }} />
           </div>
           <span className={`${styles.floating} ${styles.floatingAngle}`}>92° · profundidad ✓</span>
           <span className={`${styles.floating} ${styles.floatingCount}`}>
@@ -190,10 +191,10 @@ const ExerciseCatalog: FunctionComponent<ExerciseCatalogProps> = ({ onStart }) =
               <li key={exercise.id}>
                 <button type="button" className={styles.feature} onClick={() => onStart(exercise)}>
                   <span className={styles.featurePhoto}>
-                    <img src={photo.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: photo.position }} />
+                    <ExerciseVideo id={rule.id} />
                   </span>
                   <span className={styles.featureFigure} aria-hidden="true">
-                    <PoseFigure id={rule.id} />
+                    <img src={photo.src} alt="" loading="lazy" decoding="async" style={{ objectPosition: photo.position }} />
                   </span>
                   <span className={styles.featureTag}>{rule.mode === 'reps' ? `${config.sets} × ${config.target} reps` : `${config.sets} × ${config.target} s`}</span>
                   <span className={styles.featureBody}>

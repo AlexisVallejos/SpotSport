@@ -126,10 +126,14 @@
   	z-index: 1;
   	width: 24%;
   	aspect-ratio: 1;
-  	padding: 8px;
-  	background-color: var(--glass);
-  	border: 1px solid var(--glass-border);
-  	backdrop-filter: blur(8px);
+  	overflow: hidden;
+  	border: 3px solid var(--accent);
+}
+.heroFigure img,
+.featureFigure img {
+  	width: 100%;
+  	height: 100%;
+  	object-fit: cover;
 }
 .floating {
   	position: absolute;
@@ -331,25 +335,22 @@
   	overflow: hidden;
   	background-color: var(--surface-2);
 }
-.featurePhoto img {
-  	width: 100%;
-  	height: 100%;
-  	object-fit: cover;
+.featurePhoto video {
   	transition: transform 0.5s ease;
 }
-.feature:hover .featurePhoto img {
+.feature:hover .featurePhoto video {
   	transform: scale(1.05);
 }
 .featureFigure {
   	position: absolute;
   	right: 10px;
   	top: 10px;
-  	width: 74px;
-  	height: 74px;
-  	padding: 6px;
-  	background-color: var(--glass);
-  	border: 1px solid var(--glass-border);
-  	backdrop-filter: blur(8px);
+  	width: 64px;
+  	height: 64px;
+  	overflow: hidden;
+  	border-radius: 50%;
+  	border: 2px solid #fff;
+  	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
 .featureTag {
   	position: absolute;
@@ -573,7 +574,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   	.feature,
-  	.featurePhoto img,
+  	.featurePhoto video,
   	.ringFill {
     		transition: none;
   	}

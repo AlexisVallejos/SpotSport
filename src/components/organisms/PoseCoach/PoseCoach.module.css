@@ -87,6 +87,8 @@
 }
 .videoWrap {
   	position: relative;
+  	/* Es .theme-dark: el color de texto se vuelve a leer acá, si no se hereda el del tema claro. */
+  	color: var(--text);
   	background-color: var(--bg);
   	min-height: 240px;
 }
@@ -765,4 +767,83 @@
 }
 .saved {
   	color: var(--text-3);
+}
+
+/* Video de técnica detrás de la preparación: tenue, para no competir con el texto. */
+.card {
+  	position: relative;
+  	overflow: hidden;
+}
+.setupBg {
+  	position: absolute;
+  	inset: 0;
+  	z-index: 0;
+  	opacity: 0.6;
+  	pointer-events: none;
+}
+.setupBg::after {
+  	content: '';
+  	position: absolute;
+  	inset: 0;
+  	background: linear-gradient(90deg, transparent 0%, color-mix(in srgb, var(--surface) 50%, transparent) 38%, var(--surface) 56%);
+}
+.demoSlot,
+.setupText {
+  	position: relative;
+  	z-index: 1;
+}
+
+/* Miniatura "así se hace" sobre el video en vivo. */
+.technique {
+  	position: absolute;
+  	left: 40px;
+  	bottom: 80px;
+  	width: clamp(150px, 22%, 260px);
+  	border: 2px solid var(--accent);
+  	background-color: #0b0b0b;
+  	box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+  	animation: techniqueIn 0.25s ease-out;
+}
+.technique video {
+  	aspect-ratio: 16 / 9;
+  	height: auto;
+}
+.technique p {
+  	margin: 0;
+  	padding: 8px 10px;
+  	font-size: 12px;
+  	line-height: 1.35;
+  	color: #e6e7ec;
+}
+.technique strong {
+  	display: block;
+  	margin-bottom: 2px;
+  	font-size: 11px;
+  	letter-spacing: 0.14em;
+  	color: #ff9d57;
+}
+.videoControls button[aria-pressed='true'] {
+  	border-color: var(--accent);
+  	color: var(--accent-text);
+}
+@keyframes techniqueIn {
+  	from {
+    		opacity: 0;
+    		transform: translateY(8px);
+  	}
+}
+@media (max-width: 599px) {
+  	.technique {
+    		left: 26px;
+    		bottom: 64px;
+    		width: 130px;
+  	}
+  	.technique p {
+    		display: none;
+  	}
+}
+@media (prefers-reduced-motion: reduce) {
+  	.technique {
+    		animation: none;
+  	}
 }

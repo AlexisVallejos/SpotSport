@@ -1,6 +1,8 @@
 import { FunctionComponent, useCallback, useEffect, useRef, useState } from 'react';
 import type { PoseLandmarker } from '@mediapipe/tasks-vision';
-import { Maximize, Minimize, Pause, Play } from 'lucide-react';
+import { Clapperboard, Maximize, Minimize, Pause, Play } from 'lucide-react';
+import ExerciseVideo from '../../molecules/ExerciseVideo/ExerciseVideo';
+import { cuesFor } from '../../../lib/pose/demo';
 import { Icon } from '../../atoms';
 import { measure, type Reading } from '../../../lib/pose/debug';
 import { createTracker, isSetDone, type Tracker, type TrackerState } from '../../../lib/pose/engine';
@@ -115,6 +117,9 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule: baseRule
   const [fullscreen, setFullscreen] = useState(false);
   const [voiceOn, setVoiceOn] = useState(voiceOnRef.current);
   const [stats, setStats] = useState<Activity | null>(null);
+  // Miniatura de la técnica correcta: aparece un rato cada vez que algo sale mal, o fija si la persona la pide.
+  const [techniquePinned, setTechniquePinned] = useState(false);
+  const [techniqueFlash, setTechniqueFlash] = useState(false);
   // Live numbers for calibrating: the Datos button, or ?debug in the address.
   const debugRef = useRef(typeof location !== 'undefined' && /[?&]debug/.test(location.href));
   const [debugOn, setDebugOn] = useState(debugRef.current);
@@ -192,6 +197,14 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule: baseRule
     document.addEventListener('fullscreenchange', onChange);
     return () => document.removeEventListener('fullscreenchange', onChange);
   }, []);
+
+  const warning = phase === 'live' && live?.status === 'active' && live.tone === 'warn';
+  useEffect(() => {
+    if (!warning) return;
+    setTechniqueFlash(true);
+    const timer = window.setTimeout(() => setTechniqueFlash(false), 5000);
+    return () => window.clearTimeout(timer);
+  }, [warning, live?.message]);
 
   const showFlash = useCallback((text: string, tone: Flash['tone']) => setFlash({ key: performance.now(), text, tone }), []);
 
@@ -592,7 +605,22 @@ const PoseCoach: FunctionComponent<PoseCoachProps> = ({ exercise, rule: baseRule
           </div>
         ) : null}
 
+        {baseRule && (techniquePinned || techniqueFlash) && restLeft === 0 && !paused ? (
+          <div className={styles.technique}>
+            <ExerciseVideo id={baseRule.id} />
+            <p>
+              <strong>ASÍ SE HACE</strong>
+              {cuesFor(baseRule.id).peak}
+            </p>
+          </div>
+        ) : null}
+
         <div className={styles.videoControls}>
+          {baseRule ? (
+            <button type="button" onClick={() => setTechniquePinned((on) => !on)} aria-pressed={techniquePinned} aria-label="Ver la técnica correcta" title="Ver la técnica correcta">
+              <Clapperboard size={20} aria-hidden="true" />
+            </button>
+          ) : null}
           {rule ? (
             <button type="button" onClick={togglePause} aria-label={paused ? 'Seguir' : 'Pausar'} title={paused ? 'Seguir' : 'Pausar'}>
               {paused ? <Play size={20} aria-hidden="true" /> : <Pause size={20} aria-hidden="true" />}
