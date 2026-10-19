@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { listAnnouncements } from '../../lib/api/shop';
-import { isConfigured } from '../../lib/supabase';
+import { isConfigured } from '../../lib/supabaseConfig';
 import type { Announcement } from '../../lib/types';
 import styles from './AnnouncementBar.module.css';
 

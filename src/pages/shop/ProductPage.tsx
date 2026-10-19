@@ -6,7 +6,7 @@ import { useCart } from '../../context/CartContext';
 import { getProduct } from '../../lib/api/shop';
 import { options, variantLabel } from '../../lib/catalog';
 import { formatPrice } from '../../lib/money';
-import { isConfigured } from '../../lib/supabase';
+import { isConfigured } from '../../lib/supabaseConfig';
 import { useAsync } from '../../lib/useAsync';
 import styles from '../pages.module.css';
 
@@ -48,6 +48,9 @@ export default function ProductPage() {
   }
 
   const selected = variants.find((variant) => variant.size === size && variant.color === color);
+  // Al cambiar a una variante con menos stock, la cantidad elegida no puede quedar por encima.
+  const maxQuantity = selected ? Math.max(1, Math.min(selected.stock, 99)) : 1;
+  if (quantity > maxQuantity) setQuantity(maxQuantity);
   const hasStock = (candidate: { size?: string; color?: string }) =>
     variants.some((variant) => variant.stock > 0 && (candidate.size === undefined || variant.size === candidate.size) && (candidate.color === undefined || variant.color === candidate.color));
   const lowStock = selected && selected.stock > 0 && selected.stock <= 3;

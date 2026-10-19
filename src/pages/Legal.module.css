@@ -87,3 +87,22 @@
   line-height: 1.65;
   color: var(--text-2);
 }
+
+/* Celular: la barra no entra en una línea (links + tema); se achica en vez de desbordar. */
+@media (max-width: 480px) {
+  .bar {
+    gap: 12px;
+    padding-inline: 16px;
+  }
+  .links {
+    gap: 12px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+}
+/* Pantallas muy angostas (320 px): quedan "volver" y el tema; las dos secciones están una debajo de la otra. */
+@media (max-width: 400px) {
+  .links a {
+    display: none;
+  }
+}

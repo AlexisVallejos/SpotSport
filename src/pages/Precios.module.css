@@ -452,3 +452,18 @@
     transform: none;
   }
 }
+
+/* 320–360 px: la barra (volver, tema, favoritos) no entraba y la página scrolleaba de costado. */
+@media (max-width: 360px) {
+  .bar {
+    gap: 8px;
+    padding-inline: 12px;
+  }
+  .barLinks {
+    gap: 8px;
+  }
+  .favorites,
+  .favoritesOn {
+    padding: 0 10px;
+  }
+}

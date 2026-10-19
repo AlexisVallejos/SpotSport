@@ -4,9 +4,9 @@ import NotConfigured from '../../components/layout/NotConfigured';
 import LocalCard from '../../components/shop/LocalCard';
 import ProductCard from '../../components/shop/ProductCard';
 import { Empty, Loading, Notice, PageTitle } from '../../components/ui';
-import { listCategories, listProducts } from '../../lib/api/shop';
+import { cachedCategories, listProducts } from '../../lib/api/shop';
 import { preciosLink, searchProducts, type SearchQuery } from '../../lib/precios';
-import { isConfigured } from '../../lib/supabase';
+import { isConfigured } from '../../lib/supabaseConfig';
 import { useAsync } from '../../lib/useAsync';
 import styles from '../pages.module.css';
 
@@ -29,11 +29,13 @@ export default function Shop() {
 
   useEffect(() => setDraft(q), [q]);
 
-  const categories = useAsync(() => (isConfigured ? listCategories() : Promise.resolve([])), []);
+  const categories = useAsync(() => (isConfigured ? cachedCategories() : Promise.resolve([])), []);
   const categoryId = useMemo(() => categories.data?.find((category) => category.slug === categorySlug)?.id, [categories.data, categorySlug]);
+  // Con una categoría en la URL se espera a conocer su id: si no, se pedían todos los productos y después los filtrados.
+  const waitingCategory = Boolean(categorySlug) && categories.loading;
   const products = useAsync(
-    () => (isConfigured ? listProducts({ q, categoryId, merchantId: merchantId || undefined }) : Promise.resolve([])),
-    [q, categoryId, merchantId, categories.loading],
+    () => (isConfigured && !waitingCategory ? listProducts({ q, categoryId, merchantId: merchantId || undefined }) : Promise.resolve(null)),
+    [q, categoryId, merchantId, waitingCategory],
   );
 
   const localQuery = useMemo<SearchQuery>(() => ({ q, ...LOCAL_FILTERS[categorySlug] }), [q, categorySlug]);
@@ -87,7 +89,7 @@ export default function Shop() {
       </div>
 
       {products.error ? <Notice tone="error">{products.error}</Notice> : null}
-      {products.loading ? (
+      {products.loading || waitingCategory ? (
         <Loading label="Buscando productos…" />
       ) : (products.data ?? []).length > 0 ? (
         <div className={styles.productGrid}>

@@ -1,7 +1,7 @@
 import { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { listAnnouncements, listProducts } from '../../../lib/api/shop';
-import { isConfigured } from '../../../lib/supabase';
+import { isConfigured } from '../../../lib/supabaseConfig';
 import type { Announcement, Product } from '../../../lib/types';
 import ProductCard from '../../shop/ProductCard';
 import styles from './FeaturedProducts.module.css';

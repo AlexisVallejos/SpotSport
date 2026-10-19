@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button, ButtonLink, Card, Empty, PageTitle } from '../../components/ui';
 import { useCart } from '../../context/CartContext';
+import { MAX_PER_LINE } from '../../lib/cart';
 import { formatPrice } from '../../lib/money';
 import styles from '../pages.module.css';
 
@@ -40,7 +41,7 @@ export default function CartPage() {
                         −
                       </button>
                       <span>{line.quantity}</span>
-                      <button type="button" onClick={() => cart.setQuantity(line.variantId, line.quantity + 1)} disabled={line.quantity >= line.maxStock} aria-label="Más">
+                      <button type="button" onClick={() => cart.setQuantity(line.variantId, line.quantity + 1)} disabled={line.quantity >= Math.min(line.maxStock, MAX_PER_LINE)} aria-label="Más">
                         +
                       </button>
                     </div>

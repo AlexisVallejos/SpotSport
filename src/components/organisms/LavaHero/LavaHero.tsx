@@ -155,7 +155,9 @@ const LavaHero = () => {
             muted
             loop
             playsInline
-            preload="auto"
+            // Mientras corre la intro (primera visita) sólo metadatos: así la intro no compite por la conexión.
+            // Al terminar, play() descarga el resto.
+            preload={document.documentElement.dataset.introDone === 'true' ? 'auto' : 'metadata'}
             aria-hidden="true"
           />
         )}

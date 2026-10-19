@@ -1,13 +1,15 @@
+/* WOFF2 recortado a latín (incluye extendido) y símbolos con pyftsubset: Inter pasa de 856 KB a 150 KB.
+   Los .ttf originales quedan en public/fonts como fuente para volver a generarlos. */
 @font-face {
   	font-family: 'Barlow Condensed';
-  	src: url('/fonts/BarlowCondensed-ExtraBold.ttf') format('truetype');
+  	src: url('/fonts/BarlowCondensed-ExtraBold.woff2') format('woff2');
   	font-weight: 800;
   	font-style: normal;
   	font-display: swap;
 }
 @font-face {
   	font-family: 'Inter';
-  	src: url('/fonts/Inter-Variable.ttf') format('truetype');
+  	src: url('/fonts/Inter-Variable.woff2') format('woff2');
   	font-weight: 100 900;
   	font-style: normal;
   	font-display: swap;

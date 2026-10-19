@@ -7,7 +7,8 @@ import styles from '../pages.module.css';
 
 /** Solo se vuelve a rutas internas: nunca a un sitio externo. */
 export function safeNext(value: string | null, fallback = '/cuenta'): string {
-  return value && value.startsWith('/') && !value.startsWith('//') ? value : fallback;
+  // "/\\sitio.com" el navegador lo lee como "//sitio.com": también se descarta.
+  return value && value.startsWith('/') && !value.startsWith('//') && !value.includes('\\') ? value : fallback;
 }
 
 export default function Login() {

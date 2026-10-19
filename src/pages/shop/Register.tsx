@@ -11,6 +11,7 @@ export default function Register() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const next = safeNext(params.get('next'));
+  const loginLink = `/login${params.get('next') ? `?next=${encodeURIComponent(next)}` : ''}`;
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -45,7 +46,7 @@ export default function Register() {
         <Card title="Revisá tu email">
           <Notice tone="ok">Te enviamos un enlace a {email}. Confirmá tu cuenta y después ingresá.</Notice>
           <p className={styles.alt}>
-            <Link to="/login">Ir a ingresar</Link>
+            <Link to={loginLink}>Ir a ingresar</Link>
           </p>
         </Card>
       </div>
@@ -65,7 +66,7 @@ export default function Register() {
             {busy ? 'Creando…' : 'Crear cuenta'}
           </Button>
           <p className={styles.alt}>
-            ¿Ya tenés cuenta? <Link to="/login">Ingresá</Link>
+            ¿Ya tenés cuenta? <Link to={loginLink}>Ingresá</Link>
           </p>
         </form>
       </Card>

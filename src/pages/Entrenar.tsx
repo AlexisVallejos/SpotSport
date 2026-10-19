@@ -1,4 +1,5 @@
 import { FunctionComponent, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Icon } from '../components/atoms';
 // Directo y no desde el barrel: así MediaPipe queda fuera del bundle de la landing.
 import ExerciseCatalog from '../components/organisms/ExerciseCatalog/ExerciseCatalog';
@@ -26,9 +27,9 @@ const Entrenar: FunctionComponent = () => {
     // Cámara y demo 3D se leen mejor sobre oscuro: esta página queda oscura en los dos temas.
     <div className={`${styles.page} theme-dark`}>
       <header className={styles.bar}>
-        <a href="#inicio" className={styles.back}>
+        <Link to="/" className={styles.back}>
           <Icon name="arrowLeft" size={18} /> SPOT
-        </a>
+        </Link>
         <span className={styles.section}>Entrená con cámara</span>
       </header>
       <main className={styles.main}>

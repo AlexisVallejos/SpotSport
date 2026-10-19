@@ -20,6 +20,11 @@ export default function ShopLayout() {
     menu.current?.removeAttribute('open');
   }, [location.pathname]);
 
+  // El buscador muestra lo que se está buscando en /tienda?q=… (y se vacía al salir de la tienda).
+  useEffect(() => {
+    setQuery(location.pathname === '/tienda' ? (new URLSearchParams(location.search).get('q') ?? '') : '');
+  }, [location.pathname, location.search]);
+
   const search = (event: FormEvent) => {
     event.preventDefault();
     navigate(query.trim() ? `/tienda?q=${encodeURIComponent(query.trim())}` : '/tienda');
@@ -37,6 +42,7 @@ export default function ShopLayout() {
         </Link>
         <nav className={styles.links} aria-label="Principal">
           <NavLink to="/tienda">Tienda</NavLink>
+          <NavLink to="/precios">Precios</NavLink>
           <NavLink to="/entrenar">Entrenar</NavLink>
         </nav>
         <form className={styles.search} role="search" onSubmit={search}>

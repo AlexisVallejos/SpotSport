@@ -1,6 +1,7 @@
 import type { Session } from '@supabase/supabase-js';
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { isConfigured, supabase } from '../lib/supabase';
+import { getSupabase } from '../lib/supabaseClient';
+import { isConfigured } from '../lib/supabaseConfig';
 import type { Merchant, Profile } from '../lib/types';
 
 type AuthValue = {
@@ -35,6 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setMerchant(null);
       return;
     }
+    const supabase = await getSupabase();
     const [profileResult, merchantResult] = await Promise.all([
       supabase.from('profiles').select('*').eq('id', userId).maybeSingle(),
       supabase.from('merchants').select('*').eq('owner_id', userId).maybeSingle(),
@@ -46,22 +48,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!isConfigured) return;
     let alive = true;
-    supabase.auth.getSession().then(async ({ data }) => {
+    let unsubscribe = () => {};
+    // El cliente se descarga aparte: la página se dibuja sin esperarlo.
+    void getSupabase().then((supabase) => {
       if (!alive) return;
-      setSession(data.session);
-      await load(data.session?.user.id ?? null);
-      if (alive) setLoading(false);
-    });
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, next) => {
-      setSession(next);
-      // Se difiere para no hacer consultas dentro del callback de autenticación.
-      setTimeout(() => {
-        if (alive) void load(next?.user.id ?? null);
-      }, 0);
+      supabase.auth.getSession().then(async ({ data }) => {
+        if (!alive) return;
+        setSession(data.session);
+        await load(data.session?.user.id ?? null);
+        if (alive) setLoading(false);
+      });
+      const { data: subscription } = supabase.auth.onAuthStateChange((_event, next) => {
+        setSession(next);
+        // Se difiere para no hacer consultas dentro del callback de autenticación.
+        setTimeout(() => {
+          if (alive) void load(next?.user.id ?? null);
+        }, 0);
+      });
+      unsubscribe = () => subscription.subscription.unsubscribe();
     });
     return () => {
       alive = false;
-      subscription.subscription.unsubscribe();
+      unsubscribe();
     };
   }, [load]);
 
@@ -75,15 +83,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAdmin: profile?.is_admin ?? false,
       isMerchant: merchant?.status === 'approved',
       signIn: async (email, password) => {
-        const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
+        const supabase = await getSupabase();
+        const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error) throw new Error(/invalid login/i.test(error.message) ? 'Email o contraseña incorrectos.' : /not confirmed/i.test(error.message) ? 'Confirmá tu email desde el enlace que te enviamos.' : error.message);
+        // Perfil y comercio antes de volver: si no, /admin o /comercio rebotan por falta de permisos.
+        setSession(data.session);
+        await load(data.user?.id ?? null);
       },
       signUp: async (email, password, fullName) => {
+        const supabase = await getSupabase();
         const { data, error } = await supabase.auth.signUp({ email: email.trim(), password, options: { data: { full_name: fullName.trim() } } });
         if (error) throw new Error(/already registered/i.test(error.message) ? 'Ese email ya tiene una cuenta. Probá iniciar sesión.' : /password/i.test(error.message) ? 'La contraseña debe tener al menos 6 caracteres.' : error.message);
+        if (data.session) {
+          setSession(data.session);
+          await load(data.user?.id ?? null);
+        }
         return { needsConfirmation: !data.session };
       },
       signOut: async () => {
+        const supabase = await getSupabase();
         await supabase.auth.signOut();
       },
       refresh: async () => {
