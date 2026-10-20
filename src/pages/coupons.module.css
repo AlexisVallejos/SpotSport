@@ -1,120 +1,8 @@
-/* Cupones y vouchers: tarjeta tipo ticket, con el mismo lenguaje de la tienda (ángulos rectos, acento naranja). */
+/* Cupones: grilla de tickets, formularios del comercio, estadísticas y comisión. El ticket vive en components/shop/Ticket. */
 .grid {
   	display: grid;
-  	grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  	gap: 16px;
-}
-
-.ticket {
-  	position: relative;
-  	display: flex;
-  	flex-direction: column;
-  	background-color: var(--card);
-  	border: 1px solid var(--card-border);
-  	color: var(--card-text);
-}
-.ticketTop {
-  	display: flex;
-  	flex-direction: column;
-  	gap: 8px;
-  	padding: 20px 20px 18px;
-}
-.merchant {
-  	margin: 0;
-  	font-size: 12px;
-  	letter-spacing: 0.08em;
-  	text-transform: uppercase;
-  	color: var(--card-text-2);
-}
-.discount {
-  	margin: 0;
-  	font-size: 34px;
-  	line-height: 1;
-  	font-weight: 800;
-  	letter-spacing: -0.02em;
-  	color: var(--accent-text);
-}
-.title {
-  	margin: 0;
-  	font-size: 17px;
-  	font-weight: 700;
-}
-.desc {
-  	margin: 0;
-  	font-size: 14px;
-  	color: var(--card-text-2);
-}
-
-/* Línea punteada con muescas, como un cupón recortable. */
-.cut {
-  	position: relative;
-  	height: 0;
-  	border-top: 2px dashed var(--card-divider);
-  	margin: 0 14px;
-}
-.cut::before,
-.cut::after {
-  	content: '';
-  	position: absolute;
-  	top: -11px;
-  	width: 20px;
-  	height: 20px;
-  	border-radius: 50%;
-  	background-color: var(--bg);
-  	border: 1px solid var(--card-border);
-}
-.cut::before {
-  	left: -25px;
-}
-.cut::after {
-  	right: -25px;
-}
-
-.ticketBottom {
-  	display: flex;
-  	flex-direction: column;
-  	gap: 12px;
-  	padding: 18px 20px 20px;
-}
-.meta {
-  	margin: 0;
-  	font-size: 13px;
-  	color: var(--card-text-2);
-}
-
-.code {
-  	display: flex;
-  	align-items: center;
-  	justify-content: space-between;
-  	gap: 12px;
-  	padding: 12px 14px;
-  	border: 1px dashed var(--accent-line);
-  	background-color: var(--accent-soft);
-}
-.codeText {
-  	font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-  	font-size: 18px;
-  	font-weight: 700;
-  	letter-spacing: 0.06em;
-  	color: var(--text);
-}
-
-.countdown {
-  	margin: 0;
-  	font-size: 14px;
-  	font-weight: 700;
-  	font-variant-numeric: tabular-nums;
-  	color: var(--accent-text);
-}
-.countdownLow {
-  	color: var(--danger-text);
-}
-.expired {
-  	opacity: 0.55;
-}
-.expired .discount,
-.expired .countdown {
-  	color: var(--text-3);
+  	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  	gap: 20px;
 }
 
 .formGrid {
@@ -143,4 +31,116 @@
   	white-space: nowrap;
   	font-size: 12px;
   	color: var(--text-3);
+}
+
+/* Estadísticas */
+.twoCols {
+  	display: grid;
+  	grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  	gap: 16px;
+  	margin: 16px 0 8px;
+}
+@media (max-width: 900px) {
+  	.twoCols {
+    		grid-template-columns: 1fr;
+  	}
+}
+.sectionTitle {
+  	margin: 32px 0 12px;
+  	font-size: 18px;
+}
+.sectionNote {
+  	font-size: 13px;
+  	font-weight: 400;
+  	color: var(--text-3);
+}
+.note {
+  	margin: 16px 0 0;
+  	font-size: 13px;
+  	color: var(--text-3);
+}
+.note a {
+  	color: var(--accent-text);
+  	font-weight: 600;
+}
+
+.funnel {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 16px;
+}
+.funnelStep {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 6px;
+}
+.funnelHead {
+  	display: flex;
+  	justify-content: space-between;
+  	gap: 12px;
+  	font-size: 14px;
+}
+.funnelHead small {
+  	font-weight: 400;
+  	color: var(--text-3);
+}
+.funnelTrack {
+  	height: 8px;
+  	background-color: var(--surface-3);
+}
+.funnelFill {
+  	height: 100%;
+  	background-color: var(--accent);
+  	transition: width 500ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Ventas y comisión */
+.saleForm {
+  	display: grid;
+  	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  	gap: 16px;
+  	align-items: end;
+}
+.salePreview {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 4px;
+  	padding: 10px 14px;
+  	font-size: 12px;
+  	letter-spacing: 0.06em;
+  	text-transform: uppercase;
+  	color: var(--text-3);
+  	background-color: var(--accent-soft);
+  	border: 1px solid var(--accent-line);
+}
+.salePreview strong {
+  	font-size: 20px;
+  	letter-spacing: 0;
+  	text-transform: none;
+  	color: var(--text);
+}
+.rateRow {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 12px;
+  	align-items: flex-start;
+}
+.rateInput {
+  	width: 72px;
+  	height: 36px;
+  	padding: 0 8px;
+  	font: inherit;
+  	color: var(--text);
+  	background-color: var(--surface);
+  	border: 1px solid var(--border-strong);
+}
+.rateInput:focus {
+  	outline: 2px solid var(--accent);
+  	outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  	.funnelFill {
+    		transition: none;
+  	}
 }

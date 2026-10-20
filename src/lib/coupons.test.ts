@@ -71,3 +71,39 @@ describe('campaignLabel', () => {
     expect(campaignLabel({ ends_at: null, max_claims: 10, claims_count: 4 })).toBe('quedan 6');
   });
 });
+
+import { barRatio, commissionFor, compactLeft, dayLabel, formatPercent, percentOf } from './coupons';
+
+describe('estadísticas', () => {
+  it('percentOf', () => {
+    expect(percentOf(1, 4)).toBe(25);
+    expect(percentOf(1, 3)).toBe(33);
+    expect(percentOf(5, 0)).toBe(0);
+  });
+  it('formatPercent', () => {
+    expect(formatPercent(5)).toBe('5 %');
+    expect(formatPercent(8.5)).toBe('8,5 %');
+  });
+  it('commissionFor coincide con la base', () => {
+    expect(commissionFor(2_500_000, 5)).toBe(125_000);
+    expect(commissionFor(1_000_001, 8.5)).toBe(85_000);
+    expect(commissionFor(0, 5)).toBe(0);
+  });
+  it('dayLabel', () => expect(dayLabel('2026-10-05')).toBe('5/10'));
+  it('barRatio', () => {
+    expect(barRatio(0, 10)).toBe(0);
+    expect(barRatio(10, 10)).toBe(1);
+    expect(barRatio(1, 1000)).toBe(0.04);
+    expect(barRatio(5, 0)).toBe(0);
+  });
+});
+
+describe('compactLeft', () => {
+  it('usa la unidad más grande', () => {
+    expect(compactLeft(2 * 86_400_000 + 5000)).toBe('2d');
+    expect(compactLeft(5 * 3_600_000)).toBe('5h');
+    expect(compactLeft(12 * 60_000 + 30_000)).toBe('12m');
+    expect(compactLeft(45_000)).toBe('45s');
+    expect(compactLeft(-1)).toBe('0s');
+  });
+});

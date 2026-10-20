@@ -8,7 +8,7 @@ afterAll(async () => { await db?.close(); });
 it('mantiene RLS en todas las tablas de la aplicación desplegada', async () => {
   const r = await db.query<{ relrowsecurity: boolean }>(`select c.relrowsecurity from pg_class c
     join pg_namespace n on n.oid=c.relnamespace where n.nspname in ('public','catalogo') and c.relkind='r'`);
-  expect(r.rows).toHaveLength(23);
+  expect(r.rows).toHaveLength(25);
   expect(r.rows.every((x) => x.relrowsecurity)).toBe(true);
 });
 

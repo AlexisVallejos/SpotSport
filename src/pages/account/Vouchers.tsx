@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { Countdown, Ticket, ticketStyles } from '../../components/shop/Ticket';
 import { Button, Empty, Loading, Notice, PageTitle } from '../../components/ui';
 import { listMyVouchers, voucherRedirect } from '../../lib/api/coupons';
 import { timeLeft } from '../../lib/coupons';
 import { useAsync } from '../../lib/useAsync';
 import styles from '../coupons.module.css';
-
-const LOW_MS = 3_600_000;
 
 /** Reloj que avanza cada segundo mientras haya algo que contar. */
 function useNow(active: boolean) {
@@ -59,36 +58,35 @@ export default function Vouchers() {
   const past = list.filter((voucher) => timeLeft(voucher.expires_at, now).expired);
 
   const card = (voucher: (typeof list)[number]) => {
-    const left = timeLeft(voucher.expires_at, now);
+    const expired = timeLeft(voucher.expires_at, now).expired;
     return (
-      <article key={voucher.id} className={`${styles.ticket} ${left.expired ? styles.expired : ''}`}>
-        <div className={styles.ticketTop}>
-          <p className={styles.merchant}>{voucher.coupon?.merchant?.name ?? 'Comercio'}</p>
-          <p className={styles.discount}>{voucher.coupon?.discount_label ?? 'Cupón'}</p>
-          <h2 className={styles.title}>{voucher.coupon?.title ?? 'Cupón'}</h2>
-        </div>
-        <div className={styles.cut} aria-hidden="true" />
-        <div className={styles.ticketBottom}>
-          <div className={styles.code}>
-            <span className={styles.codeText}>{voucher.code}</span>
-            <Button small variant="ghost" onClick={() => void copyCode(voucher.id, voucher.code)} disabled={left.expired}>
-              {copied === voucher.id ? 'Copiado' : 'Copiar'}
-            </Button>
+      <Ticket
+        key={voucher.id}
+        kicker="Voucher"
+        merchant={voucher.coupon?.merchant?.name ?? 'Comercio'}
+        discount={voucher.coupon?.discount_label ?? 'Cupón'}
+        title={voucher.coupon?.title ?? 'Cupón'}
+        expired={expired}>
+        <div className={ticketStyles.code}>
+          <div>
+            <span className={ticketStyles.codeLabel}>Tu código</span>
+            <span className={ticketStyles.codeText}>{voucher.code}</span>
           </div>
-          <p className={`${styles.countdown} ${!left.expired && left.ms < LOW_MS ? styles.countdownLow : ''}`} role="timer">
-            {left.label}
-          </p>
-          {left.expired ? (
-            <p className={styles.meta}>
-              Venció. <Link to="/cupones">Buscá otro cupón</Link>
-            </p>
-          ) : (
-            <Button block disabled={going === voucher.id} onClick={() => void go(voucher.id)}>
-              {going === voucher.id ? 'Abriendo…' : 'Ir a la tienda con el cupón'}
-            </Button>
-          )}
+          <Button small variant="secondary" onClick={() => void copyCode(voucher.id, voucher.code)} disabled={expired}>
+            {copied === voucher.id ? 'Copiado' : 'Copiar'}
+          </Button>
         </div>
-      </article>
+        <Countdown createdAt={voucher.created_at} expiresAt={voucher.expires_at} now={now} />
+        {expired ? (
+          <p className={ticketStyles.meta}>
+            <Link to="/cupones">Buscá otro cupón</Link>
+          </p>
+        ) : (
+          <Button block disabled={going === voucher.id} onClick={() => void go(voucher.id)}>
+            {going === voucher.id ? 'Abriendo…' : 'Ir a la tienda con el cupón'}
+          </Button>
+        )}
+      </Ticket>
     );
   };
 

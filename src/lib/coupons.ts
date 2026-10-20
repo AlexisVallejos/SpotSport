@@ -78,3 +78,41 @@ export function campaignLabel(coupon: Pick<Coupon, 'ends_at' | 'max_claims' | 'c
   if (coupon.max_claims !== null) parts.push(`quedan ${Math.max(0, coupon.max_claims - coupon.claims_count)}`);
   return parts.join(' · ');
 }
+
+// ── Estadísticas ──
+
+/** Porcentaje entero de `part` sobre `whole` (0 si no hay base). */
+export function percentOf(part: number, whole: number): number {
+  return whole > 0 ? Math.round((part / whole) * 100) : 0;
+}
+
+/** "5 %" o "8,5 %": sin decimales de más. */
+export function formatPercent(value: number): string {
+  return `${Number.isInteger(value) ? value : value.toLocaleString('es-AR', { maximumFractionDigits: 2 })} %`;
+}
+
+/** Lo que SPOT se queda: monto por porcentaje, en centavos y redondeado, igual que la base. */
+export function commissionFor(amountCents: number, percent: number): number {
+  return Math.round((amountCents * percent) / 100);
+}
+
+/** Etiqueta corta de un día YYYY-MM-DD: "15/10". */
+export function dayLabel(day: string): string {
+  const [, month, date] = day.split('-');
+  return `${Number(date)}/${Number(month)}`;
+}
+
+/** Alto de una barra (0 a 1) respecto del máximo del gráfico; las barras con datos nunca desaparecen del todo. */
+export function barRatio(value: number, max: number): number {
+  if (value <= 0 || max <= 0) return 0;
+  return Math.max(0.04, value / max);
+}
+
+/** Lo que entra dentro del anillo: la unidad más grande, sin texto ("2d", "5h", "12m", "45s"). */
+export function compactLeft(ms: number): string {
+  const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+  if (totalSeconds >= 86_400) return `${Math.floor(totalSeconds / 86_400)}d`;
+  if (totalSeconds >= 3600) return `${Math.floor(totalSeconds / 3600)}h`;
+  if (totalSeconds >= 60) return `${Math.floor(totalSeconds / 60)}m`;
+  return `${totalSeconds}s`;
+}

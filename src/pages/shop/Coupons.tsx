@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NotConfigured from '../../components/layout/NotConfigured';
+import { Ticket, ticketStyles } from '../../components/shop/Ticket';
 import { Button, Empty, Loading, Notice, PageTitle } from '../../components/ui';
 import { useAuth } from '../../context/AuthContext';
 import { claimCoupon, listPublicCoupons } from '../../lib/api/coupons';
@@ -52,23 +53,20 @@ export default function Coupons() {
           {(coupons.data ?? []).map((coupon) => {
             const campaign = campaignLabel(coupon);
             return (
-              <article key={coupon.id} className={styles.ticket}>
-                <div className={styles.ticketTop}>
-                  <p className={styles.merchant}>{coupon.merchant?.name ?? 'Comercio'}</p>
-                  <p className={styles.discount}>{coupon.discount_label}</p>
-                  <h2 className={styles.title}>{coupon.title}</h2>
-                  {coupon.description ? <p className={styles.desc}>{coupon.description}</p> : null}
-                </div>
-                <div className={styles.cut} aria-hidden="true" />
-                <div className={styles.ticketBottom}>
-                  <p className={styles.meta}>
-                    Dura {validity(coupon.valid_hours)} desde que lo obtenés{campaign ? ` · ${campaign}` : ''}
-                  </p>
-                  <Button block disabled={busy === coupon.id} onClick={() => void claim(coupon.id)}>
-                    {busy === coupon.id ? 'Obteniendo…' : session ? 'Obtener cupón' : 'Ingresá para obtenerlo'}
-                  </Button>
-                </div>
-              </article>
+              <Ticket
+                key={coupon.id}
+                kicker="Cupón"
+                merchant={coupon.merchant?.name ?? 'Comercio'}
+                discount={coupon.discount_label}
+                title={coupon.title}
+                description={coupon.description}>
+                <p className={ticketStyles.meta}>
+                  Dura {validity(coupon.valid_hours)} desde que lo obtenés{campaign ? ` · ${campaign}` : ''}
+                </p>
+                <Button block disabled={busy === coupon.id} onClick={() => void claim(coupon.id)}>
+                  {busy === coupon.id ? 'Obteniendo…' : session ? 'Obtener cupón' : 'Ingresá para obtenerlo'}
+                </Button>
+              </Ticket>
             );
           })}
         </div>

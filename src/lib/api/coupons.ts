@@ -1,6 +1,6 @@
 import type { CouponInput } from '../coupons';
 import { fail, guard, supabase } from '../supabase';
-import type { Coupon, Voucher } from '../types';
+import type { Coupon, CouponOverview, CouponStats, SaleStatus, Voucher, VoucherSale } from '../types';
 
 const WITH_MERCHANT = '*, merchant:merchants(name,slug,logo_url)';
 
@@ -73,5 +73,71 @@ export async function setCouponActive(id: string, isActive: boolean): Promise<vo
 export async function deleteCoupon(id: string): Promise<void> {
   guard();
   const { error } = await supabase.from('coupons').delete().eq('id', id);
+  if (error) fail(error);
+}
+
+// ── Estadísticas, ventas y comisión ──
+
+/** Los números de cupones del comercio de la cuenta (últimos `days` días). */
+export async function merchantCouponStats(days = 30): Promise<CouponStats> {
+  guard();
+  const { data, error } = await supabase.rpc('merchant_coupon_stats', { p_days: days });
+  if (error) fail(error);
+  return data as CouponStats;
+}
+
+export async function listMySales(): Promise<VoucherSale[]> {
+  guard();
+  const { data, error } = await supabase.from('voucher_sales').select('*').order('reported_at', { ascending: false }).limit(200);
+  if (error) fail(error);
+  return (data ?? []) as VoucherSale[];
+}
+
+/** El comercio registra una venta hecha con un voucher. La comisión la calcula la base. */
+export async function registerSale(code: string, amountCents: number): Promise<VoucherSale> {
+  guard();
+  const { data, error } = await supabase.rpc('register_voucher_sale', { p_code: code, p_amount_cents: amountCents });
+  if (error) fail(error);
+  return data as VoucherSale;
+}
+
+export async function adminCouponOverview(days = 30): Promise<CouponOverview> {
+  guard();
+  const { data, error } = await supabase.rpc('admin_coupon_overview', { p_days: days });
+  if (error) fail(error);
+  return data as CouponOverview;
+}
+
+export async function adminListSales(): Promise<VoucherSale[]> {
+  guard();
+  const { data, error } = await supabase.from('voucher_sales').select('*, merchant:merchants(name)').order('reported_at', { ascending: false }).limit(200);
+  if (error) fail(error);
+  return (data ?? []) as unknown as VoucherSale[];
+}
+
+export async function setSaleStatus(saleId: string, status: SaleStatus): Promise<void> {
+  guard();
+  const { error } = await supabase.rpc('admin_set_sale_status', { p_sale: saleId, p_status: status });
+  if (error) fail(error);
+}
+
+/** Marca como cobradas todas las comisiones pendientes de un comercio. Devuelve cuántas. */
+export async function settleMerchant(merchantId: string): Promise<number> {
+  guard();
+  const { data, error } = await supabase.rpc('admin_settle_merchant', { p_merchant: merchantId });
+  if (error) fail(error);
+  return data as number;
+}
+
+/** Porcentaje propio de un comercio (null: usa el general). */
+export async function setMerchantCommission(merchantId: string, percent: number | null): Promise<void> {
+  guard();
+  const { error } = await supabase.from('merchants').update({ commission_percent: percent }).eq('id', merchantId);
+  if (error) fail(error);
+}
+
+export async function setDefaultCommission(percent: number): Promise<void> {
+  guard();
+  const { error } = await supabase.from('site_settings').upsert({ key: 'commission', value: { percent }, updated_at: new Date().toISOString() });
   if (error) fail(error);
 }

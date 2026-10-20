@@ -193,3 +193,53 @@ export type Voucher = {
   created_at: string;
   coupon?: Coupon | null;
 };
+
+export type CouponTotals = {
+  claims: number;
+  clicks: number;
+  unique_clickers: number;
+  sales: number;
+  sales_cents: number;
+  commission_cents: number;
+  commission_pending_cents: number;
+  commission_paid_cents: number;
+};
+
+export type CouponDay = { day: string; claims: number; clicks: number; sales_cents: number };
+
+export type CouponRow = { id: string; title: string; claims: number; clicks: number; unique_clickers: number; sales: number; sales_cents: number };
+
+export type CouponStats = { totals: CouponTotals; daily: CouponDay[]; coupons: CouponRow[]; commission_percent?: number };
+
+export type SaleStatus = 'pending' | 'paid' | 'void';
+
+export type VoucherSale = {
+  id: string;
+  voucher_id: string | null;
+  coupon_id: string | null;
+  merchant_id: string;
+  code: string;
+  coupon_title: string;
+  amount_cents: number;
+  commission_percent: number;
+  commission_cents: number;
+  status: SaleStatus;
+  reported_at: string;
+  settled_at: string | null;
+  merchant?: { name: string } | null;
+};
+
+export type MerchantCommissionRow = {
+  id: string;
+  name: string;
+  commission_percent: number | null;
+  effective_percent: number;
+  claims: number;
+  clicks: number;
+  sales: number;
+  sales_cents: number;
+  commission_pending_cents: number;
+  commission_paid_cents: number;
+};
+
+export type CouponOverview = { overall: CouponStats; default_percent: number; merchants: MerchantCommissionRow[] };

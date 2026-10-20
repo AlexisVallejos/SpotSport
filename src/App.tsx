@@ -29,6 +29,8 @@ const ProductForm = lazy(() => import('./pages/merchant/ProductForm'));
 const MerchantOrders = lazy(() => import('./pages/merchant/MerchantOrders'));
 const MerchantProfile = lazy(() => import('./pages/merchant/MerchantProfile'));
 const MerchantCoupons = lazy(() => import('./pages/merchant/MerchantCoupons'));
+const MerchantStats = lazy(() => import('./pages/merchant/MerchantStats'));
+const MerchantSales = lazy(() => import('./pages/merchant/MerchantSales'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard'));
 const AdminMerchants = lazy(() => import('./pages/admin/AdminMerchants'));
 const AdminUsers = lazy(() => import('./pages/admin/AdminUsers'));
@@ -36,6 +38,7 @@ const AdminProducts = lazy(() => import('./pages/admin/AdminProducts'));
 const AdminOrders = lazy(() => import('./pages/admin/AdminOrders'));
 const AdminAnnouncements = lazy(() => import('./pages/admin/AdminAnnouncements'));
 const AdminCategories = lazy(() => import('./pages/admin/AdminCategories'));
+const AdminCoupons = lazy(() => import('./pages/admin/AdminCoupons'));
 
 const ACCOUNT_LINKS: PanelLink[] = [
   { to: '/cuenta', label: 'Resumen', end: true },
@@ -50,6 +53,8 @@ const MERCHANT_LINKS: PanelLink[] = [
   { to: '/comercio/productos', label: 'Productos' },
   { to: '/comercio/pedidos', label: 'Pedidos' },
   { to: '/comercio/cupones', label: 'Cupones' },
+  { to: '/comercio/estadisticas', label: 'Estadísticas' },
+  { to: '/comercio/ventas', label: 'Ventas con cupón' },
   { to: '/comercio/perfil', label: 'Mi comercio' },
 ];
 
@@ -59,6 +64,7 @@ const ADMIN_LINKS: PanelLink[] = [
   { to: '/admin/usuarios', label: 'Usuarios' },
   { to: '/admin/productos', label: 'Productos' },
   { to: '/admin/pedidos', label: 'Pedidos' },
+  { to: '/admin/cupones', label: 'Cupones y comisiones' },
   { to: '/admin/anuncios', label: 'Anuncios' },
   { to: '/admin/categorias', label: 'Categorías' },
 ];
@@ -121,6 +127,8 @@ export default function App() {
                 <Route path="productos/:id" element={<ProductForm />} />
                 <Route path="pedidos" element={<MerchantOrders />} />
                 <Route path="cupones" element={<MerchantCoupons />} />
+                <Route path="estadisticas" element={<MerchantStats />} />
+                <Route path="ventas" element={<MerchantSales />} />
                 <Route path="perfil" element={<MerchantProfile />} />
               </Route>
             </Route>
@@ -132,6 +140,7 @@ export default function App() {
                 <Route path="usuarios" element={<AdminUsers />} />
                 <Route path="productos" element={<AdminProducts />} />
                 <Route path="pedidos" element={<AdminOrders />} />
+                <Route path="cupones" element={<AdminCoupons />} />
                 <Route path="anuncios" element={<AdminAnnouncements />} />
                 <Route path="categorias" element={<AdminCategories />} />
               </Route>
