@@ -19,3 +19,6 @@ data/historial.json
 data/resenas.json
 data/suscriptores.json
 data/compras.json
+
+# Vercel (salida de scripts/vercel-output.mjs y vínculo del proyecto)
+.vercel
