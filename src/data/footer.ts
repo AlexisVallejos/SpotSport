@@ -15,9 +15,10 @@ export const footerLinkGroups: FooterLinkGroupProps[] = [
     title: 'COMPARÁ Y COMPRÁ',
     links: [
       { label: 'Comparador de precios', href: '/precios' },
-      { label: 'Mejores descuentos', href: '/precios?orden=descuento' },
+      { label: 'Ofertas en zapatillas', href: '/ofertas' },
       { label: 'Mis favoritos', href: '/precios?favoritos=1' },
       { label: 'Tienda SPOT', href: '/tienda' },
+      { label: 'Mis tickets', href: '/tickets' },
     ],
   },
 ];

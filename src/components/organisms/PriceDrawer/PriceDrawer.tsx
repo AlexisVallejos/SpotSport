@@ -1,6 +1,7 @@
 import { FormEvent, FunctionComponent, useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, useReducedMotion, type Variants } from 'motion/react';
-import { ArrowUpRight, Heart, Star, X } from 'lucide-react';
+import { ArrowUpRight, Heart, ShoppingBag, Star, X } from 'lucide-react';
 import { toggleFavorite, useFavorites } from '../../../lib/favorites';
 import {
   STORES,
@@ -139,6 +140,16 @@ const ProductContent: FunctionComponent<ContentProps> = ({ product, detail, stor
           </span>
         </div>
         {product.savings > 0 ? <p className={styles.savings}>Comprando acá ahorrás {formatPrice(product.savings)} frente a la tienda más cara.</p> : null}
+        {/* Las zapatillas se pueden comprar sin salir de SPOT: pago con Mercado Pago y ticket para retirar en el local. */}
+        {product.type === 'Zapatillas' ? (
+          <Link to={`/comprar/${encodeURIComponent(product.id)}?tienda=${best.store}`} className={styles.spotBuy}>
+            <ShoppingBag size={18} aria-hidden="true" />
+            <span>
+              Comprar con SPOT
+              <small>Pagás con Mercado Pago y las retirás en el local con tu ticket</small>
+            </span>
+          </Link>
+        ) : null}
       </motion.header>
 
       <motion.section className={styles.section} variants={block} aria-labelledby="precio-tiendas">

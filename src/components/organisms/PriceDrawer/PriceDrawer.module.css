@@ -622,3 +622,44 @@
     transform: none;
   }
 }
+
+/* Comprar con SPOT: el botón principal del panel cuando el producto son zapatillas. */
+.spotBuy {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 15px;
+  font-weight: 800;
+  transition: background 0.2s, transform 0.1s ease-out;
+}
+
+.spotBuy:hover {
+  background: var(--accent-hover);
+}
+
+.spotBuy:active {
+  transform: scale(0.98);
+}
+
+.spotBuy span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.spotBuy small {
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotBuy {
+    transition: none;
+  }
+}

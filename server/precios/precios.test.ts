@@ -210,6 +210,13 @@ describe('buildProducts', () => {
       expect(search(products, { ids: ['25869'] }).items.map((item) => item.id)).toEqual(['25869']);
       expect(search(products, { compared: true }).total).toBe(1);
     });
+
+    it('en "ofertas" deja sólo lo rebajado', () => {
+      const onSale = search(products, { onSale: true }).items;
+      expect(onSale.length).toBeGreaterThan(0);
+      expect(onSale.every((item) => item.discount >= 5)).toBe(true);
+      expect(search(products, { onSale: true }).total).toBe(products.filter((item) => item.discount >= 5).length);
+    });
   });
 });
 

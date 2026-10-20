@@ -8,12 +8,11 @@ import ThemeToggle from '../../molecules/ThemeToggle/ThemeToggle';
 import { navLinks, searchPlaceholder } from '../../../data/navigation';
 import styles from './MainNavigation.module.css';
 
-// "Tienda" queda marcada en todo el recorrido de compra, comparador incluido.
-const SHOP_PATHS = ['/tienda', '/precios', '/producto', '/carrito', '/checkout'];
+// "Tienda" queda marcada en todo el recorrido de compra, comparador y tickets incluidos.
+const SHOP_PATHS = ['/tienda', '/precios', '/producto', '/carrito', '/checkout', '/comprar', '/ticket'];
 
-function isCurrent(href: string, pathname: string, search: string): boolean {
-  if (href === '/tienda') return SHOP_PATHS.some((path) => pathname.startsWith(path)) && !search.includes('orden=descuento');
-  if (href.startsWith('/precios')) return pathname === '/precios' && search.includes('orden=descuento');
+function isCurrent(href: string, pathname: string): boolean {
+  if (href === '/tienda') return SHOP_PATHS.some((path) => pathname.startsWith(path));
   return !href.includes('#') && pathname.startsWith(href);
 }
 
@@ -46,7 +45,7 @@ const MainNavigation: FunctionComponent = () => {
               to={href}
               onClick={() => setMenuOpen(false)}
               className={styles.navigationLink}
-              aria-current={isCurrent(href, pathname, search) ? 'page' : undefined}
+              aria-current={isCurrent(href, pathname) ? 'page' : undefined}
             >
               {label}
             </Link>
@@ -69,6 +68,7 @@ const MainNavigation: FunctionComponent = () => {
               <span className={styles.accountName}>{name}</span>
               <Link to="/cuenta">Mi cuenta</Link>
               <Link to="/cuenta/pedidos">Mis compras</Link>
+              <Link to="/tickets">Mis tickets</Link>
               {isMerchant ? <Link to="/comercio">Mi comercio</Link> : <Link to="/cuenta/afiliarse">{merchant ? 'Mi solicitud de comercio' : 'Vender en SPOT'}</Link>}
               {isAdmin ? <Link to="/admin">Administración</Link> : null}
               <button type="button" onClick={() => void signOut().then(() => navigate('/'))}>

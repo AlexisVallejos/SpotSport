@@ -1,7 +1,7 @@
 import { FunctionComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { AnimatePresence } from 'motion/react';
-import { CornerDownLeft, Heart, Search, Sparkles, X } from 'lucide-react';
+import { CornerDownLeft, Heart, QrCode, Search, ShoppingBag, Sparkles, Store, Ticket, X } from 'lucide-react';
 // Directos y no desde los barrels: así esta página no suma peso a la landing.
 import FilterMenu from '../components/molecules/FilterMenu/FilterMenu';
 import GlideTabs from '../components/molecules/GlideTabs/GlideTabs';
@@ -26,13 +26,66 @@ import {
   type Product,
   type SearchQuery,
   type SearchResult,
+  type SortKey,
   type StoreId,
 } from '../lib/precios';
 import styles from './Precios.module.css';
 
 const PAGE = 48;
 
-const Precios: FunctionComponent = () => {
+export type CatalogMode = 'comparador' | 'tienda' | 'ofertas';
+
+type ModeConfig = {
+  base: string;
+  documentTitle: string;
+  kicker: string;
+  title: [string, string];
+  lead: string;
+  /** Filtros que la página impone y no se pueden sacar. */
+  fixed: Partial<SearchQuery>;
+  /** Orden cuando la URL no pide otro. */
+  defaultSort: SortKey;
+};
+
+// El mismo catálogo en tres vitrinas: el comparador entero, la tienda de zapatillas y las zapatillas rebajadas.
+const MODES: Record<CatalogMode, ModeConfig> = {
+  comparador: {
+    base: '/precios',
+    documentTitle: 'Comparador de precios — SPOT',
+    kicker: 'OPEN SPORTS · DEXTER · TRIP STORE',
+    title: ['EL MEJOR PRECIO,', 'SIN DAR VUELTAS.'],
+    lead: 'Zapatillas, botines, ropa y accesorios de tres tiendas argentinas. Encontramos el mismo producto en cada una y te mostramos dónde está más barato. Los precios se actualizan solos varias veces por día.',
+    fixed: {},
+    defaultSort: 'recomendado',
+  },
+  tienda: {
+    base: '/tienda',
+    documentTitle: 'Tienda de zapatillas — SPOT',
+    kicker: 'TIENDA SPOT · ZAPATILLAS',
+    title: ['COMPRALAS ACÁ,', 'RETIRALAS EN EL LOCAL.'],
+    lead: 'Todas las zapatillas de Open Sports, Dexter y Trip Store con el precio de cada tienda. Pagás con Mercado Pago en SPOT y te llevás un ticket con QR para retirarlas en la sucursal que elijas.',
+    fixed: { category: 'calzado', type: 'Zapatillas' },
+    defaultSort: 'recomendado',
+  },
+  ofertas: {
+    base: '/ofertas',
+    documentTitle: 'Ofertas en zapatillas — SPOT',
+    kicker: 'OFERTAS · SÓLO ZAPATILLAS',
+    title: ['ZAPATILLAS REBAJADAS,', 'LAS QUE MÁS BAJARON PRIMERO.'],
+    lead: 'Las zapatillas con descuento en Open Sports, Dexter y Trip Store, ordenadas por cuánto bajaron. Las comprás acá con Mercado Pago y las retirás en el local con tu ticket SPOT.',
+    fixed: { category: 'calzado', type: 'Zapatillas', onSale: true },
+    defaultSort: 'descuento',
+  },
+};
+
+const BUY_STEPS = [
+  { icon: ShoppingBag, title: 'Elegí tus zapatillas', text: 'Tienda, sucursal y talle.' },
+  { icon: QrCode, title: 'Pagá con Mercado Pago', text: 'Tarjeta, débito o dinero en cuenta.' },
+  { icon: Store, title: 'Mostrá tu ticket', text: 'Con el QR las retirás en el local.' },
+];
+
+const Precios: FunctionComponent<{ mode?: CatalogMode }> = ({ mode = 'comparador' }) => {
+  const config = MODES[mode];
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,11 +102,11 @@ const Precios: FunctionComponent = () => {
 
   useEffect(() => {
     const previous = document.title;
-    document.title = 'Comparador de precios — SPOT';
+    document.title = config.documentTitle;
     return () => {
       document.title = previous;
     };
-  }, []);
+  }, [config.documentTitle]);
 
   // Mientras la API está leyendo las tiendas, volvemos a preguntar cada 20 s para ir mostrando lo nuevo.
   useEffect(() => {
@@ -81,7 +134,11 @@ const Precios: FunctionComponent = () => {
   // Lo escrito se interpreta en vivo ("remera running mujer" → filtros); Enter lo fija como filtros de verdad.
   const parsed = useMemo(() => parseSearch(query.q ?? '', { ...query, q: '' }), [query]);
   const draftParsed = useMemo(() => parseSearch(draft), [draft]);
-  const searchQuery: SearchQuery = useMemo(() => ({ ...parsed.query, ids: onlyFavorites ? favorites : null, limit: PAGE }), [parsed, onlyFavorites, favorites]);
+  const sort = !parsed.query.sort || parsed.query.sort === 'recomendado' ? config.defaultSort : parsed.query.sort;
+  const searchQuery: SearchQuery = useMemo(
+    () => ({ ...parsed.query, ...config.fixed, sort, ids: onlyFavorites ? favorites : null, limit: PAGE }),
+    [parsed, config.fixed, sort, onlyFavorites, favorites],
+  );
   const searchKey = JSON.stringify(searchQuery);
   const refreshes = status?.refreshing ? status.total : null; // Mientras se llena el catálogo, cada novedad vuelve a buscar.
 
@@ -150,15 +207,15 @@ const Precios: FunctionComponent = () => {
   const open = useCallback(
     (product: Product) => {
       openedHere.current = true;
-      navigate({ pathname: `/precios/${encodeURIComponent(product.id)}`, search: location.search });
+      navigate({ pathname: `${config.base}/${encodeURIComponent(product.id)}`, search: location.search });
     },
-    [navigate, location.search],
+    [navigate, location.search, config.base],
   );
   const close = useCallback(() => {
     if (openedHere.current) navigate(-1);
-    else navigate({ pathname: '/precios', search: location.search }, { replace: true });
+    else navigate({ pathname: config.base, search: location.search }, { replace: true });
     openedHere.current = false;
-  }, [navigate, location.search]);
+  }, [navigate, location.search, config.base]);
 
   // Enter: las palabras reconocidas pasan a ser filtros (chips) y en el campo queda sólo el texto libre.
   const commitSearch = () => {
@@ -173,7 +230,8 @@ const Precios: FunctionComponent = () => {
   const [shortcut, setShortcut] = useState('');
   useEffect(() => setShortcut(shortcutLabel()), []);
 
-  const sortLabel = SORTS.find((sort) => sort.key === query.sort)?.label;
+  const sortLabel = SORTS.find((option) => option.key === query.sort)?.label;
+  const defaultSortLabel = SORTS.find((option) => option.key === config.defaultSort)?.label ?? 'Recomendado';
   const activeFilters = [
     query.category && { key: 'categoria', label: CATEGORIES[query.category], clear: () => update({ category: null }) },
     query.type && { key: 'tipo', label: query.type, clear: () => update({ type: null }) },
@@ -182,16 +240,19 @@ const Precios: FunctionComponent = () => {
     query.brand && { key: 'marca', label: query.brand, clear: () => update({ brand: null }) },
     query.store && { key: 'tienda', label: STORES[query.store].name, clear: () => update({ store: null }) },
     query.compared && { key: 'comparables', label: 'En varias tiendas', clear: () => update({ compared: false }) },
-    query.sort && query.sort !== 'recomendado' && { key: 'orden', label: sortLabel ?? query.sort, clear: () => update({ sort: 'recomendado' }) },
+    query.sort && query.sort !== 'recomendado' && query.sort !== config.defaultSort && { key: 'orden', label: sortLabel ?? query.sort, clear: () => update({ sort: 'recomendado' }) },
     onlyFavorites && { key: 'favoritos', label: 'Favoritos', clear: () => update({}, { favoritos: null }) },
-  ].filter(Boolean) as { key: string; label: string; clear: () => void }[];
+  ]
+    .filter(Boolean)
+    // Lo que impone la página (sólo zapatillas, sólo ofertas) no se muestra como filtro para sacar.
+    .filter((filter) => !(mode !== 'comparador' && (filter as { key: string }).key in { categoria: 1, tipo: 1 })) as { key: string; label: string; clear: () => void }[];
 
   const items = result?.items ?? [];
   const preview = id ? (items.find((product) => product.id === id) ?? null) : null;
   const total = status?.total ?? 0;
   const firstLoad = status && status.total === 0;
 
-  const stats = status
+  const stats = status && mode === 'comparador'
     ? [
         { value: total.toLocaleString('es-AR'), label: 'productos de 3 tiendas' },
         { value: status.compared.toLocaleString('es-AR'), label: 'en más de una tienda' },
@@ -205,13 +266,30 @@ const Precios: FunctionComponent = () => {
 
       <main className={styles.main} id="contenido">
         <section className={styles.head} aria-labelledby="precios-titulo">
-          <p className={styles.kicker}>OPEN SPORTS · DEXTER · TRIP STORE</p>
+          <p className={styles.kicker}>{config.kicker}</p>
           <h1 id="precios-titulo" className={styles.title}>
-            EL MEJOR PRECIO,
+            {config.title[0]}
             <br />
-            SIN DAR VUELTAS.
+            {config.title[1]}
           </h1>
-          <p className={styles.lead}>Zapatillas, botines, ropa y accesorios de tres tiendas argentinas. Encontramos el mismo producto en cada una y te mostramos dónde está más barato. Los precios se actualizan solos varias veces por día.</p>
+          <p className={styles.lead}>{config.lead}</p>
+          {mode !== 'comparador' ? (
+            <ol className={styles.steps} aria-label="Cómo comprar con SPOT">
+              {BUY_STEPS.map((step, index) => (
+                <li key={step.title}>
+                  <span className={styles.stepIcon} aria-hidden="true">
+                    <step.icon size={18} />
+                  </span>
+                  <span>
+                    <b>
+                      {index + 1}. {step.title}
+                    </b>
+                    <small>{step.text}</small>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          ) : null}
           {stats.length ? (
             <dl className={styles.stats}>
               {stats.map((stat) => (
@@ -226,6 +304,11 @@ const Precios: FunctionComponent = () => {
             <button type="button" className={onlyFavorites ? styles.favoritesOn : styles.favorites} aria-pressed={onlyFavorites} onClick={() => update({}, { favoritos: onlyFavorites ? null : '1' })}>
               <Heart size={15} fill={onlyFavorites ? 'currentColor' : 'none'} aria-hidden="true" /> Favoritos {favorites.length ? `(${favorites.length})` : ''}
             </button>
+            {mode !== 'comparador' ? (
+              <Link to="/tickets" className={styles.favorites}>
+                <Ticket size={15} aria-hidden="true" /> Mis tickets
+              </Link>
+            ) : null}
           </div>
         </section>
 
@@ -273,14 +356,21 @@ const Precios: FunctionComponent = () => {
           <div className={styles.toolbar}>
             <div className={styles.menus}>
               <FilterMenu label="Para" value={query.gender ?? null} allLabel="Todos" options={GENDERS.map((gender) => ({ value: gender, label: gender }))} onChange={(value) => update({ gender: (value as SearchQuery['gender']) ?? null })} />
-              <FilterMenu label="Tipo" value={query.type ?? null} searchable options={(result?.types ?? []).map((type) => ({ value: type.value, label: type.value, count: type.count }))} onChange={(value) => update({ type: value })} />
+              {config.fixed.type ? null : <FilterMenu label="Tipo" value={query.type ?? null} searchable options={(result?.types ?? []).map((type) => ({ value: type.value, label: type.value, count: type.count }))} onChange={(value) => update({ type: value })} />}
               <FilterMenu label="Marca" value={query.brand ?? null} allLabel="Todas" searchable options={(result?.brands ?? []).map((brand) => ({ value: brand.value, label: brand.value, count: brand.count }))} onChange={(value) => update({ brand: value })} />
               <FilterMenu label="Tienda" value={query.store ?? null} allLabel="Las tres" options={(Object.keys(STORES) as StoreId[]).map((store) => ({ value: store, label: STORES[store].name }))} onChange={(value) => update({ store: (value as StoreId | null) ?? null })} />
               <button type="button" className={query.compared ? styles.pillOn : styles.pill} aria-pressed={!!query.compared} onClick={() => update({ compared: !query.compared })}>
                 En varias tiendas
               </button>
             </div>
-            <FilterMenu label="Orden" align="end" value={query.sort && query.sort !== 'recomendado' ? query.sort : null} allLabel="Recomendado" options={SORTS.filter((sort) => sort.key !== 'recomendado').map((sort) => ({ value: sort.key, label: sort.label }))} onChange={(value) => update({ sort: (value as SearchQuery['sort']) ?? 'recomendado' })} />
+            <FilterMenu
+              label="Orden"
+              align="end"
+              value={query.sort && query.sort !== 'recomendado' && query.sort !== config.defaultSort ? query.sort : null}
+              allLabel={defaultSortLabel}
+              options={SORTS.filter((option) => option.key !== 'recomendado' && option.key !== config.defaultSort).map((option) => ({ value: option.key, label: option.label }))}
+              onChange={(value) => update({ sort: (value as SearchQuery['sort']) ?? 'recomendado' })}
+            />
           </div>
 
           {result && !firstLoad ? (

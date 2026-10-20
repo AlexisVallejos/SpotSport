@@ -1,4 +1,4 @@
-import { CATEGORIES, GENDERS, SORTS, SPORTS, STORES, type Category, type Facet, type Gender, type Product, type ProductSummary, type SearchQuery, type SearchResult, type SortKey, type Sport, type StoreId } from '../../shared/precios';
+import { CATEGORIES, GENDERS, SALE_MIN_DISCOUNT, SORTS, SPORTS, STORES, type Category, type Facet, type Gender, type Product, type ProductSummary, type SearchQuery, type SearchResult, type SortKey, type Sport, type StoreId } from '../../shared/precios';
 
 const MAX_LIMIT = 96;
 const MAX_FACETS = 40;
@@ -37,6 +37,7 @@ export function parseQuery(params: URLSearchParams): SearchQuery {
     brand: params.get('marca')?.slice(0, 40) || null,
     store: oneOf<StoreId>(params.get('tienda'), Object.keys(STORES) as StoreId[]),
     compared: params.get('comparables') === '1',
+    onSale: params.get('oferta') === '1',
     ids: ids ? ids.split(',').filter(Boolean).slice(0, 200) : null,
     sort: oneOf<SortKey>(params.get('orden'), SORTS.map((sort) => sort.key)) ?? 'recomendado',
     offset: number('desde', 0),
@@ -44,7 +45,7 @@ export function parseQuery(params: URLSearchParams): SearchQuery {
   };
 }
 
-type Filter = keyof Pick<SearchQuery, 'q' | 'category' | 'type' | 'sport' | 'gender' | 'brand' | 'store' | 'compared' | 'ids'>;
+type Filter = keyof Pick<SearchQuery, 'q' | 'category' | 'type' | 'sport' | 'gender' | 'brand' | 'store' | 'compared' | 'onSale' | 'ids'>;
 
 function matcher(query: SearchQuery, skip?: Filter) {
   const words = fold(query.q ?? '').split(/\s+/).filter(Boolean);
@@ -58,6 +59,7 @@ function matcher(query: SearchQuery, skip?: Filter) {
     if (query.brand && skip !== 'brand' && product.brand !== query.brand) return false;
     if (query.store && skip !== 'store' && !product.offers.some((offer) => offer.store === query.store)) return false;
     if (query.compared && skip !== 'compared' && product.offers.length < 2) return false;
+    if (query.onSale && skip !== 'onSale' && product.discount < SALE_MIN_DISCOUNT) return false;
     if (!words.length || skip === 'q') return true;
     const haystack = fold(`${product.name} ${product.type} ${product.sports.join(' ')} ${product.id}`);
     return words.every((word) => haystack.includes(word));

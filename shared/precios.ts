@@ -89,6 +89,9 @@ export type CatalogStatus = {
   byCategory: Record<Category, number>;
 };
 
+/** Desde cuánto descuento un producto cuenta como oferta (la misma marca "-N%" de las cartas). */
+export const SALE_MIN_DISCOUNT = 5;
+
 export type SortKey = 'recomendado' | 'ahorro' | 'descuento' | 'menor' | 'mayor' | 'nuevos';
 
 export const SORTS: { key: SortKey; label: string }[] = [
@@ -110,6 +113,8 @@ export type SearchQuery = {
   store?: StoreId | null;
   /** Sólo productos que vende más de una tienda. */
   compared?: boolean;
+  /** Sólo lo que está rebajado (5 % o más sobre el precio de lista de la tienda). */
+  onSale?: boolean;
   /** Sólo estos ids (favoritos). */
   ids?: string[] | null;
   sort?: SortKey;

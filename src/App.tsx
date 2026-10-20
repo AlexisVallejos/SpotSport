@@ -11,7 +11,9 @@ import SpotSearch from './components/organisms/SpotSearch/SpotSearch';
 const Entrenar = lazy(() => import('./pages/Entrenar'));
 const Precios = lazy(() => import('./pages/Precios'));
 const Legal = lazy(() => import('./pages/Legal'));
-const Shop = lazy(() => import('./pages/shop/Shop'));
+const Comprar = lazy(() => import('./pages/Comprar'));
+const TicketPage = lazy(() => import('./pages/Ticket').then((module) => ({ default: module.TicketPage })));
+const MyTickets = lazy(() => import('./pages/Ticket').then((module) => ({ default: module.MyTickets })));
 const ProductPage = lazy(() => import('./pages/shop/ProductPage'));
 const CartPage = lazy(() => import('./pages/shop/CartPage'));
 const Checkout = lazy(() => import('./pages/shop/Checkout'));
@@ -89,9 +91,16 @@ export default function App() {
         <Route path="/precios" element={<Precios />} />
         <Route path="/precios/:id" element={<Precios />} />
         <Route path="/legal" element={<Legal />} />
+        {/* Tienda y Ofertas: el mismo catálogo que el comparador, sólo zapatillas y con compra por SPOT. */}
+        <Route path="/tienda" element={<Precios mode="tienda" />} />
+        <Route path="/tienda/:id" element={<Precios mode="tienda" />} />
+        <Route path="/ofertas" element={<Precios mode="ofertas" />} />
+        <Route path="/ofertas/:id" element={<Precios mode="ofertas" />} />
+        <Route path="/comprar/:id" element={<Comprar />} />
+        <Route path="/ticket/:id" element={<TicketPage />} />
+        <Route path="/tickets" element={<MyTickets />} />
 
         <Route element={<ShopLayout />}>
-          <Route path="tienda" element={<Shop />} />
           <Route path="producto/:id" element={<ProductPage />} />
           <Route path="carrito" element={<CartPage />} />
           <Route path="login" element={<Login />} />

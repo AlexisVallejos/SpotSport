@@ -18,8 +18,10 @@
   "dependencies": {
     "@mediapipe/tasks-vision": "1.0.1",
     "@supabase/supabase-js": "2.117.3",
+    "jspdf": "^4.2.1",
     "lucide-react": "^1.52.0",
     "motion": "^12.23.12",
+    "qrcode": "^1.5.4",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "7.18.4",
@@ -29,6 +31,7 @@
     "@diffusionstudio/piper-wasm": "1.0.0",
     "@electric-sql/pglite": "0.5.9",
     "@playwright/test": "^1.64.0",
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
     "@types/three": "^0.186.0",

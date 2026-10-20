@@ -2,7 +2,7 @@ import { CATEGORIES, GENDERS, SORTS, SPORTS, STORES, type CatalogStatus, type Ca
 
 export type { CatalogStatus, Category, Gender, ProductDetail, Review, SearchQuery, SearchResult, SortKey, Sport, StoreId, StoreReviews } from '../../shared/precios';
 export type { ProductSummary as Product, OfferSummary as Offer } from '../../shared/precios';
-export { CATEGORIES, GENDERS, SORTS, SPORTS, STORES } from '../../shared/precios';
+export { CATEGORIES, GENDERS, SALE_MIN_DISCOUNT, SORTS, SPORTS, STORES } from '../../shared/precios';
 
 async function json<T>(response: Response): Promise<T> {
   const body = await response.json().catch(() => null);
@@ -13,7 +13,7 @@ async function json<T>(response: Response): Promise<T> {
 const get = <T,>(path: string, signal?: AbortSignal) => fetch(path, { signal: signal ?? AbortSignal.timeout(30_000) }).then((response) => json<T>(response));
 
 /** Filtros ↔ parámetros de la URL (los mismos en la página /precios y en la API). */
-const KEYS: Record<Exclude<keyof SearchQuery, 'compared' | 'ids' | 'offset' | 'limit'>, string> = {
+const KEYS: Record<Exclude<keyof SearchQuery, 'compared' | 'onSale' | 'ids' | 'offset' | 'limit'>, string> = {
   q: 'q',
   category: 'categoria',
   type: 'tipo',
@@ -31,6 +31,7 @@ export function toParams(query: SearchQuery): URLSearchParams {
     if (value && !(key === 'sort' && value === 'recomendado')) params.set(name, String(value).trim());
   }
   if (query.compared) params.set('comparables', '1');
+  if (query.onSale) params.set('oferta', '1');
   if (query.ids) params.set('ids', query.ids.join(','));
   if (query.offset) params.set('desde', String(query.offset));
   if (query.limit) params.set('limite', String(query.limit));
@@ -50,6 +51,7 @@ export function fromParams(params: URLSearchParams): SearchQuery {
     brand: params.get('marca') || null,
     store: oneOf<StoreId>(params.get('tienda'), Object.keys(STORES) as StoreId[]),
     compared: params.get('comparables') === '1',
+    onSale: params.get('oferta') === '1',
     sort: oneOf<SortKey>(params.get('orden'), SORTS.map((sort) => sort.key)) ?? 'recomendado',
   };
 }

@@ -196,7 +196,9 @@
   font-weight: 600;
 }
 
+/* Al rotar en hover queda pintada encima del botón que cubre la carta: sin pointer-events, el click le llega al botón. */
 .go {
+  pointer-events: none;
   display: grid;
   place-items: center;
   width: 32px;
