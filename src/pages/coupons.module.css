@@ -1,0 +1,146 @@
+/* Cupones: grilla de tickets, formularios del comercio, estadísticas y comisión. El ticket vive en components/shop/Ticket. */
+.grid {
+  	display: grid;
+  	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  	gap: 20px;
+}
+
+.formGrid {
+  	display: grid;
+  	grid-template-columns: repeat(2, minmax(0, 1fr));
+  	gap: 16px;
+}
+.formWide {
+  	grid-column: 1 / -1;
+}
+@media (max-width: 640px) {
+  	.formGrid {
+    		grid-template-columns: 1fr;
+  	}
+}
+.actions {
+  	display: flex;
+  	flex-wrap: wrap;
+  	gap: 8px;
+}
+.url {
+  	display: block;
+  	max-width: 260px;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+  	white-space: nowrap;
+  	font-size: 12px;
+  	color: var(--text-3);
+}
+
+/* Estadísticas */
+.twoCols {
+  	display: grid;
+  	grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  	gap: 16px;
+  	margin: 16px 0 8px;
+}
+@media (max-width: 900px) {
+  	.twoCols {
+    		grid-template-columns: 1fr;
+  	}
+}
+.sectionTitle {
+  	margin: 32px 0 12px;
+  	font-size: 18px;
+}
+.sectionNote {
+  	font-size: 13px;
+  	font-weight: 400;
+  	color: var(--text-3);
+}
+.note {
+  	margin: 16px 0 0;
+  	font-size: 13px;
+  	color: var(--text-3);
+}
+.note a {
+  	color: var(--accent-text);
+  	font-weight: 600;
+}
+
+.funnel {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 16px;
+}
+.funnelStep {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 6px;
+}
+.funnelHead {
+  	display: flex;
+  	justify-content: space-between;
+  	gap: 12px;
+  	font-size: 14px;
+}
+.funnelHead small {
+  	font-weight: 400;
+  	color: var(--text-3);
+}
+.funnelTrack {
+  	height: 8px;
+  	background-color: var(--surface-3);
+}
+.funnelFill {
+  	height: 100%;
+  	background-color: var(--accent);
+  	transition: width 500ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Ventas y comisión */
+.saleForm {
+  	display: grid;
+  	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  	gap: 16px;
+  	align-items: end;
+}
+.salePreview {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 4px;
+  	padding: 10px 14px;
+  	font-size: 12px;
+  	letter-spacing: 0.06em;
+  	text-transform: uppercase;
+  	color: var(--text-3);
+  	background-color: var(--accent-soft);
+  	border: 1px solid var(--accent-line);
+}
+.salePreview strong {
+  	font-size: 20px;
+  	letter-spacing: 0;
+  	text-transform: none;
+  	color: var(--text);
+}
+.rateRow {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 12px;
+  	align-items: flex-start;
+}
+.rateInput {
+  	width: 72px;
+  	height: 36px;
+  	padding: 0 8px;
+  	font: inherit;
+  	color: var(--text);
+  	background-color: var(--surface);
+  	border: 1px solid var(--border-strong);
+}
+.rateInput:focus {
+  	outline: 2px solid var(--accent);
+  	outline-offset: 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  	.funnelFill {
+    		transition: none;
+  	}
+}

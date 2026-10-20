@@ -4,7 +4,9 @@ Trabajo preparado el 13/10/2026. El repositorio ya tiene una tienda con `public.
 
 **Actualización del 14/10/2026:** la base ya está aplicada y conectada al proyecto Supabase SPOT. Ver [estado de la conexión, verificaciones y notas de migraciones](conexion-supabase.md). Las instrucciones para crear/aplicar una base nueva se conservan como referencia; no repetirlas sobre la instancia existente.
 
-**Entrega 3.4–3.6:** [contrato del catálogo, permisos, operaciones para I2, EP-03, defensa y respaldo/restauración](catalogo-api.md). La lectura pública ya está implementada con RLS; la demo se solicita expresamente con `incluirDemo:true`.
+**Entrega 3.4–3.6:** [contrato del catálogo, permisos, operaciones para I2, EP-03, defensa y respaldo/restauración](catalogo-api.md). La lectura pública está implementada y probada localmente con RLS; la aplicación de esta ampliación en Supabase sigue pendiente porque el intento fue cancelado. Una vez aplicada, la demo se solicita expresamente con `incluirDemo:true`.
+
+**Pruebas documentadas (19/10/2026):** [informe con matriz de casos y evidencia](pruebas-integrante-3.md). Se conservan el resultado individual de las pruebas, los registros de ejecución/compilación y la versión del código probado.
 
 ## Archivos y entregables
 

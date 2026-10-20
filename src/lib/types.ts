@@ -162,3 +162,84 @@ export const NEXT_ORDER_STATUS: Partial<Record<OrderStatus, { status: OrderStatu
   preparing: { status: 'shipped', label: 'Marcar como enviado' },
   shipped: { status: 'delivered', label: 'Marcar como entregado' },
 };
+
+export type Coupon = {
+  id: string;
+  merchant_id: string;
+  title: string;
+  description: string;
+  discount_label: string;
+  code_prefix: string;
+  /** Web del comercio; {codigo} se reemplaza por el código del voucher. */
+  destination_url: string;
+  valid_hours: number;
+  starts_at: string;
+  ends_at: string | null;
+  max_claims: number | null;
+  claims_count: number;
+  is_active: boolean;
+  created_at: string;
+  merchant?: { name: string; slug: string; logo_url: string | null } | null;
+};
+
+export type Voucher = {
+  id: string;
+  coupon_id: string;
+  user_id: string;
+  code: string;
+  expires_at: string;
+  clicks: number;
+  last_clicked_at: string | null;
+  created_at: string;
+  coupon?: Coupon | null;
+};
+
+export type CouponTotals = {
+  claims: number;
+  clicks: number;
+  unique_clickers: number;
+  sales: number;
+  sales_cents: number;
+  commission_cents: number;
+  commission_pending_cents: number;
+  commission_paid_cents: number;
+};
+
+export type CouponDay = { day: string; claims: number; clicks: number; sales_cents: number };
+
+export type CouponRow = { id: string; title: string; claims: number; clicks: number; unique_clickers: number; sales: number; sales_cents: number };
+
+export type CouponStats = { totals: CouponTotals; daily: CouponDay[]; coupons: CouponRow[]; commission_percent?: number };
+
+export type SaleStatus = 'pending' | 'paid' | 'void';
+
+export type VoucherSale = {
+  id: string;
+  voucher_id: string | null;
+  coupon_id: string | null;
+  merchant_id: string;
+  code: string;
+  coupon_title: string;
+  amount_cents: number;
+  commission_percent: number;
+  commission_cents: number;
+  status: SaleStatus;
+  reported_at: string;
+  settled_at: string | null;
+  merchant?: { name: string } | null;
+};
+
+export type MerchantCommissionRow = {
+  id: string;
+  name: string;
+  commission_percent: number | null;
+  effective_percent: number;
+  claims: number;
+  clicks: number;
+  sales: number;
+  sales_cents: number;
+  commission_pending_cents: number;
+  commission_paid_cents: number;
+};
+
+export type CouponOverview = { overall: CouponStats; default_percent: number; merchants: MerchantCommissionRow[] };

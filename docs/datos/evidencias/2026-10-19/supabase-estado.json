@@ -1,0 +1,29 @@
+{
+  "fecha": "2026-10-19",
+  "zonaHoraria": "America/Buenos_Aires",
+  "proyecto": "qvwsyeaijnyhtmwvhzyz",
+  "tipo": "comprobacion_remota_solo_lectura_y_resultado_de_despliegue",
+  "consulta": "select to_regclass('public.catalogo_ofertas') as vista_publica, exists(select 1 from information_schema.columns where table_schema='catalogo' and table_name='ofertas' and column_name='publicada') as columna_publicada, (select count(*) from catalogo.ofertas) as ofertas, (select count(*) from catalogo.historial_precios) as observaciones;",
+  "resultadoPrevioAlIntento": {
+    "vista_publica": null,
+    "columna_publicada": false,
+    "ofertas": 40,
+    "observaciones": 40
+  },
+  "migracionesRemotasObservadas": [
+    { "version": "20261014203740", "nombre": "marketplace_schema" },
+    { "version": "20261014203806", "nombre": "marketplace_storage_seed" },
+    { "version": "20261014203812", "nombre": "catalogo_schema" },
+    { "version": "20261014203819", "nombre": "catalogo_import" },
+    { "version": "20261014204214", "nombre": "deployed_function_permissions" }
+  ],
+  "migracionIntentada": "catalogo_api_permisos",
+  "respuestaHerramienta": { "status": "cancelled", "message": "Migration was cancelled." },
+  "comprobacionPosteriorAlIntento": {
+    "vista_publica": null,
+    "columna_publicada": false,
+    "ofertas": 40,
+    "observaciones": 40
+  },
+  "conclusion": "La ampliacion 3.4-3.6 no tiene un despliegue remoto confirmado. No se ejecutaron verificaciones HTTP de sus nuevas vistas/RPC ni se eludio la cancelacion."
+}

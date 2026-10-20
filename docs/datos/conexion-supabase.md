@@ -24,7 +24,7 @@ Para un despliegue en Easypanel, usar la URL y la clave pública de `.env.local`
 
 El primer administrador de la aplicación se asigna según las instrucciones del README, después de registrar la cuenta correspondiente. No se inventó un usuario administrador ni se enviaron correos de prueba.
 
-## Verificación
+## Verificación inicial (14/10/2026)
 
 La misma biblioteca y clave pública de la aplicación pudieron leer por HTTPS:
 
@@ -36,6 +36,12 @@ La misma biblioteca y clave pública de la aplicación pudieron leer por HTTPS:
 Además se comprobaron los conteos del catálogo, el estado activo del proyecto y RLS en todas las tablas. La suite completa pasó **259 pruebas en 22 archivos**, incluyendo registro/perfiles, tienda, importación y dos pruebas nuevas del despliegue.
 
 La compilación de producción del cliente y del servidor terminó correctamente con la conexión configurada. Se instalaron las dependencias que ya estaban declaradas en el proyecto y faltaban en el entorno local; no se cambiaron versiones del manifiesto ni del lockfile.
+
+## Tareas 3.4–3.6: verificación del 19/10/2026
+
+La nueva migración local `20261014212300_catalogo_api_permisos.sql` implementa lectura pública, gestión por membresía y moderación. No está aplicada en este proyecto: la herramienta devolvió `Migration was cancelled.`. La comprobación remota previa encontró `catalogo_ofertas` ausente, sin columna `publicada`, y conservó 40 ofertas/40 observaciones. No se modificó el historial interno ni se usó otro método para eludir la cancelación.
+
+La implementación local pasó 286 pruebas en 24 archivos y la compilación de cliente/servidor. Hay un [informe de casos, resultados y límites](pruebas-integrante-3.md) con logs, resultados individuales, commit y huellas de archivos. Estas pruebas no se presentan como validación de PostgREST remoto. La tabla de versiones remotas de abajo conserva solo las migraciones confirmadas.
 
 ## Historial de migraciones
 

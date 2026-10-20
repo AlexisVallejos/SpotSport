@@ -1,0 +1,79 @@
+.wrap {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 12px;
+}
+.legend {
+  	display: flex;
+  	flex-wrap: wrap;
+  	gap: 16px;
+  	font-size: 13px;
+  	color: var(--text-3);
+}
+.legend span {
+  	display: inline-flex;
+  	align-items: center;
+  	gap: 6px;
+}
+.swatch {
+  	width: 10px;
+  	height: 10px;
+}
+.claims {
+  	background-color: var(--text-3);
+}
+.clicks {
+  	background-color: var(--accent);
+}
+.plot {
+  	display: flex;
+  	align-items: flex-end;
+  	gap: 3px;
+  	height: 160px;
+  	padding-top: 8px;
+  	border-bottom: 1px solid var(--border-strong);
+}
+.day {
+  	flex: 1;
+  	min-width: 0;
+  	height: 100%;
+  	display: flex;
+  	align-items: flex-end;
+  	justify-content: center;
+  	gap: 1px;
+}
+.bar {
+  	flex: 1;
+  	max-width: 14px;
+  	min-height: 0;
+  	transform-origin: bottom;
+  	animation: grow 500ms cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+@keyframes grow {
+  	from {
+    		transform: scaleY(0.2);
+    		opacity: 0;
+  	}
+}
+.axis {
+  	display: flex;
+  	gap: 3px;
+  	font-size: 11px;
+  	color: var(--text-4);
+}
+.axis span {
+  	flex: 1;
+  	min-width: 0;
+  	text-align: center;
+  	overflow: hidden;
+}
+.empty {
+  	margin: 0;
+  	font-size: 13px;
+  	color: var(--text-3);
+}
+@media (prefers-reduced-motion: reduce) {
+  	.bar {
+    		animation: none;
+  	}
+}
