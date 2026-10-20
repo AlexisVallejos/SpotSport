@@ -17,6 +17,7 @@ export default function ShopLayout() {
         <span>© SPOT — Todo el deporte en un solo lugar</span>
         <span className={styles.footerLinks}>
           <Link to="/tienda">Tienda</Link>
+          <Link to="/cupones">Cupones</Link>
           <Link to="/cuenta/afiliarse">Vendé en SPOT</Link>
           <Link to="/entrenar">Entrená con cámara</Link>
         </span>
