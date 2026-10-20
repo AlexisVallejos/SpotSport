@@ -1,0 +1,231 @@
+/* Voucher / cupón: ticket oscuro con el logo de SPOT, muescas y línea de corte. Siempre sobre fondo oscuro, con ambos temas. */
+.ticket {
+  	font-family: Inter, sans-serif;
+  	position: relative;
+  	display: flex;
+  	flex-direction: column;
+  	overflow: hidden;
+  	color: #f5f5f3;
+  	background:
+    		radial-gradient(120% 90% at 100% 0%, rgba(255, 121, 0, 0.2) 0%, rgba(255, 121, 0, 0) 55%),
+    		linear-gradient(180deg, #1a1a1a 0%, #121212 100%);
+  	border: 1px solid rgba(255, 255, 255, 0.09);
+  	box-shadow: 0 24px 48px -28px rgba(255, 121, 0, 0.45);
+}
+.ticket::before {
+  	content: '';
+  	position: absolute;
+  	inset: 0 0 auto 0;
+  	height: 3px;
+  	background: linear-gradient(90deg, #ff7900, #ffb347);
+}
+
+.head {
+  	display: flex;
+  	align-items: center;
+  	justify-content: space-between;
+  	gap: 12px;
+  	padding: 20px 20px 0;
+}
+.logo {
+  	display: block;
+  	height: 24px;
+  	width: auto;
+}
+.kicker {
+  	padding: 4px 10px;
+  	font-size: 10px;
+  	font-weight: 700;
+  	letter-spacing: 0.18em;
+  	text-transform: uppercase;
+  	color: #ff9d57;
+  	border: 1px solid rgba(255, 121, 0, 0.42);
+  	background-color: rgba(255, 121, 0, 0.1);
+}
+
+.body {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 6px;
+  	padding: 22px 20px 22px;
+}
+.merchant {
+  	margin: 0;
+  	font-size: 12px;
+  	letter-spacing: 0.1em;
+  	text-transform: uppercase;
+  	color: #a7a9b2;
+}
+.discount {
+  	margin: 0;
+  	font-family: 'Barlow Condensed', Inter, sans-serif;
+  	font-size: 56px;
+  	line-height: 0.95;
+  	font-weight: 800;
+  	letter-spacing: -0.01em;
+  	text-transform: uppercase;
+  	color: #ff9d57;
+}
+.title {
+  	margin: 0;
+  	font-family: Inter, sans-serif;
+  	font-size: 17px;
+  	font-weight: 700;
+}
+.desc {
+  	margin: 0;
+  	font-size: 14px;
+  	color: #a7a9b2;
+}
+
+.cut {
+  	position: relative;
+  	height: 0;
+  	margin: 0 18px;
+  	border-top: 2px dashed rgba(255, 255, 255, 0.14);
+}
+.cut::before,
+.cut::after {
+  	content: '';
+  	position: absolute;
+  	top: -11px;
+  	width: 20px;
+  	height: 20px;
+  	border-radius: 50%;
+  	background-color: var(--bg);
+  	border: 1px solid rgba(255, 255, 255, 0.09);
+}
+.cut::before {
+  	left: -29px;
+}
+.cut::after {
+  	right: -29px;
+}
+
+.foot {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 14px;
+  	padding: 20px;
+}
+
+.expired {
+  	filter: grayscale(1);
+  	opacity: 0.6;
+  	box-shadow: none;
+}
+.stamp {
+  	position: absolute;
+  	top: 38%;
+  	right: 18px;
+  	padding: 4px 12px;
+  	transform: rotate(-9deg);
+  	font-size: 14px;
+  	font-weight: 800;
+  	letter-spacing: 0.2em;
+  	color: #ff9d8a;
+  	border: 2px solid #ff9d8a;
+  	background-color: rgba(18, 18, 18, 0.7);
+}
+
+/* Código */
+.code {
+  	display: flex;
+  	align-items: center;
+  	justify-content: space-between;
+  	gap: 12px;
+  	padding: 12px 14px;
+  	border: 1px dashed rgba(255, 121, 0, 0.55);
+  	background-color: rgba(255, 121, 0, 0.1);
+}
+.codeLabel {
+  	display: block;
+  	margin-bottom: 2px;
+  	font-size: 10px;
+  	letter-spacing: 0.16em;
+  	text-transform: uppercase;
+  	color: #a7a9b2;
+}
+.codeText {
+  	font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  	font-size: 17px;
+  	font-weight: 700;
+  	letter-spacing: 0.06em;
+  	white-space: nowrap;
+  	color: #f5f5f3;
+}
+
+/* Cuenta regresiva */
+.timer {
+  	display: flex;
+  	align-items: center;
+  	gap: 14px;
+}
+.ring {
+  	flex: none;
+  	position: relative;
+  	width: 64px;
+  	height: 64px;
+}
+.ring svg {
+  	display: block;
+  	transform: rotate(-90deg);
+}
+.ringTrack {
+  	fill: none;
+  	stroke: rgba(255, 255, 255, 0.1);
+}
+.ringFill {
+  	fill: none;
+  	stroke: #ff7900;
+  	stroke-linecap: round;
+  	transition: stroke-dashoffset 1s linear;
+}
+.ringLow {
+  	stroke: #ff9d8a;
+}
+.ringText {
+  	position: absolute;
+  	inset: 0;
+  	display: grid;
+  	place-items: center;
+  	font-size: 14px;
+  	font-weight: 800;
+  	font-variant-numeric: tabular-nums;
+}
+.timerText {
+  	display: flex;
+  	flex-direction: column;
+  	gap: 2px;
+  	min-width: 0;
+}
+.timerMain {
+  	margin: 0;
+  	font-size: 16px;
+  	font-weight: 700;
+  	font-variant-numeric: tabular-nums;
+  	color: #ff9d57;
+}
+.timerLow {
+  	color: #ff9d8a;
+}
+.timerSub {
+  	margin: 0;
+  	font-size: 12px;
+  	color: #a7a9b2;
+}
+.meta {
+  	margin: 0;
+  	font-size: 13px;
+  	color: #a7a9b2;
+}
+.meta a {
+  	color: #ff9d57;
+  	font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  	.ringFill {
+    		transition: none;
+  	}
+}
