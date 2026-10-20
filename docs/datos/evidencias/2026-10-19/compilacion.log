@@ -1,0 +1,66 @@
+
+> spot-sport@0.1.0 prebuild
+> node scripts/copy-mediapipe.mjs
+
+MediaPipe WASM copiado a public/mediapipe/wasm
+
+> spot-sport@0.1.0 build
+> tsc -b && tsc -p tsconfig.server.json && vite build && vite build -c vite.server.config.ts
+
+vite v7.3.7 building client environment for production...
+transforming...
+✓ 2572 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                               1.72 kB │ gzip:   0.83 kB
+dist/assets/Legal-DIFuo5Qj.css                1.44 kB │ gzip:   0.64 kB
+dist/assets/pages-DBspTaas.css                5.25 kB │ gzip:   1.61 kB
+dist/assets/Entrenar-BGnbZjm4.css            11.36 kB │ gzip:   2.82 kB
+dist/assets/Precios-BVv4jjAh.css             16.56 kB │ gzip:   4.04 kB
+dist/assets/index-MzcuF-36.css               69.91 kB │ gzip:  15.01 kB
+dist/assets/useAsync-Ct2JSk2Q.js              0.49 kB │ gzip:   0.31 kB
+dist/assets/orders-B8sNh2Qd.js                0.60 kB │ gzip:   0.34 kB
+dist/assets/account-LZw6eJWu.js               1.15 kB │ gzip:   0.63 kB
+dist/assets/Profile-BZvQ1vj3.js               1.22 kB │ gzip:   0.71 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+dist/assets/Login-3YWtdMqB.js                 1.37 kB │ gzip:   0.79 kB
+dist/assets/AdminDashboard-DQnvLkK_.js        1.38 kB │ gzip:   0.66 kB
+dist/assets/AdminOrders-BGMFReIq.js           1.44 kB │ gzip:   0.79 kB
+dist/assets/pages.module-DrhiZNG-.js          1.46 kB │ gzip:   0.68 kB
+dist/assets/MerchantDashboard-D9XKFVh8.js     1.50 kB │ gzip:   0.73 kB
+dist/assets/OrderCard-CszqOrXL.js             1.70 kB │ gzip:   0.75 kB
+dist/assets/AdminUsers-BilOsh44.js            1.95 kB │ gzip:   0.96 kB
+dist/assets/MerchantOrders-DNAA1SyZ.js        1.99 kB │ gzip:   1.00 kB
+dist/assets/Register-C0UhLLiy.js              2.06 kB │ gzip:   0.99 kB
+dist/assets/admin-Spw627iB.js                 2.10 kB │ gzip:   0.65 kB
+dist/assets/MerchantProfile-DZlLCsmN.js       2.26 kB │ gzip:   1.08 kB
+dist/assets/AccountHome-BhakM3bA.js           2.28 kB │ gzip:   1.09 kB
+dist/assets/AdminCategories-poqkMhRm.js       2.30 kB │ gzip:   1.11 kB
+dist/assets/AdminProducts-0UA1sucF.js         2.35 kB │ gzip:   1.09 kB
+dist/assets/CartPage-C9GbiUsG.js              2.39 kB │ gzip:   1.00 kB
+dist/assets/Orders-DzsRBDZr.js                2.39 kB │ gzip:   1.18 kB
+dist/assets/merchant-1NTgUKEi.js              2.81 kB │ gzip:   1.12 kB
+dist/assets/AdminMerchants-B0HDV4er.js        2.90 kB │ gzip:   1.23 kB
+dist/assets/MerchantProducts-AV2Jswbf.js      2.98 kB │ gzip:   1.36 kB
+dist/assets/BecomeMerchant-C5ds5GV_.js        3.15 kB │ gzip:   1.39 kB
+dist/assets/Checkout-DOQmjtu9.js              3.45 kB │ gzip:   1.55 kB
+dist/assets/Shop-Bdn5itpr.js                  3.99 kB │ gzip:   1.90 kB
+dist/assets/ProductPage-BoAaqMsl.js           4.25 kB │ gzip:   1.70 kB
+dist/assets/Legal-CDd6GpBb.js                 4.33 kB │ gzip:   1.85 kB
+dist/assets/ProductForm-DHlSdDMm.js           4.88 kB │ gzip:   2.16 kB
+dist/assets/AdminAnnouncements-0TJn5k6s.js    6.31 kB │ gzip:   2.57 kB
+dist/assets/Precios-XH-P8cHM.js              25.59 kB │ gzip:   9.77 kB
+dist/assets/Entrenar-BAMNlC7p.js            720.98 kB │ gzip: 196.06 kB
+dist/assets/index-DvGwLAD1.js               739.37 kB │ gzip: 227.90 kB
+✓ built in 26.67s
+vite v7.3.7 building ssr environment for production...
+transforming...
+✓ 10 modules transformed.
+rendering chunks...
+dist-server/main.mjs  43.59 kB
+✓ built in 435ms
+EXIT_CODE=0

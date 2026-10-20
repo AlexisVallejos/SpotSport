@@ -1,0 +1,301 @@
+
+> spot-sport@0.1.0 test
+> vitest run --reporter=verbose --reporter=json --outputFile.json=docs/datos/evidencias/2026-10-19/vitest.json
+
+
+ RUN  v4.1.11 C:/Users/ignac/OneDrive/Documentos/GitHub/SpotSport
+
+ ✓ server/suscripciones.test.ts > newsletter > normaliza mails y rechaza lo que no parece un mail 4ms
+ ✓ server/suscripciones.test.ts > newsletter > suscribe una sola vez, da de baja y guarda en disco 211ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > squat: the figure is fully visible to the analyzer 5ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > lunge: the figure is fully visible to the analyzer 2ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > pushup: the figure is fully visible to the analyzer 3ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > plank: the figure is fully visible to the analyzer 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > sidePlank: the figure is fully visible to the analyzer 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > bridge: the figure is fully visible to the analyzer 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > legRaise: the figure is fully visible to the analyzer 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > kick: the figure is fully visible to the analyzer 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > squat: shows good form the whole way (every check passes) 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > lunge: shows good form the whole way (every check passes) 3ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > pushup: shows good form the whole way (every check passes) 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > plank: shows good form the whole way (every check passes) 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > sidePlank: shows good form the whole way (every check passes) 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > bridge: shows good form the whole way (every check passes) 0ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > legRaise: shows good form the whole way (every check passes) 2ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > kick: shows good form the whole way (every check passes) 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > squat: starts at rest and reaches full depth 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > lunge: starts at rest and reaches full depth 0ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > pushup: starts at rest and reaches full depth 0ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > bridge: starts at rest and reaches full depth 0ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > legRaise: starts at rest and reaches full depth 0ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > kick: starts at rest and reaches full depth 0ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > squat: moves steadily between rest and depth 2ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > lunge: moves steadily between rest and depth 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > pushup: moves steadily between rest and depth 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > bridge: moves steadily between rest and depth 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > legRaise: moves steadily between rest and depth 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > kick: moves steadily between rest and depth 1ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > keeps feet on the floor: nothing goes below it 15ms
+ ✓ src/lib/pose/demo.test.ts > figureAt > keeps the limbs the same length while moving 2ms
+ ✓ src/lib/pose/demo.test.ts > cuesFor > has a short cue for every exercise 1ms
+ ✓ src/lib/pose/phrases.test.ts > voice pack coverage > has no duplicates and the basics 9ms
+ ✓ src/lib/pose/phrases.test.ts > voice pack coverage > wrote a spoken version of every correction a rule can give 2ms
+ ✓ src/lib/pose/phrases.test.ts > voice pack coverage > covers everything the narrator can say, rule by rule 125ms
+ ✓ src/lib/pose/phrases.test.ts > voice pack coverage > only warms up clips that exist in the pack 3ms
+ ✓ src/lib/pose/phrases.test.ts > voice pack coverage > covers the setup screens, set endings and summaries 2ms
+ ✓ src/lib/precios.test.ts > formato > muestra precios argentinos sin centavos 95ms
+ ✓ src/lib/precios.test.ts > formato > dice hace cuánto se actualizó 1ms
+ ✓ src/lib/precios.test.ts > formato > nombra el género 1ms
+ ✓ src/lib/precios.test.ts > formato > promedia estrellas 1ms
+ ✓ src/lib/precios.test.ts > filtros en la URL > arma links con los nombres en castellano y sin el orden por defecto 6ms
+ ✓ src/lib/precios.test.ts > filtros en la URL > lee los filtros de vuelta e ignora valores inventados 26ms
+ ✓ server/precios/precios.test.ts > cleanName > saca "Zapatillas", el uso y el género del nombre de Dexter 10ms
+ ✓ server/precios/precios.test.ts > cleanName > respeta la grafía de la marca y agrupa las líneas de adidas 3ms
+ ✓ server/precios/precios.test.ts > cleanName > entiende el uso al final, unisex y mayúsculas raras 2ms
+ ✓ server/precios/precios.test.ts > cleanName > reconoce el tipo de prenda o accesorio y lo deja en el nombre 7ms
+ ✓ server/precios/precios.test.ts > cleanName > encuentra la marca aunque el club vaya antes y descarta palabras cortadas 5ms
+ ✓ server/precios/precios.test.ts > códigos de modelo > lee el código desde la foto de Magento 3ms
+ ✓ server/precios/precios.test.ts > códigos de modelo > usa el final de la URL como respaldo, con el sufijo de color de Nike 3ms
+ ✓ server/precios/precios.test.ts > códigos de modelo > quita el prefijo de marca de Dexter 4ms
+ ✓ server/precios/precios.test.ts > parseMagentoPage > lee total, precios, cuotas y fotos 4ms
+ ✓ server/precios/precios.test.ts > parseMagentoPage > toma el precio tachado sólo si es mayor 1ms
+ ✓ server/precios/precios.test.ts > parseMagentoPage > usa el deporte por defecto de la sección sólo si el nombre no dice otro 2ms
+ ✓ server/precios/precios.test.ts > parseDexterPage > lee precio de oferta, precio de lista, cuotas y fotos 2ms
+ ✓ server/precios/precios.test.ts > buildProducts > cruza el mismo código en dos tiendas y ordena de más barata a más cara 5ms
+ ✓ server/precios/precios.test.ts > buildProducts > junta en una sola oferta el mismo producto listado en Hombre y en Mujer 1ms
+ ✓ server/precios/precios.test.ts > buildProducts > search > filtra por categoría, deporte, tipo y búsqueda, y cuenta marcas y tipos 163ms
+ ✓ server/precios/precios.test.ts > buildProducts > search > ordena, pagina y trae favoritos por id 3ms
+ ✓ server/precios/precios.test.ts > reseñas > lee la lista pública de Magento 3ms
+ ✓ server/precios/precios.test.ts > reseñas > valida las reseñas de SPOT 2ms
+ ✓ src/services/catalogo/index.test.ts > usa la clave pública y excluye demo por defecto, sin campos auxiliares en el DTO 26ms
+ ✓ src/services/catalogo/index.test.ts > construye filtros y paginación con el SDK real, conservando precisión decimal 7ms
+ ✓ src/services/catalogo/index.test.ts > no interpreta comodines ingresados como filtros adicionales 2ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"limite":0} 5ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"limite":201} 1ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"desde":-1} 1ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"desde":1.5} 1ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"varianteId":"x"} 1ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"precioMin":"-1","moneda":"ARS"} 2ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"precioMax":"NaN","moneda":"ARS"} 1ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"precioMin":"1.234","moneda":"ARS"} 1ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"precioMin":"1"} 1ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"precioMin":"100","precioMax":"20","moneda":"ARS"} 2ms
+ ✓ src/services/catalogo/index.test.ts > rechaza filtros inválidos sin hacer peticiones: {"texto":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"} 1ms
+ ✓ src/services/catalogo/index.test.ts > propaga problemas de conexión/permisos en lugar de ocultarlos como catálogo vacío 220ms
+ ✓ src/services/catalogo/index.test.ts > consulta historial de una oferta con un orden estable y límite 125ms
+ ✓ src/services/catalogo/index.test.ts > mantiene los límites de gestión y solo expone las operaciones RPC autorizadas 24ms
+ ✓ src/services/catalogo/index.test.ts > rechaza lotes inválidos aunque el RPC responda HTTP 200, y devuelve el id del lote exitoso 9ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > asks to step back when the body is not visible 11ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > does not trust landmarks the camera only half sees 1ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > waits for the starting position before counting anything 3ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > does not count sitting down and standing up as a squat 39ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > counts a full squat 18ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > flags a shallow squat 15ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > flags a squat with the chest collapsing 150ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > ignores a single glitched frame 6ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > ignores a jolt that is too quick to be a repetition 3ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (reps) > needs the starting position again after a reset 8ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (hold) > needs a moment of good form, then only counts time while the plank is straight 4ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (hold) > has to earn the timer again after losing the form 2ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (hold) > does not count a body pointing at the camera 4ms
+ ✓ src/lib/pose/engine.test.ts > createTracker (hold) > knows when a set is done 1ms
+ ✓ src/lib/orders.test.ts > pedidos > no cuenta los cancelados en lo gastado 8ms
+ ✓ src/lib/orders.test.ts > pedidos > agrupa por compra y ordena de más nueva a más vieja 41ms
+ ✓ src/lib/pose/script.test.ts > numberWords > spells 0–99 in Spanish 6ms
+ ✓ src/lib/pose/script.test.ts > numberWords > uses the feminine for things like "repeticiones" 1ms
+ ✓ src/lib/pose/script.test.ts > numberWords > falls back to digits outside the range 1ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > asks to step back once in a while, not on every frame 5ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > stays quiet before the person shows up 0ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > says it sees you once, briefly 1ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > does not read out every repetition: the count is on screen 1ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > gives a short check-in every five and warns before the last one 1ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > cheers a little on the tens 1ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > corrects a bad rep in short Argentine Spanish, and not twice in a row 2ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > never talks over itself: lines come at least a few seconds apart 1ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > does not nag while you are mid-rep: corrections come after it 0ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > speaks a message with no special wording as it is 0ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (reps): few words, spaced out > keeps counting after a new set resets the tracker 0ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (hold) > marks only the tens, with no extra chatter 1ms
+ ✓ src/lib/pose/script.test.ts > createNarrator (hold) > warns when the form slips, not more than every few seconds 1ms
+ ✓ src/lib/pose/script.test.ts > texts > introduces the exercise in two short sentences 1ms
+ ✓ src/lib/pose/script.test.ts > texts > keeps the explanation under fifteen words 1ms
+ ✓ src/lib/pose/script.test.ts > texts > introduces an exercise without rules, without naming it 0ms
+ ✓ src/lib/pose/script.test.ts > texts > closes sets briefly and names the next one after the rest 1ms
+ ✓ src/lib/pose/script.test.ts > texts > summarizes reps with numbers in words, only mentioning what matters 1ms
+ ✓ src/lib/pose/script.test.ts > texts > summarizes a hold in rounded seconds 1ms
+ ✓ src/lib/pose/script.test.ts > texts > cleans symbols for the speech engine 1ms
+ ✓ src/lib/pose/script.test.ts > texts > splits lines into sentences and keys them without the final full stop 1ms
+ ✓ src/lib/pose/script.test.ts > texts > keeps every spoken correction short 2ms
+ ✓ src/lib/cart.test.ts > carrito > suma la misma variante en una sola línea sin pasarse del stock 9ms
+ ✓ src/lib/cart.test.ts > carrito > actualiza el precio y el stock con lo último que vio la tienda 3ms
+ ✓ src/lib/cart.test.ts > carrito > no agrega nada sin stock 1ms
+ ✓ src/lib/cart.test.ts > carrito > cambia cantidades, las limita al stock y quita con 0 2ms
+ ✓ src/lib/cart.test.ts > carrito > calcula unidades y subtotal 2ms
+ ✓ src/lib/cart.test.ts > carrito > agrupa por comercio como se van a dividir los pedidos 1ms
+ ✓ src/lib/cart.test.ts > carrito > manda al servidor solo variante y cantidad 1ms
+ ✓ src/lib/cart.test.ts > carrito > lee el carrito guardado y descarta lo roto 2ms
+ ✓ src/lib/cart.test.ts > dinero > formatea centavos como pesos 4ms
+ ✓ src/lib/cart.test.ts > dinero > entiende cómo escribe la gente un precio 2ms
+ ✓ src/lib/catalog.test.ts > catálogo > calcula el precio desde, las variantes disponibles y el stock 18ms
+ ✓ src/lib/catalog.test.ts > catálogo > arma etiquetas y opciones sin repetidos 4ms
+ ✓ src/lib/catalog.test.ts > catálogo > slugify saca tildes y símbolos 72ms
+ ✓ src/lib/catalog.test.ts > validación del formulario de producto > convierte precios y stock 4ms
+ ✓ src/lib/catalog.test.ts > validación del formulario de producto > pide nombre, variantes y precios válidos 2ms
+ ✓ src/lib/catalog.test.ts > validación del formulario de producto > rechaza dos variantes con el mismo talle y color 1ms
+ ✓ src/lib/catalog.test.ts > validación del formulario de producto > acepta un producto de talle único 1ms
+ ✓ src/components/organisms/NeuralCategories/neuralLayout.test.ts > mapa neuronal de categorías > arma núcleo, ramas, tipos y deportes de zapatillas dentro del dibujo 16ms
+ ✓ src/components/organisms/NeuralCategories/neuralLayout.test.ts > mapa neuronal de categorías > es siempre igual (azar con semilla) 2ms
+ ✓ src/components/organisms/NeuralCategories/neuralLayout.test.ts > mapa neuronal de categorías > encuentra la neurona de los filtros y su camino al núcleo 1ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Sentadilla profunda → squat 5ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Estocadas alternadas → lunge 1ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Zancadas con mancuernas → lunge 1ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Flexiones diamante → pushup 1ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Push-ups → pushup 2ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Plancha abdominal → plank 1ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Plancha lateral → sidePlank 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Hip thrust con pelota → bridge 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Puente de glúteo → bridge 2ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Levantamiento de piernas → legRaise 1ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Elevación de piernas colgado → legRaise 1ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Patada de glúteo → kick 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Patadas traseras → kick 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Patada de burro con mancuerna → kick 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Plancha de lado derecho → sidePlank 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Curl de bíceps has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Flexión de bíceps has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Flexión de piernas tumbado has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Press de banca has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Dorsiflexión de tobillo has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Burpees sin Flexión has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Flexión lateral con mancuerna has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Flexión a pino contra la pared has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > Estiramiento de flexión horizontal del hombro has no rule 0ms
+ ✓ src/lib/exercises/match.test.ts > ruleFor > covers every local exercise 2ms
+ ✓ scripts/catalogo/csv.test.ts > CSV de catálogo > conserva dinero como texto y convierte solo booleanos 10ms
+ ✓ scripts/catalogo/csv.test.ts > CSV de catálogo > acepta comas, comillas escapadas y saltos dentro de un campo 1ms
+ ✓ scripts/catalogo/csv.test.ts > CSV de catálogo > rechaza encabezado cambiado, filas incompletas y booleanos ambiguos 5ms
+ ✓ scripts/catalogo/csv.test.ts > CSV de catálogo > rechaza CSV vacío y comillas mal cerradas 2ms
+ ✓ src/lib/pose/geometry.test.ts > angle > measures a right angle 5ms
+ ✓ src/lib/pose/geometry.test.ts > angle > measures a straight line 2ms
+ ✓ src/lib/pose/geometry.test.ts > angle > returns 0 when two points coincide 3ms
+ ✓ src/lib/pose/geometry.test.ts > inclination > is 0 for a segment pointing up 1ms
+ ✓ src/lib/pose/geometry.test.ts > inclination > is 90 for a horizontal segment 1ms
+ ✓ src/lib/pose/geometry.test.ts > isVisible > uses the visibility score 1ms
+ ✓ src/lib/pose/geometry.test.ts > bestSide > picks the side the camera sees better 1ms
+ ✓ src/lib/pose/geometry.test.ts > isAboveLine > compares against the line between two points 1ms
+ ✓ src/lib/wger.test.ts > subtitle > skips repeats and cuts at the limit 75ms
+ ✓ src/lib/wger.test.ts > slim > keeps the Spanish translation as plain text 51ms
+ ✓ src/lib/wger.test.ts > slim > drops exercises without Spanish 1ms
+ ✓ src/lib/wger.test.ts > searchExercises > matches words ignoring accents and case 2ms
+ ✓ src/lib/wger.test.ts > searchExercises > matches the category name 4ms
+ ✓ src/lib/wger.test.ts > searchExercises > filters by category 1ms
+ ✓ src/lib/wger.test.ts > searchExercises > returns everything for an empty query, images first 1ms
+ ✓ src/lib/wger.test.ts > searchExercises > puts the Ritmo-Vida routines before wger 1ms
+ ✓ src/data/heroShoes.test.ts > línea de tiempo del video de portada > sabe qué zapatilla está en cada momento 9ms
+ ✓ src/data/heroShoes.test.ts > línea de tiempo del video de portada > muestra el texto sólo con la zapatilla completa 2ms
+ ✓ src/data/heroShoes.test.ts > línea de tiempo del video de portada > cada zapatilla aparece desde la lava vacía de la anterior 1ms
+ ✓ src/data/heroShoes.test.ts > línea de tiempo del video de portada > la barra de progreso va de 0 a 1 dentro de cada zapatilla 2ms
+ ✓ src/data/heroShoes.test.ts > cambio de zapatilla > a la siguiente: deja que la actual se desintegre y el video sigue solo 2ms
+ ✓ src/data/heroShoes.test.ts > cambio de zapatilla > a otra que no es la siguiente: se desintegra y salta con la lava vacía 1ms
+ ✓ src/data/heroShoes.test.ts > cambio de zapatilla > desde la lava vacía va directo a la elegida 1ms
+ ✓ src/data/heroShoes.test.ts > cambio de zapatilla > elegir la que ya está no hace nada 1ms
+ ✓ src/lib/smartQuery.test.ts > parseSearch > convierte palabras conocidas en filtros 11ms
+ ✓ src/lib/smartQuery.test.ts > parseSearch > deja como texto lo que no reconoce y entiende tildes y frases 2ms
+ ✓ src/lib/smartQuery.test.ts > parseSearch > usa una sola marca y no confunde palabras parecidas 1ms
+ ✓ src/lib/smartQuery.test.ts > parseSearch > respeta los filtros que ya había y quita palabras de un token 1ms
+ ✓ supabase/tests/deployment.test.ts > mantiene RLS en todas las tablas de la aplicación desplegada 56ms
+ ✓ supabase/tests/deployment.test.ts > no expone triggers por RPC y fija su contexto de resolución 45ms
+ ✓ src/lib/dates.test.ts > fechas de formularios > ida y vuelta sin perder el momento 9ms
+ ✓ src/lib/dates.test.ts > fechas de formularios > vacío o inválido es null / cadena vacía 1ms
+ ✓ src/lib/dates.test.ts > fechas de formularios > el formato es el que espera datetime-local 1ms
+ ✓ src/lib/voice.test.ts > pickVoice > prefers Rioplatense, then other Latin American, then Spain 6ms
+ ✓ src/lib/voice.test.ts > pickVoice > accepts underscores and any Spanish variant 1ms
+ ✓ src/lib/voice.test.ts > pickVoice > prefers a neural voice over any other, even from another country 1ms
+ ✓ src/lib/voice.test.ts > pickVoice > picks the Argentine neural voice when it exists 1ms
+ ✓ src/lib/voice.test.ts > pickVoice > prefers a cloud voice (Google) over the basic local one 1ms
+ ✓ src/lib/voice.test.ts > pickVoice > skips voices that already failed 0ms
+ ✓ src/lib/voice.test.ts > pickVoice > returns null when there is no Spanish voice 1ms
+ ✓ supabase/tests/marketplace.test.ts > cuentas y perfiles > crea el perfil al registrarse 19ms
+ ✓ supabase/tests/marketplace.test.ts > cuentas y perfiles > nadie se hace admin solo 48ms
+ ✓ supabase/tests/marketplace.test.ts > cuentas y perfiles > un admin sí puede promover a otra cuenta 22ms
+ ✓ supabase/tests/marketplace.test.ts > cuentas y perfiles > cada cuenta edita su perfil pero no el email 23ms
+ ✓ supabase/tests/marketplace.test.ts > cuentas y perfiles > cada cuenta ve solo su perfil; el admin ve todos; sin sesión no se ve nada 27ms
+ ✓ supabase/tests/marketplace.test.ts > afiliación de comercios > un cliente pide afiliarse y queda pendiente 20ms
+ ✓ supabase/tests/marketplace.test.ts > afiliación de comercios > no puede crearse ya aprobado ni a nombre de otro 13ms
+ ✓ supabase/tests/marketplace.test.ts > afiliación de comercios > una cuenta no puede tener dos comercios 21ms
+ ✓ supabase/tests/marketplace.test.ts > afiliación de comercios > el dueño no se auto-aprueba, pero sí edita sus datos 24ms
+ ✓ supabase/tests/marketplace.test.ts > afiliación de comercios > solo el admin aprueba, rechaza y suspende 22ms
+ ✓ supabase/tests/marketplace.test.ts > afiliación de comercios > un comercio rechazado puede volver a pedir la afiliación 9ms
+ ✓ supabase/tests/marketplace.test.ts > afiliación de comercios > el público ve solo comercios aprobados 9ms
+ ✓ supabase/tests/marketplace.test.ts > catálogo > el público ve productos de comercios aprobados, no los de pendientes 21ms
+ ✓ supabase/tests/marketplace.test.ts > catálogo > un comercio suspendido desaparece del catálogo y se recupera al reabrirse 43ms
+ ✓ supabase/tests/marketplace.test.ts > catálogo > un producto desactivado no se ve en la tienda pero sí en el panel del comercio 29ms
+ ✓ supabase/tests/marketplace.test.ts > catálogo > el comercio aprobado crea productos y variantes propios 30ms
+ ✓ supabase/tests/marketplace.test.ts > catálogo > no puede publicar en otro comercio ni tocar sus variantes 44ms
+ ✓ supabase/tests/catalogo-api.test.ts > publica 40 DTO, precios decimales y orden numérico dentro de una variante/moneda 329ms
+ ✓ supabase/tests/marketplace.test.ts > catálogo > un comercio pendiente no puede publicar 8ms
+ ✓ supabase/tests/marketplace.test.ts > catálogo > solo el admin destaca productos 15ms
+ ✓ supabase/tests/marketplace.test.ts > catálogo > precio y stock no pueden ser negativos 7ms
+ ✓ supabase/tests/marketplace.test.ts > compras > sin sesión no se puede comprar 12ms
+ ✓ supabase/tests/marketplace.test.ts > compras > descuenta stock, toma el precio de la base y separa un pedido por comercio 74ms
+ ✓ supabase/tests/catalogo-api.test.ts > ni el anónimo ni un cliente pueden escribir/importar ni leer columnas privadas 194ms
+ ✓ supabase/tests/marketplace.test.ts > compras > rechaza todo el pedido si falta stock y no toca nada 56ms
+ ✓ supabase/tests/marketplace.test.ts > compras > no deja pasarse del stock en dos líneas de la misma variante 27ms
+ ✓ supabase/tests/marketplace.test.ts > compras > valida cantidades, carrito vacío, datos de entrega y productos no disponibles 140ms
+ ✓ supabase/tests/marketplace.test.ts > compras > retiro en el local no exige dirección 21ms
+ ✓ supabase/tests/marketplace.test.ts > compras > un comercio no puede comprarse a sí mismo 8ms
+ ✓ supabase/tests/marketplace.test.ts > compras > no se puede crear ni editar un pedido a mano 14ms
+ ✓ supabase/tests/marketplace.test.ts > pedidos > cada quien ve solo lo suyo 43ms
+ ✓ supabase/tests/marketplace.test.ts > pedidos > el cliente no puede preparar su pedido ni otro comercio gestionarlo 20ms
+ ✓ supabase/tests/marketplace.test.ts > pedidos > el comercio avanza el pedido paso a paso y no se puede saltear 34ms
+ ✓ supabase/tests/marketplace.test.ts > pedidos > el comercio registra el cobro; el cliente no 21ms
+ ✓ supabase/tests/marketplace.test.ts > pedidos > el cliente cancela mientras está pendiente y el stock vuelve 35ms
+ ✓ supabase/tests/catalogo-api.test.ts > ejecuta las tres consultas de defensa con permisos públicos 357ms
+ ✓ supabase/tests/marketplace.test.ts > pedidos > el cliente ya no puede cancelar cuando el comercio empezó a prepararlo 28ms
+ ✓ supabase/tests/marketplace.test.ts > métricas > el admin ve los números de toda la plataforma; nadie más 35ms
+ ✓ supabase/tests/marketplace.test.ts > métricas > el comercio ve solo las suyas 13ms
+ ✓ supabase/tests/marketplace.test.ts > anuncios y ajustes del sitio > el público ve los anuncios vigentes y no los inactivos ni los futuros 21ms
+ ✓ supabase/tests/marketplace.test.ts > anuncios y ajustes del sitio > solo el admin crea y edita anuncios, categorías y ajustes 32ms
+ ✓ supabase/tests/marketplace.test.ts > imágenes (storage) > cada comercio sube en su carpeta y en ninguna otra 29ms
+ ✓ supabase/tests/marketplace.test.ts > imágenes (storage) > el bucket del sitio es solo del admin y todo se puede leer 74ms
+ ✓ supabase/tests/catalogo-api.test.ts > filtra gestión por membresía y niega escalada/carga cruzada 258ms
+ ✓ supabase/tests/catalogo.test.ts > 3.1 y 3.2: esquema y demo > carga veinte artículos y cuarenta ofertas de variantes equivalentes 30ms
+ ✓ supabase/tests/catalogo.test.ts > 3.1 y 3.2: esquema y demo > las dos fixtures CSV reproducen el seed sin duplicar datos 337ms
+ ✓ supabase/tests/catalogo.test.ts > 3.1 y 3.2: esquema y demo > las FK y la unicidad protegen las relaciones 24ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza duplicados de un lote sin escribir datos 15ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza precio = -1 y conserva el estado previo 15ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza precio = NaN y conserva el estado previo 13ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza precio = 10.123 y conserva el estado previo 19ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza precio = 100,50 y conserva el estado previo 30ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza url_producto = javascript:alert(1) y conserva el estado previo 15ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza url_producto = https://demo-a.invalid.evil.test/producto y conserva el estado previo 23ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza url_producto = https://otro.invalid/producto y conserva el estado previo 14ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza moneda = XYZ y conserva el estado previo 17ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza fecha_observacion = 2026-99-99T00:00:00Z y conserva el estado previo 22ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza fecha_observacion = 2026-10-11 y conserva el estado previo 17ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza fecha_observacion = 2999-01-01T00:00:00Z y conserva el estado previo 19ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza es_demo = false y conserva el estado previo 16ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza disponible = sí y conserva el estado previo 12ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza nombre =  y conserva el estado previo 18ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > revierte la primera fila si falla la segunda, incluido el historial 21ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > actualiza precio e historial juntos, y no duplica al repetir 38ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza datos viejos, misma fecha con precio distinto y cambios de identidad 45ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > distingue talles diferentes como variantes diferentes 11ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza fuentes inexistentes/sin permiso y comercios suspendidos 24ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > no expone el importador ni las tablas al navegador 60ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza lotes vacíos o que no son listas (undefined) 16ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza lotes vacíos o que no son listas ({}) 23ms
+ ✓ supabase/tests/catalogo.test.ts > 3.3: importaciones controladas > rechaza lotes vacíos o que no son listas (null) 23ms
+ ✓ supabase/tests/catalogo-api.test.ts > despublica una edición, conserva historial y solo un admin puede volver a aprobarla 629ms
+ ✓ supabase/tests/catalogo-api.test.ts > oculta vencidas, no disponibles, sin permiso y comercios suspendidos, incluso en el historial 769ms
+ ✓ supabase/tests/catalogo-api.test.ts > rechaza precio inválido y revierte el lote con log persistente sin perder la aprobación anterior 83ms
+ ✓ supabase/tests/catalogo-api.test.ts > admin da de alta fuentes, restringe orígenes/permiso y revoca operadores 43ms
+ ✓ supabase/tests/catalogo-api.test.ts > una oferta real exige revisión manual documentada y caducidad; una FK faltante no se acepta 41ms
+
+ Test Files  24 passed (24)
+      Tests  286 passed (286)
+   Start at  20:59:27
+   Duration  27.39s (transform 11.17s, setup 0ms, import 15.93s, tests 96.44s, environment 18ms)
+
+JSON report written to C:/Users/ignac/OneDrive/Documentos/GitHub/SpotSport/docs/datos/evidencias/2026-10-19/vitest.json
+EXIT_CODE=0

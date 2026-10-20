@@ -1,0 +1,94 @@
+{
+  "fechaRegistro": "2026-10-20T00:00:17.472Z",
+  "zonaHoraria": "America/Buenos_Aires",
+  "commit": "3367e15c15cd6c7e2773f0cc6ba2c0ecef7d3e80",
+  "entorno": {
+    "plataforma": "win32",
+    "arquitectura": "x64",
+    "sistema": "10.0.26200",
+    "node": "v24.14.1",
+    "vitest": "4.1.11",
+    "pglite": "0.5.9",
+    "supabaseJs": "2.117.3",
+    "npm": "11.12.1"
+  },
+  "resultado": {
+    "total": 286,
+    "aprobadas": 286,
+    "fallidas": 0,
+    "pendientes": 0,
+    "archivos": 24,
+    "exito": true,
+    "inicio": "2026-10-19T23:59:27.609Z"
+  },
+  "alcanceIntegrante3": [
+    {
+      "archivo": "scripts/catalogo/csv.test.ts",
+      "casos": 4,
+      "estado": "passed"
+    },
+    {
+      "archivo": "supabase/tests/catalogo-api.test.ts",
+      "casos": 9,
+      "estado": "passed"
+    },
+    {
+      "archivo": "supabase/tests/catalogo.test.ts",
+      "casos": 27,
+      "estado": "passed"
+    },
+    {
+      "archivo": "supabase/tests/deployment.test.ts",
+      "casos": 2,
+      "estado": "passed"
+    },
+    {
+      "archivo": "src/services/catalogo/index.test.ts",
+      "casos": 18,
+      "estado": "passed"
+    }
+  ],
+  "sha256": {
+    "data/catalogo/demo-a.csv": "8a29f8b4c1023c1f5db52ba8f72483ced0274b4fdc25b42d6117c7275c9225fa",
+    "data/catalogo/demo-b.csv": "f04c3899ecaf2a2c8e014b32b9b55c3ec1b09c5797fe0e40cb5fb947de8989b1",
+    "package-lock.json": "724646bf968af0e92b762d3d3c58145974c4f73c7b70364a140943d09c6036a1",
+    "package.json": "e035780faacabbea4ce7d58071ed3521b117eef8cf89ea5a97aef8e476677aa0",
+    "scripts/catalogo/csv.test.ts": "8e07cb444e70a81223207dad55fd19b65135443b06c858b4f1ce0b909b84f6d0",
+    "scripts/catalogo/csv.ts": "90924ae9cb9182de0c7273ae4a0b2316bbbc3a0e6df7510e0e5bc4fdc3a58f0b",
+    "scripts/importar-catalogo.ts": "ad7fe0595313e5e30a9c80620a3dd9a2ef698d260ffbdb53e62a593dab10ff70",
+    "shared/catalogo.ts": "4722b598fb26ae50166269fdea109eb269780c1b32eb4c96cbadac800fe0c1c1",
+    "src/services/catalogo/gestion.ts": "221b689c3759c51132337ee3a5f9bf1e995ea7f8e4408d018266219bb7d1e900",
+    "src/services/catalogo/index.test.ts": "7507b97e5f40ad94a4c0590e50fbd7ad2edd184f9275e96c4d8846bdccbf9c24",
+    "src/services/catalogo/index.ts": "6593877e7a26eebfe9a5d7416131ff975934593ade62272d0ce90c317a0c0a76",
+    "supabase/migrations/20261013000001_marketplace_schema.sql": "6f29576a884b41f2cac13e8dfb1ec5d360b838cc09e4c1532925b5826e98feb9",
+    "supabase/migrations/20261013000002_marketplace_rls.sql": "4dfd49934d42f9bd13b22d3ac49db9e220276b45983d4824a04bfbe26e039105",
+    "supabase/migrations/20261013000003_marketplace_storage_seed.sql": "01a3ed777fd29e309b3bbeef7f02f9e814f4bd25945e29a37e7ffec75ace295c",
+    "supabase/migrations/20261013000004_catalogo_schema.sql": "a0b70b4050e5a029089506353f101ca80738ef74d917884786a3ef0e734dd621",
+    "supabase/migrations/20261013000005_catalogo_import.sql": "254a2fe52c2995d8dea5fb360728b7c8c50cf4192ce103f33d0e1b2c68d10844",
+    "supabase/migrations/20261014204116_deployed_function_permissions.sql": "9b018c2e2fc0c047ee1c1e65444224185146eddef6cfe54bfc00f6de39dac915",
+    "supabase/migrations/20261014212300_catalogo_api_permisos.sql": "fa8caf1caa4848b6441aa245bb182532b1f938d3ff75c058a34b8491ec3de00a",
+    "supabase/queries/defensa_catalogo.sql": "211c989e4bf772e39ec8691c47c27682b783209db795210f8dd6490ea982f695",
+    "supabase/seeds/catalogo_demo.sql": "e972c4250141dcd1b4591cf3993e15f90948753d9c53cf4d5e94d381dde3f86b",
+    "supabase/tests/catalogo-api.test.ts": "9ce9bc6bc9c0c226f6134f4c2b3217a12177e7246e8212681db90608ba23e10c",
+    "supabase/tests/catalogo.test.ts": "493e257dbf0749d6f920c91136d5c0ef6c2ca5ac36f49567b368acb48f947fde",
+    "supabase/tests/deployment.test.ts": "9f21ed05a5aadaf211d8d59be4246e51678d2383fb6d9075e5cc996e3ed3304f",
+    "supabase/tests/harness.ts": "d8a7d989671355ab4768cb3e795aefac38f6cd45b1d66d4e2e9f2b2bde2a3fa6",
+    "tsconfig.json": "3f8fb7fdc89c7de15b936a0e59c0662902ac1ec33119961ddb0fbcc7e2252a5e",
+    "tsconfig.server.json": "c133fe40c17494071c5a18121d770d044d4bf97eb04176fe1e70e1cdbc4bbc0e",
+    "vite.config.ts": "cff05c3aeb8ec02d5071db2a460abf5391bd0baad7bbec5ba53178d02c4a270a",
+    "vite.server.config.ts": "787b83b5fcb8ea3d692ae3838c2b7e0b524da70bfe78711142fdbb760abdfe43"
+  },
+  "compilacion": {
+    "comando": "npm run build",
+    "codigoSalida": 0,
+    "cliente": true,
+    "servidor": true
+  },
+  "evidenciaSHA256": {
+    "vitest.json": "a7459be8ea018773fec9609efc84c371d31ad04d50818fd0f85761f31e742e35",
+    "pruebas.log": "835f088cf2ebf86aefebee44c9f5e58725aac063fbee1ce7ece9b098768e8228",
+    "compilacion.log": "67bd05589592388c34b0912d9843e4ca2382c551cc45ceb5b846f5fd5b14bb42",
+    "casos-ejecutados.md": "555c747df817d8e804415a53c3a322d53099e4b05a1cc14ea267ae2c4543dd8f",
+    "supabase-estado.json": "2c2e3a5daf33bf2fb32eee552ec44759814540baf68f185abdccdc6043bf41b9"
+  }
+}

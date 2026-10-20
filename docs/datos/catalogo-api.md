@@ -2,6 +2,10 @@
 
 Implementación del 14/10/2026. Incluye 3.5, que es la verificación de seguridad del tramo. El catálogo académico está en `catalogo`; la tienda, sus pedidos y su afiliación siguen en `public`. La API del comparador de páginas existente en `server/` continúa siendo un módulo distinto.
 
+La verificación y sus límites se registran en el [informe de pruebas del 19/10/2026](pruebas-integrante-3.md), con resultados esperados/observados y archivos de evidencia.
+
+**Estado al 19/10/2026:** implementación local aprobada; la ampliación remota está pendiente porque la aplicación de la migración fue cancelada. Las nuevas vistas/RPC que se describen abajo estarán disponibles en SPOT después de aplicar esa migración.
+
 ## 3.4 — Contrato listo para I2
 
 Importar `listarOfertas` e `historialPrecios` desde `src/services/catalogo`. Usan el cliente Supabase existente, su clave pública y las vistas `public.catalogo_ofertas` / `public.catalogo_historial`. No hace falta un servidor adicional ni una clave administrativa para consultar.
